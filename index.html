@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full" style="font-size:20px;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,22 +28,38 @@
         @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
         .progress-bar-container { width: 100%; height: 8px; background: #e9e5db; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: #86efac; transition: width 0.3s ease; }
+        .priority-toggle input { display: none; }
+        .priority-toggle { border: 2px solid #EDAE4C; background: transparent; color: #EDAE4C; transition: all 0.2s ease; }
+        .priority-toggle.active { background: #EDAE4C; color: #fff; border-color: #EDAE4C; }
+        .school-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 250 250'%3E%3Cg opacity='0.12' fill='%232d1b4e' stroke='%232d1b4e' stroke-width='0.5'%3E%3C!-- Pencil --%3E%3Crect x='30' y='10' width='8' height='50' rx='1' fill='%23f4c542' stroke='%23c9a020'/%3E%3Cpolygon points='30,60 38,60 34,72' fill='%23f5e0b0' stroke='%23c9a020'/%3E%3Crect x='30' y='10' width='8' height='6' rx='1' fill='%23e87d7d' stroke='%23c9a020'/%3E%3C!-- Notebook --%3E%3Crect x='160' y='15' width='45' height='55' rx='3' fill='%236366f1' stroke='%234f46b0'/%3E%3Cline x1='170' y1='28' x2='196' y2='28' stroke='white' stroke-width='1.2'/%3E%3Cline x1='170' y1='36' x2='196' y2='36' stroke='white' stroke-width='1.2'/%3E%3Cline x1='170' y1='44' x2='190' y2='44' stroke='white' stroke-width='1.2'/%3E%3Ccircle cx='163' cy='25' r='2' fill='%234f46b0'/%3E%3Ccircle cx='163' cy='35' r='2' fill='%234f46b0'/%3E%3Ccircle cx='163' cy='45' r='2' fill='%234f46b0'/%3E%3C!-- Ruler --%3E%3Crect x='85' y='90' width='55' height='14' rx='2' fill='%23fbbf24' stroke='%23d4a017'/%3E%3Cline x1='95' y1='90' x2='95' y2='97' stroke='%23d4a017' stroke-width='0.8'/%3E%3Cline x1='105' y1='90' x2='105' y2='100' stroke='%23d4a017' stroke-width='0.8'/%3E%3Cline x1='115' y1='90' x2='115' y2='97' stroke='%23d4a017' stroke-width='0.8'/%3E%3Cline x1='125' y1='90' x2='125' y2='100' stroke='%23d4a017' stroke-width='0.8'/%3E%3C!-- Apple --%3E%3Cellipse cx='200' cy='140' rx='16' ry='18' fill='%23ef4444' stroke='%23b91c1c'/%3E%3Cpath d='M200,122 Q203,115 198,113' fill='none' stroke='%23166534' stroke-width='1.5'/%3E%3Cellipse cx='200' cy='140' rx='5' ry='8' fill='%23f87171' opacity='0.4'/%3E%3C!-- Star --%3E%3Cpolygon points='45,130 49,142 62,142 51,150 55,162 45,154 35,162 39,150 28,142 41,142' fill='%23fbbf24' stroke='%23d4a017'/%3E%3C!-- Scissors --%3E%3Cellipse cx='25' cy='200' rx='8' ry='10' fill='none' stroke='%232d1b4e' stroke-width='1.8'/%3E%3Cellipse cx='45' cy='200' rx='8' ry='10' fill='none' stroke='%232d1b4e' stroke-width='1.8'/%3E%3Cline x1='30' y1='192' x2='50' y2='175' stroke='%232d1b4e' stroke-width='1.8'/%3E%3Cline x1='40' y1='192' x2='20' y2='175' stroke='%232d1b4e' stroke-width='1.8'/%3E%3C!-- Book --%3E%3Crect x='100' y='170' width='40' height='50' rx='2' fill='%23a78bfa' stroke='%237c5cbf'/%3E%3Crect x='103' y='173' width='34' height='44' rx='1' fill='%23c4b5fd' stroke='%237c5cbf'/%3E%3Cline x1='120' y1='173' x2='120' y2='217' stroke='%237c5cbf' stroke-width='0.8'/%3E%3C!-- Crayon --%3E%3Crect x='180' y='185' width='10' height='40' rx='1' fill='%2386efac' stroke='%2322c55e'/%3E%3Cpolygon points='180,225 190,225 185,237' fill='%2386efac' stroke='%2322c55e'/%3E%3Crect x='180' y='185' width='10' height='8' rx='1' fill='%23166534' stroke='%2322c55e'/%3E%3C!-- ABC --%3E%3Ctext x='75' y='45' font-family='serif' font-size='22' font-weight='bold' fill='%23a78bfa' stroke='none' opacity='0.7'%3EABc%3C/text%3E%3C/g%3E%3C/svg%3E");
+            background-size: 250px 250px;
+        }
     </style>
 </head>
 <body class="h-full">
-<div id="app" class="h-full w-full overflow-auto" style="background: #ede9fe;">
+<div id="app" class="h-full w-full overflow-auto school-bg" style="background-color: #ede9fe;">
     <!-- TOAST -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div><!-- EDIT TASK MODAL -->
     <div id="edit-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
             <h3 class="text-xl font-bold mb-4" style="color:#1a1a2e;">Edit Task</h3>
-            <div class="mb-4"><label for="edit-task-text" class="sr-only">Task text</label> <input id="edit-task-text" type="text" placeholder="Task description" maxlength="200" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            <div class="mb-4"><label for="edit-task-text" class="sr-only">Task title</label> <input id="edit-task-text" type="text" placeholder="Task title" maxlength="200" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+                <label for="edit-task-desc" class="sr-only">Description (optional)</label> <textarea id="edit-task-desc" placeholder="Description (optional)" maxlength="500" rows="2" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;resize:vertical;"></textarea>
+                <div id="edit-links-container" class="flex flex-col gap-2 mb-2"></div>
+                <button type="button" id="edit-add-link-btn" class="text-xs font-medium px-3 py-1 rounded-lg mb-2" style="background:#e8e6ff;color:#6366f1;">+ Add another link</button>
+                <label for="edit-task-due" class="sr-only">Due date (optional)</label>
+                <div class="flex gap-2 mb-2">
+                    <input id="edit-task-due" type="date" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
+                    <label class="priority-toggle flex items-center gap-1 cursor-pointer text-xs font-medium px-3 py-1 rounded-lg flex-shrink-0"><input type="checkbox" id="edit-task-priority"> Top Priority</label>
+                </div>
             </div>
             <div class="mb-4">
                 <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign to students:</p>
                 <div id="edit-student-checkboxes" class="grid grid-cols-7 gap-2 max-h-48 overflow-y-auto"></div>
             </div>
-            <div class="flex gap-2 justify-end"><button id="edit-cancel" class="px-4 py-2 rounded-xl font-semibold" style="background:#e8e6ff;color:#6366f1;">Cancel</button> <button id="edit-save" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#6366f1;">Save</button>
+            <div class="flex gap-2 justify-end">
+                <button id="edit-cancel" class="px-4 py-2 rounded-xl font-semibold" style="background:#e8e6ff;color:#6366f1;">Cancel</button> <button id="edit-save" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#6366f1;">Save</button>
             </div>
         </div>
     </div><!-- VIEW: Student Select -->
@@ -68,22 +84,57 @@
         <div class="max-w-4xl w-full mx-auto">
             <div class="flex items-center justify-between mb-6">
                 <button id="admin-back" class="flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
-                <h2 id="admin-title" class="font-display text-2xl font-bold" style="color:#1a1a2e;">Teacher Admin Panel</h2><button id="toggle-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
+                <h2 id="admin-title" class="font-display text-2xl font-bold" style="color:#1a1a2e;">Teacher Admin Panel</h2>
+                <div class="flex gap-2">
+                    <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
+                    <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
+                </div>
             </div><!-- DASHBOARD VIEW -->
             <div id="dashboard-section" class="hidden mb-6">
-                <h3 class="font-semibold text-lg mb-4" style="color:#1a1a2e;">Student Progress Overview</h3>
-                <div id="dashboard-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+                <!-- Student Status Detail (hidden by default) -->
+                <div id="student-status-detail" class="hidden">
+                    <button id="status-back" class="flex items-center gap-1 text-sm font-medium mb-4" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back to Overview</button>
+                    <h3 class="font-semibold text-lg mb-1" style="color:#1a1a2e;">Student <span id="status-student-num"></span></h3>
+                    <p id="status-summary" class="text-sm mb-4" style="color:#666;"></p>
+                    <div id="status-task-list" class="flex flex-col gap-2"></div>
+                </div>
+                <!-- Overview (default) -->
+                <div id="dashboard-overview">
+                    <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">In Progress</h2>
+                    <div id="dashboard-grid-progress" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-6"></div>
+                    <p id="dashboard-progress-empty" class="text-center py-4 mb-6 hidden" style="color:#aaa;">No students in progress.</p>
+                    <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">Complete</h2>
+                    <div id="dashboard-grid-complete" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+                    <p id="dashboard-complete-empty" class="text-center py-4 hidden" style="color:#aaa;">No students completed yet.</p>
+                </div>
             </div><!-- TASKS MANAGEMENT VIEW -->
             <div id="tasks-section">
                 <form id="add-task-form" class="mb-6 bg-white rounded-xl p-4 shadow-sm">
                     <div class="flex gap-2 mb-4">
-                        <label for="task-input" class="sr-only">New task</label> <input id="task-input" type="text" placeholder="Add a new task..." maxlength="200" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
+                        <label for="task-input" class="sr-only">Task title</label> <input id="task-input" type="text" placeholder="Task title..." maxlength="200" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
+                    </div>
+                    <div class="mb-4">
+                        <label for="task-desc" class="sr-only">Description (optional)</label> <textarea id="task-desc" placeholder="Description (optional)" maxlength="500" rows="2" class="w-full border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;resize:vertical;"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <div id="task-links-container" class="flex flex-col gap-2">
+                            <div class="flex gap-2 link-row"><input type="text" placeholder="Link title" class="link-title-input border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;width:35%;"> <input type="url" placeholder="URL" class="link-url-input flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;"> <button type="button" class="remove-link-btn px-3 rounded-xl text-sm font-bold hidden" style="color:#e74c3c;">&times;</button></div>
+                        </div>
+                        <button type="button" id="add-link-btn" class="text-xs font-medium px-3 py-1 rounded-lg mt-2" style="background:#e8e6ff;color:#6366f1;">+ Add another link</button>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <label for="task-due" class="sr-only">Due date (optional)</label> <input id="task-due" type="date" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
+                        <label class="priority-toggle flex items-center gap-1 cursor-pointer text-xs font-medium px-3 py-1 rounded-lg flex-shrink-0"><input type="checkbox" id="task-priority"> Top Priority</label>
                     </div>
                     <div class="mb-4">
                         <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign to students:</p>
                         <div id="student-checkboxes" class="grid grid-cols-7 gap-2"></div>
                     </div>
-                    <div class="flex gap-2 justify-between items-center"><button type="button" id="select-all-btn" class="text-xs font-medium px-3 py-1 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Select All</button> <button type="submit" class="px-5 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background:#6366f1;"> <i data-lucide="plus" style="width:18px;height:18px;"></i> Add </button>
+                    <div class="flex gap-2 justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="select-all-btn" class="text-xs font-medium px-3 py-1 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Select All</button>
+                        </div>
+                        <button type="submit" class="px-5 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background:#6366f1;"> <i data-lucide="plus" style="width:18px;height:18px;"></i> Add </button>
                     </div>
                 </form>
                 <div id="admin-task-list" class="flex flex-col gap-2"></div>
@@ -105,6 +156,14 @@
                     <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
                 </div>
             </div>
+            <div id="student-priority-section" class="hidden mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <span style="font-size:24px;line-height:1;filter:drop-shadow(1px 1px 0 #b8860b);">&#11088;</span>
+                    <h3 class="font-display text-lg font-bold" style="color:#b8860b;">Do First</h3>
+                </div>
+                <div id="student-priority-list" class="flex flex-col gap-2"></div>
+            </div>
+            <h3 id="student-donext-title" class="font-display text-lg font-bold mb-3 hidden" style="color:#1a1a2e;">Do Next</h3>
             <div id="student-task-list" class="flex flex-col gap-2"></div>
             <p id="student-empty" class="text-center py-10" style="color:#aaa;">No tasks assigned yet. Check back soon!</p>
         </div>
@@ -307,8 +366,39 @@
             let el = list.querySelector(`[data-id="${task.task_id}"]`);
             if (el) {
                 el.querySelector(".task-text").textContent = task.task_text;
+                // Update description
+                let descEl = el.querySelector(".task-desc");
+                if (task.task_desc) {
+                    if (!descEl) { descEl = document.createElement("p"); descEl.className = "task-desc text-xs"; descEl.style.color = "#666"; el.querySelector(".task-text").parentElement.after(descEl); }
+                    descEl.textContent = task.task_desc;
+                } else if (descEl) { descEl.remove(); }
                 const assignedNums = task.assigned_to ? task.assigned_to.split(",").sort((a, b) => parseInt(a) - parseInt(b)).join(", ") : "None";
                 el.querySelector(".assigned-text").textContent = "Assigned: " + assignedNums;
+                const infoRow = el.querySelector(".assigned-text").parentElement;
+                infoRow.querySelectorAll(".task-priority-badge, .admin-link-badge, .task-due").forEach(el2 => el2.remove());
+                if (task.task_priority) {
+                    const span = document.createElement("span");
+                    span.className = "task-priority-badge text-xs font-semibold px-2 py-1 rounded-lg";
+                    span.style.cssText = "background:#fdf6e3;color:#b8860b;";
+                    span.innerHTML = "&#11088; Top Priority";
+                    infoRow.appendChild(span);
+                }
+                const updLinks = getLinks(task);
+                updLinks.forEach((lnk, i) => {
+                    const a = document.createElement("a");
+                    a.href = lnk.url; a.target = "_blank"; a.rel = "noopener";
+                    a.className = "admin-link-badge text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1";
+                    a.style.cssText = "background:#e8e6ff;color:#6366f1;";
+                    a.innerHTML = '<i data-lucide="external-link" style="width:12px;height:12px;"></i> ' + escHtml(lnk.title || 'Link' + (updLinks.length > 1 ? ' ' + (i + 1) : ''));
+                    infoRow.appendChild(a);
+                });
+                if (task.task_due) {
+                    const span = document.createElement("span");
+                    span.className = "task-due text-xs font-medium px-2 py-1 rounded-lg";
+                    span.style.cssText = "background:#fff3e0;color:#e65100;";
+                    span.textContent = "Due: " + fmtDue(task.task_due);
+                    infoRow.appendChild(span);
+                }
                 const actionArea = el.querySelector(".action-area");
                 renderDeleteButton(actionArea, task);
                 renderStudentDeleteButtons(el, task);
@@ -317,12 +407,21 @@
                 el.className = "task-enter flex flex-col gap-3 bg-white rounded-xl px-4 py-3 shadow-sm";
                 el.dataset.id = task.task_id;
                 const assignedNums = task.assigned_to ? task.assigned_to.split(",").sort((a, b) => parseInt(a) - parseInt(b)).join(", ") : "None";
+                const priorityHtml = task.task_priority ? `<span class="task-priority-badge text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#11088; Top Priority</span>` : "";
+                const linksArr = getLinks(task);
+                const linkHtml = linksArr.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="admin-link-badge text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (linksArr.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
+                const dueHtml = task.task_due ? `<span class="task-due text-xs font-medium px-2 py-1 rounded-lg" style="background:#fff3e0;color:#e65100;">Due: ${fmtDue(task.task_due)}</span>` : "";
+                const descHtml = task.task_desc ? `<p class="task-desc text-xs" style="color:#666;">${escHtml(task.task_desc)}</p>` : "";
                 el.innerHTML = `
         <div class="flex items-center justify-between">
-          <span class="task-text font-medium" style="color:#1a1a2e;">${escHtml(task.task_text)}</span>
+          <span class="task-text font-medium text-xl" style="color:#1a1a2e;">${escHtml(task.task_text)}</span>
           <div class="flex items-center gap-1 action-area"></div>
         </div>
-        <p class="assigned-text text-xs" style="color:#999;">Assigned: ${escHtml(assignedNums)}</p>
+        ${descHtml}
+        <div class="flex items-center gap-2 flex-wrap">
+          <p class="assigned-text text-xs" style="color:#999;">Assigned: ${escHtml(assignedNums)}</p>
+          ${priorityHtml}${linkHtml}${dueHtml}
+        </div>
         <div class="student-delete-container flex gap-2 flex-wrap"></div>
       `;
                 const actionArea = el.querySelector(".action-area");
@@ -405,9 +504,12 @@
     }
 
     function renderDashboard() {
-        const grid = document.getElementById("dashboard-grid");
-        grid.innerHTML = "";
-        const tasks = getTasks();
+        const gridProgress = document.getElementById("dashboard-grid-progress");
+        const gridComplete = document.getElementById("dashboard-grid-complete");
+        gridProgress.innerHTML = "";
+        gridComplete.innerHTML = "";
+
+        let progressCount = 0, completeCount = 0;
 
         for (let studentNum = 1; studentNum <= TOTAL_STUDENTS; studentNum++) {
             const studentTasks = getTasksForStudent(studentNum);
@@ -418,10 +520,11 @@
                 return comp.length > 0;
             }).length;
 
-            const card = document.createElement("div");
-            card.className = "bg-white rounded-xl p-4 shadow-sm";
             const percent = Math.round((completed / studentTasks.length) * 100);
             const isComplete = percent === 100;
+
+            const card = document.createElement("div");
+            card.className = "bg-white rounded-xl p-4 shadow-sm cursor-pointer transition-shadow hover:shadow-md";
             card.style.borderLeft = `4px solid ${isComplete ? "#86efac" : "#ef4444"}`;
 
             const badgeBg = isComplete ? "#e8f5e9" : "#fee2e2";
@@ -434,7 +537,7 @@
         <span class="font-semibold" style="color:#1a1a2e;">Student ${studentNum}</span>
         <div class="flex items-center gap-2">
           <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:${badgeBg};color:${badgeColor};">${percent}%</span>
-          ${isComplete ? `<button class="p-1 rounded-lg hover:bg-red-50" style="color:#e74c3c;" aria-label="Delete student"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>` : ""}
+          ${isComplete ? `<button class="delete-student-btn p-1 rounded-lg hover:bg-red-50" style="color:#e74c3c;" aria-label="Delete student"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>` : ""}
         </div>
       </div>
       <div class="text-xs mb-2" style="color:#666;">${completed}/${studentTasks.length} complete</div>
@@ -445,12 +548,68 @@
             card.appendChild(cardInner);
 
             if (isComplete) {
-                const deleteBtn = cardInner.querySelector('button');
-                deleteBtn.addEventListener("click", () => removeAllTasksFromStudent(studentNum));
+                const deleteBtn = cardInner.querySelector('.delete-student-btn');
+                deleteBtn.addEventListener("click", (e) => { e.stopPropagation(); removeAllTasksFromStudent(studentNum); });
             }
 
-            grid.appendChild(card);
+            card.addEventListener("click", () => renderStudentStatus(studentNum));
+
+            if (isComplete) { gridComplete.appendChild(card); completeCount++; }
+            else { gridProgress.appendChild(card); progressCount++; }
         }
+
+        document.getElementById("dashboard-progress-empty").classList.toggle("hidden", progressCount > 0);
+        document.getElementById("dashboard-complete-empty").classList.toggle("hidden", completeCount > 0);
+        lucide.createIcons();
+    }
+
+    function renderStudentStatus(studentNum) {
+        document.getElementById("dashboard-overview").classList.add("hidden");
+        document.getElementById("student-status-detail").classList.remove("hidden");
+        document.getElementById("status-student-num").textContent = studentNum;
+
+        const tasks = getTasksForStudent(studentNum);
+        const doneCount = tasks.filter(t => getCompletionsByTaskAndStudent(t.task_id, studentNum).length > 0).length;
+        document.getElementById("status-summary").textContent = doneCount + " of " + tasks.length + " tasks complete";
+
+        const list = document.getElementById("status-task-list");
+        list.innerHTML = "";
+
+        tasks.forEach(task => {
+            const done = getCompletionsByTaskAndStudent(task.task_id, studentNum).length > 0;
+            const el = document.createElement("div");
+            el.className = "flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm";
+            el.style.borderLeft = `4px solid ${done ? "#86efac" : "#ef4444"}`;
+
+            const statusBadge = done
+                ? '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#e8f5e9;color:#558b2f;">Done</span>'
+                : '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fee2e2;color:#b91c1c;">Not done</span>';
+
+            const priorityHtml = task.task_priority
+                ? '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#11088; Top Priority</span>'
+                : "";
+
+            const dueHtml = task.task_due
+                ? `<span class="text-xs font-medium px-2 py-1 rounded-lg" style="background:#fff3e0;color:#e65100;">Due: ${fmtDue(task.task_due)}</span>`
+                : "";
+
+            const statusLinks = getLinks(task);
+            const linkHtml = statusLinks.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (statusLinks.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
+
+            const descHtml = task.task_desc ? `<p class="text-xs mt-1" style="color:${done ? '#ccc' : '#666'};">${escHtml(task.task_desc)}</p>` : "";
+
+            el.innerHTML = `
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-medium" style="color:${done ? '#aaa' : '#1a1a2e'};${done ? 'text-decoration:line-through;' : ''}">${escHtml(task.task_text)}</span>
+            ${statusBadge}${priorityHtml}
+          </div>
+          ${descHtml}
+          <div class="flex items-center gap-2 mt-1">${dueHtml}${linkHtml}</div>
+        </div>
+      `;
+            list.appendChild(el);
+        });
         lucide.createIcons();
     }
 
@@ -478,13 +637,57 @@
     // =====================================================================
     // STUDENT VIEW
     // =====================================================================
+    function createStudentTaskEl(task, done) {
+        const el = document.createElement("div");
+        el.className = "task-enter flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm cursor-pointer";
+        el.dataset.id = task.task_id;
+        el.innerHTML = `
+        <div class="custom-check w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0" style="border-color:#ccc;">
+          <i data-lucide="check" style="width:14px;height:14px;color:white;" class="check-icon hidden"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <span class="task-text font-medium text-xl" style="color:#2d1b4e;"></span>
+          <p class="task-desc text-xs hidden" style="color:#666;"></p>
+          <div class="task-meta flex items-center gap-2 mt-1"></div>
+        </div>
+      `;
+        updateStudentTaskEl(el, task, done);
+        el.addEventListener("click", (e) => { if (e.target.closest(".task-link-btn")) return; toggleCompletion(task.task_id); });
+        return el;
+    }
+
+    function renderStudentList(container, tasks) {
+        const existingEls = new Map([...container.children].map(el => [el.dataset.id, el]));
+        const currentIds = new Set(tasks.map(t => t.task_id));
+        existingEls.forEach((el, id) => { if (!currentIds.has(id)) el.remove(); });
+
+        tasks.forEach(task => {
+            const done = getCompletionsByTaskAndStudent(task.task_id, currentStudent).length > 0;
+            let el = container.querySelector(`[data-id="${task.task_id}"]`);
+            if (el) {
+                updateStudentTaskEl(el, task, done);
+            } else {
+                el = createStudentTaskEl(task, done);
+                container.appendChild(el);
+            }
+        });
+    }
+
     function renderStudent() {
         if (!currentStudent) return;
         const tasks = getTasksForStudent(currentStudent);
+        const priorityTasks = tasks.filter(t => t.task_priority);
+        const regularTasks = tasks.filter(t => !t.task_priority);
+
+        const prioritySection = document.getElementById("student-priority-section");
+        const priorityList = document.getElementById("student-priority-list");
         const list = document.getElementById("student-task-list");
         const empty = document.getElementById("student-empty");
         document.getElementById("student-num-display").textContent = currentStudent;
         empty.classList.toggle("hidden", tasks.length > 0);
+
+        prioritySection.classList.toggle("hidden", priorityTasks.length === 0);
+        document.getElementById("student-donext-title").classList.toggle("hidden", priorityTasks.length === 0 || regularTasks.length === 0);
 
         const doneCount = tasks.filter(t => {
             const completion = getCompletionsByTaskAndStudent(t.task_id, currentStudent);
@@ -494,32 +697,8 @@
         document.getElementById("progress-badge").textContent = doneCount + "/" + tasks.length;
         document.getElementById("progress-fill").style.width = progressPercent + "%";
 
-        const existingEls = new Map([...list.children].map(el => [el.dataset.id, el]));
-        const currentIds = new Set(tasks.map(t => t.task_id));
-
-        existingEls.forEach((el, id) => { if (!currentIds.has(id)) el.remove(); });
-
-        tasks.forEach(task => {
-            const completions = getCompletionsByTaskAndStudent(task.task_id, currentStudent);
-            const done = completions.length > 0;
-            let el = list.querySelector(`[data-id="${task.task_id}"]`);
-            if (el) {
-                updateStudentTaskEl(el, task, done);
-            } else {
-                el = document.createElement("div");
-                el.className = "task-enter flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm cursor-pointer";
-                el.dataset.id = task.task_id;
-                el.innerHTML = `
-        <div class="custom-check w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0" style="border-color:#ccc;">
-          <i data-lucide="check" style="width:14px;height:14px;color:white;" class="check-icon hidden"></i>
-        </div>
-        <span class="task-text font-medium" style="color:#2d1b4e;"></span>
-      `;
-                updateStudentTaskEl(el, task, done);
-                el.addEventListener("click", () => toggleCompletion(task.task_id));
-                list.appendChild(el);
-            }
-        });
+        renderStudentList(priorityList, priorityTasks);
+        renderStudentList(list, regularTasks);
         lucide.createIcons();
     }
 
@@ -532,6 +711,33 @@
         text.style.color = done ? "#aaa" : "#2d1b4e";
         if (done) { check.classList.add("checked"); icon.classList.remove("hidden"); }
         else { check.classList.remove("checked"); icon.classList.add("hidden"); }
+
+        const descEl = el.querySelector(".task-desc");
+        if (descEl) {
+            if (task.task_desc) { descEl.textContent = task.task_desc; descEl.classList.remove("hidden"); descEl.style.color = done ? "#ccc" : "#666"; }
+            else { descEl.classList.add("hidden"); }
+        }
+
+        const meta = el.querySelector(".task-meta");
+        if (meta) {
+            meta.innerHTML = "";
+            const taskLinks = getLinks(task);
+            taskLinks.forEach((lnk, i) => {
+                const a = document.createElement("a");
+                a.href = lnk.url; a.target = "_blank"; a.rel = "noopener";
+                a.className = "task-link-btn text-xs font-semibold px-3 py-1 rounded-lg text-white inline-flex items-center gap-1";
+                a.style.background = "#6366f1";
+                a.textContent = lnk.title || (taskLinks.length > 1 ? "Follow me! (" + (i + 1) + ")" : "Follow me!");
+                meta.appendChild(a);
+            });
+            if (task.task_due) {
+                const span = document.createElement("span");
+                span.className = "text-xs font-medium px-2 py-1 rounded-lg";
+                span.style.cssText = "background:#fff3e0;color:#e65100;";
+                span.textContent = "Due: " + fmtDue(task.task_due);
+                meta.appendChild(span);
+            }
+        }
     }
 
     async function toggleCompletion(taskId) {
@@ -545,10 +751,15 @@
         }
     }
 
-    async function addTask(text, assignedStudents) {
+    async function addTask(text, desc, assignedStudents, link, dueDate, priority) {
         const taskId = "t_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
         const assignedStr = assignedStudents.join(",");
-        const r = await fbCreate({ type: "task", task_id: taskId, task_text: text, assigned_to: assignedStr, completed: false, created_at: new Date().toISOString() });
+        const taskData = { type: "task", task_id: taskId, task_text: text, assigned_to: assignedStr, completed: false, created_at: new Date().toISOString() };
+        if (desc) taskData.task_desc = desc;
+        if (link) taskData.task_link = link;
+        if (dueDate) taskData.task_due = dueDate;
+        if (priority) taskData.task_priority = true;
+        const r = await fbCreate(taskData);
         if (r.isOk) showToast("Task added!");
         else showToast("Error adding task", "error");
     }
@@ -563,6 +774,53 @@
     }
 
     function escHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+    function fmtDue(d) { const [y, m, day] = d.split("-"); return parseInt(m) + "/" + parseInt(day); }
+    function getLinks(task) {
+        return (task.task_link || "").split("\n").map(s => s.trim()).filter(Boolean).map(s => {
+            const idx = s.indexOf("|");
+            if (idx > -1) return { title: s.substring(0, idx), url: s.substring(idx + 1) };
+            return { title: "", url: s };
+        });
+    }
+    function createLinkRow(title, url) {
+        const row = document.createElement("div");
+        row.className = "flex gap-2 link-row";
+        const titleInput = document.createElement("input");
+        titleInput.type = "text"; titleInput.placeholder = "Link title";
+        titleInput.className = "link-title-input border-2 rounded-xl px-4 py-3 text-base";
+        titleInput.style.cssText = "border-color:#ddd;width:35%;";
+        titleInput.value = title || "";
+        const urlInput = document.createElement("input");
+        urlInput.type = "url"; urlInput.placeholder = "URL";
+        urlInput.className = "link-url-input flex-1 border-2 rounded-xl px-4 py-3 text-base";
+        urlInput.style.borderColor = "#ddd";
+        urlInput.value = url || "";
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "remove-link-btn px-3 rounded-xl text-sm font-bold";
+        removeBtn.style.color = "#e74c3c";
+        removeBtn.innerHTML = "&times;";
+        removeBtn.addEventListener("click", () => { row.remove(); updateRemoveBtns(row.parentElement); });
+        row.appendChild(titleInput);
+        row.appendChild(urlInput);
+        row.appendChild(removeBtn);
+        return row;
+    }
+    function updateRemoveBtns(container) {
+        const rows = container.querySelectorAll(".link-row");
+        rows.forEach(r => { const btn = r.querySelector(".remove-link-btn"); if (btn) btn.classList.toggle("hidden", rows.length <= 1); });
+    }
+    function collectLinks(container) {
+        const rows = container.querySelectorAll(".link-row");
+        const results = [];
+        rows.forEach(r => {
+            const url = r.querySelector(".link-url-input").value.trim();
+            if (!url) return;
+            const title = r.querySelector(".link-title-input").value.trim();
+            results.push(title ? title + "|" + url : url);
+        });
+        return results;
+    }
 
     // =====================================================================
     // EDIT MODAL
@@ -570,6 +828,16 @@
     function openEditModal(task) {
         editingTask = task;
         document.getElementById("edit-task-text").value = task.task_text;
+        document.getElementById("edit-task-desc").value = task.task_desc || "";
+        const editLinksContainer = document.getElementById("edit-links-container");
+        editLinksContainer.innerHTML = "";
+        const links = getLinks(task);
+        if (links.length === 0) { editLinksContainer.appendChild(createLinkRow("", "")); }
+        else { links.forEach(l => editLinksContainer.appendChild(createLinkRow(l.title, l.url))); }
+        updateRemoveBtns(editLinksContainer);
+        document.getElementById("edit-task-due").value = task.task_due || "";
+        document.getElementById("edit-task-priority").checked = !!task.task_priority;
+        document.getElementById("edit-task-priority").parentElement.classList.toggle("active", !!task.task_priority);
 
         const assigned = task.assigned_to ? task.assigned_to.split(",").map(s => parseInt(s.trim())) : [];
         const container = document.getElementById("edit-student-checkboxes");
@@ -608,10 +876,19 @@
 
         const selected = Array.from(document.querySelectorAll("#edit-student-checkboxes input:checked")).map(cb => parseInt(cb.value));
 
+        const newDesc = document.getElementById("edit-task-desc").value.trim();
+        const newLink = collectLinks(document.getElementById("edit-links-container")).join("\n");
+        const newDue = document.getElementById("edit-task-due").value;
+        const newPriority = document.getElementById("edit-task-priority").checked;
+
         const updatedTask = {
             ...editingTask,
             task_text: newText,
-            assigned_to: selected.length > 0 ? selected.join(",") : ""
+            task_desc: newDesc || "",
+            assigned_to: selected.length > 0 ? selected.join(",") : "",
+            task_link: newLink || "",
+            task_due: newDue || "",
+            task_priority: newPriority || false
         };
 
         const r = await fbUpdate(updatedTask);
@@ -646,7 +923,7 @@
         const font = config.font_family || defaultConfig.font_family;
         const size = config.font_size || defaultConfig.font_size;
 
-        document.getElementById("app").style.background = bg;
+        document.getElementById("app").style.backgroundColor = bg;
         document.getElementById("main-title").textContent = config.app_title || defaultConfig.app_title;
         document.getElementById("main-title").style.color = text;
         document.getElementById("admin-title").textContent = config.teacher_greeting || defaultConfig.teacher_greeting;
@@ -682,18 +959,40 @@
         applyConfig(defaultConfig);
 
         // Events
-        document.getElementById("admin-btn").addEventListener("click", () => showView("password"));
+        document.getElementById("admin-btn").addEventListener("click", () => { showView("password"); document.getElementById("pw-input").focus(); });
         document.getElementById("pw-back").addEventListener("click", () => { document.getElementById("pw-error").classList.add("hidden"); showView("select"); });
         document.getElementById("admin-back").addEventListener("click", () => { deleteConfirmId = null; showView("select"); });
         document.getElementById("student-back").addEventListener("click", () => { currentStudent = null; showView("select"); });
 
-        document.getElementById("toggle-dashboard").addEventListener("click", () => {
+        function setAdminView(view) {
             const dashSection = document.getElementById("dashboard-section");
             const taskSection = document.getElementById("tasks-section");
-            const isHidden = dashSection.classList.contains("hidden");
-            dashSection.classList.toggle("hidden");
-            taskSection.classList.toggle("hidden");
-            if (isHidden) renderDashboard();
+            const btnDash = document.getElementById("btn-dashboard");
+            const btnTasks = document.getElementById("btn-tasks");
+            if (view === "dashboard") {
+                dashSection.classList.remove("hidden");
+                taskSection.classList.add("hidden");
+                btnDash.style.background = "#6366f1";
+                btnDash.style.color = "#fff";
+                btnTasks.style.background = "#e8e6ff";
+                btnTasks.style.color = "#6366f1";
+                document.getElementById("dashboard-overview").classList.remove("hidden");
+                document.getElementById("student-status-detail").classList.add("hidden");
+                renderDashboard();
+            } else {
+                dashSection.classList.add("hidden");
+                taskSection.classList.remove("hidden");
+                btnTasks.style.background = "#6366f1";
+                btnTasks.style.color = "#fff";
+                btnDash.style.background = "#e8e6ff";
+                btnDash.style.color = "#6366f1";
+            }
+        }
+        document.getElementById("btn-dashboard").addEventListener("click", () => setAdminView("dashboard"));
+        document.getElementById("btn-tasks").addEventListener("click", () => setAdminView("tasks"));
+        document.getElementById("status-back").addEventListener("click", () => {
+            document.getElementById("student-status-detail").classList.add("hidden");
+            document.getElementById("dashboard-overview").classList.remove("hidden");
         });
 
         document.getElementById("edit-cancel").addEventListener("click", closeEditModal);
@@ -723,9 +1022,22 @@
             const selected = Array.from(document.querySelectorAll("#student-checkboxes input:checked")).map(cb => parseInt(cb.value));
             if (selected.length === 0) { showToast("Select at least one student", "error"); return; }
 
+            const desc = document.getElementById("task-desc").value.trim();
+            const linksContainer = document.getElementById("task-links-container");
+            const link = collectLinks(linksContainer).join("\n");
+            const dueDate = document.getElementById("task-due").value;
+            const priority = document.getElementById("task-priority").checked;
+
             input.value = "";
+            document.getElementById("task-desc").value = "";
+            linksContainer.innerHTML = "";
+            linksContainer.appendChild(createLinkRow("", ""));
+            updateRemoveBtns(linksContainer);
+            document.getElementById("task-due").value = "";
+            document.getElementById("task-priority").checked = false;
+            document.getElementById("task-priority").parentElement.classList.remove("active");
             document.querySelectorAll("#student-checkboxes input").forEach(cb => cb.checked = false);
-            await addTask(text, selected);
+            await addTask(text, desc, selected, link, dueDate, priority);
         });
 
         document.getElementById("select-all-btn").addEventListener("click", (e) => {
@@ -734,6 +1046,24 @@
             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
             checkboxes.forEach(cb => cb.checked = !allChecked);
         });
+
+        document.querySelectorAll(".priority-toggle input").forEach(cb => {
+            cb.addEventListener("change", () => { cb.parentElement.classList.toggle("active", cb.checked); });
+        });
+
+        document.getElementById("add-link-btn").addEventListener("click", () => {
+            const c = document.getElementById("task-links-container");
+            c.appendChild(createLinkRow("", ""));
+            updateRemoveBtns(c);
+        });
+        document.getElementById("edit-add-link-btn").addEventListener("click", () => {
+            const c = document.getElementById("edit-links-container");
+            c.appendChild(createLinkRow("", ""));
+            updateRemoveBtns(c);
+        });
+        // Wire up remove btn on initial add-form row
+        const initRow = document.querySelector("#task-links-container .remove-link-btn");
+        if (initRow) initRow.addEventListener("click", () => { const c = document.getElementById("task-links-container"); if (c.children.length > 1) { initRow.closest(".flex.gap-2").remove(); updateRemoveBtns(c); } });
 
         lucide.createIcons();
     })();
