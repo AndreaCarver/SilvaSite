@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Checklist</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:wght@600;700;800&amp;display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; margin: 0; }
+        .font-display { font-family: 'Fraunces', serif; }
+        .task-enter { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .check-pop { animation: pop 0.3s ease-out; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .student-btn:hover { transform: translateY(-2px); }
+        .student-btn { transition: all 0.2s ease; }
+        input:focus, button:focus { outline: 2px solid #a78bfa; outline-offset: 2px; }
+        .custom-check { transition: all 0.2s ease; }
+        .custom-check.checked { background: #a78bfa; border-color: #a78bfa; }
+        .toast-anim { animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 2.7s; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+        .progress-bar-container { width: 100%; height: 8px; background: #e9e5db; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: #86efac; transition: width 0.3s ease; }
+    </style>
+</head>
+<body class="h-full">
+<div id="app" class="h-full w-full overflow-auto" style="background: #ede9fe;">
+    <!-- TOAST -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div><!-- EDIT TASK MODAL -->
+    <div id="edit-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold mb-4" style="color:#1a1a2e;">Edit Task</h3>
+            <div class="mb-4"><label for="edit-task-text" class="sr-only">Task text</label> <input id="edit-task-text" type="text" placeholder="Task description" maxlength="200" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            </div>
+            <div class="mb-4">
+                <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign to students:</p>
+                <div id="edit-student-checkboxes" class="grid grid-cols-7 gap-2 max-h-48 overflow-y-auto"></div>
+            </div>
+            <div class="flex gap-2 justify-end"><button id="edit-cancel" class="px-4 py-2 rounded-xl font-semibold" style="background:#e8e6ff;color:#6366f1;">Cancel</button> <button id="edit-save" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#6366f1;">Save</button>
+            </div>
+        </div>
+    </div><!-- VIEW: Student Select -->
+    <div id="view-select" class="h-full w-full flex flex-col items-center justify-center p-4">
+        <div class="text-center mb-10">
+            <div class="mb-4 flex justify-center"><i data-lucide="clipboard-check" style="width: 48px; height: 48px; color: #a78bfa;"></i>
+            </div>
+            <h1 id="main-title" class="font-display text-4xl md:text-5xl font-bold mb-2" style="color: #2d1b4e;">Missing Work Checklist</h1>
+            <p class="text-lg" style="color: #555;">Select your student number to see your missing work</p>
+        </div>
+        <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 gap-3 max-w-xl mb-8" id="student-grid"></div><button id="admin-btn" class="student-btn mt-4 px-6 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background: #2d1b4e;"> <i data-lucide="lock" style="width:18px;height:18px;"></i> Teacher Admin </button>
+    </div><!-- VIEW: Password -->
+    <div id="view-password" class="h-full w-full flex flex-col items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
+            <button id="pw-back" class="mb-4 flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+            <h2 class="font-display text-2xl font-bold mb-1" style="color:#1a1a2e;">Admin Login</h2>
+            <p class="text-sm mb-5" style="color:#888;">Enter the teacher password</p><label for="pw-input" class="sr-only">Password</label> <input id="pw-input" type="password" placeholder="Password" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            <p id="pw-error" class="text-sm mb-3 hidden" style="color:#e74c3c;">Incorrect password</p><button id="pw-submit" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Enter</button>
+        </div>
+    </div><!-- VIEW: Admin -->
+    <div id="view-admin" class="h-full w-full flex flex-col p-4 hidden">
+        <div class="max-w-4xl w-full mx-auto">
+            <div class="flex items-center justify-between mb-6">
+                <button id="admin-back" class="flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+                <h2 id="admin-title" class="font-display text-2xl font-bold" style="color:#1a1a2e;">Teacher Admin Panel</h2><button id="toggle-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
+            </div><!-- DASHBOARD VIEW -->
+            <div id="dashboard-section" class="hidden mb-6">
+                <h3 class="font-semibold text-lg mb-4" style="color:#1a1a2e;">Student Progress Overview</h3>
+                <div id="dashboard-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+            </div><!-- TASKS MANAGEMENT VIEW -->
+            <div id="tasks-section">
+                <form id="add-task-form" class="mb-6 bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex gap-2 mb-4">
+                        <label for="task-input" class="sr-only">New task</label> <input id="task-input" type="text" placeholder="Add a new task..." maxlength="200" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign to students:</p>
+                        <div id="student-checkboxes" class="grid grid-cols-7 gap-2"></div>
+                    </div>
+                    <div class="flex gap-2 justify-between items-center"><button type="button" id="select-all-btn" class="text-xs font-medium px-3 py-1 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Select All</button> <button type="submit" class="px-5 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background:#6366f1;"> <i data-lucide="plus" style="width:18px;height:18px;"></i> Add </button>
+                    </div>
+                </form>
+                <div id="admin-task-list" class="flex flex-col gap-2"></div>
+                <p id="admin-empty" class="text-center py-10" style="color:#aaa;">No tasks yet. Add one above!</p>
+            </div>
+        </div>
+    </div><!-- VIEW: Student -->
+    <div id="view-student" class="h-full w-full flex flex-col p-4 hidden">
+        <div class="max-w-2xl w-full mx-auto">
+            <div class="flex items-center justify-between mb-6">
+                <button id="student-back" class="flex items-center gap-1 text-sm font-medium" style="color:#a78bfa;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+                <h2 class="font-display text-2xl font-bold" style="color:#2d1b4e;">Student <span id="student-num-display"></span></h2>
+                <div id="progress-badge" class="text-sm font-semibold px-3 py-1 rounded-full" style="background:#e8f5e9;color:#558b2f;">
+                    0/0
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div id="student-task-list" class="flex flex-col gap-2"></div>
+            <p id="student-empty" class="text-center py-10" style="color:#aaa;">No tasks assigned yet. Check back soon!</p>
+        </div>
+    </div>
+</div>
+<script>
+    // =====================================================================
+    // FIREBASE CONFIGURATION
+    // Replace the placeholder values below with your Firebase project config.
+    // You can find these in your Firebase Console > Project Settings > General.
+    // =====================================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyA186ewqmPCtScIZ1FDZucb-BwT7LLnZaI",
+        authDomain: "silvasite-4be9b.firebaseapp.com",
+        databaseURL: "https://silvasite-4be9b-default-rtdb.firebaseio.com",
+        projectId: "silvasite-4be9b",
+        storageBucket: "silvasite-4be9b.firebasestorage.app",
+        messagingSenderId: "950305667080",
+        appId: "1:950305667080:web:d0764b6407344ec31ef9bd"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const recordsRef = db.ref('records');
+
+    // =====================================================================
+    // APP CONFIG
+    // =====================================================================
+    // Note: The admin password is visible in the page source. This is a
+    // limitation of client-side-only apps. For a classroom tool this is
+    // generally acceptable, but be aware that tech-savvy students could find it.
+    const ADMIN_PASSWORD = "Silva25-26";
+    const TOTAL_STUDENTS = 26;
+
+    const COLORS = {
+        lavender: "#a78bfa",
+        sage: "#86efac",
+        darkPurple: "#2d1b4e",
+        lightSage: "#e8f5e9",
+        darkSage: "#558b2f"
+    };
+
+    // =====================================================================
+    // STATE
+    // =====================================================================
+    let allData = [];
+    let currentView = "select";
+    let currentStudent = null;
+    let deleteConfirmId = null;
+    let editingTask = null;
+
+    // =====================================================================
+    // FIREBASE DATA LAYER
+    // =====================================================================
+    // Listen for real-time changes — this replaces Canva's dataSdk.init()
+    recordsRef.on('value', (snapshot) => {
+        const data = [];
+        snapshot.forEach((child) => {
+            const val = child.val();
+            val._key = child.key; // Store Firebase key for updates/deletes
+            data.push(val);
+        });
+        allData = data;
+        if (currentView === "admin") renderAdmin();
+        if (currentView === "student") renderStudent();
+    });
+
+    // Create a record — replaces dataSdk.create()
+    async function fbCreate(obj) {
+        try {
+            await recordsRef.push(obj);
+            return { isOk: true };
+        } catch (e) {
+            console.error("Firebase create error:", e);
+            return { isOk: false };
+        }
+    }
+
+    // Update a record — replaces dataSdk.update()
+    async function fbUpdate(obj) {
+        try {
+            const key = obj._key;
+            const data = { ...obj };
+            delete data._key;
+            await recordsRef.child(key).update(data);
+            return { isOk: true };
+        } catch (e) {
+            console.error("Firebase update error:", e);
+            return { isOk: false };
+        }
+    }
+
+    // Delete a record — replaces dataSdk.delete()
+    async function fbDelete(obj) {
+        try {
+            await recordsRef.child(obj._key).remove();
+            return { isOk: true };
+        } catch (e) {
+            console.error("Firebase delete error:", e);
+            return { isOk: false };
+        }
+    }
+
+    // =====================================================================
+    // DATA HELPERS
+    // =====================================================================
+    function getTasks() {
+        return allData.filter(r => r.type === "task").sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
+    }
+    function getTasksForStudent(studentNum) {
+        return getTasks().filter(t => {
+            const assigned = t.assigned_to ? t.assigned_to.split(",").map(x => parseInt(x)) : [];
+            return assigned.includes(studentNum);
+        });
+    }
+    function getCompletionsByTaskAndStudent(taskId, studentNum) {
+        return allData.filter(r => r.type === "completion" && r.task_id === taskId && r.assigned_to === String(studentNum));
+    }
+
+    // =====================================================================
+    // TOAST NOTIFICATIONS
+    // =====================================================================
+    function showToast(msg, type = "success") {
+        const c = document.getElementById("toast-container");
+        const t = document.createElement("div");
+        t.className = "toast-anim px-4 py-3 rounded-xl text-sm font-medium text-white shadow-lg";
+        t.style.background = type === "success" ? "#22c55e" : "#e74c3c";
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    // =====================================================================
+    // NAVIGATION
+    // =====================================================================
+    function showView(name) {
+        ["select","password","admin","student"].forEach(v => {
+            document.getElementById("view-" + v).classList.toggle("hidden", v !== name);
+        });
+        currentView = name;
+        if (name === "admin") renderAdmin();
+        if (name === "student") renderStudent();
+    }
+
+    // =====================================================================
+    // STUDENT GRID
+    // =====================================================================
+    function buildStudentGrid() {
+        const grid = document.getElementById("student-grid");
+        grid.innerHTML = "";
+        for (let i = 1; i <= TOTAL_STUDENTS; i++) {
+            const btn = document.createElement("button");
+            btn.className = "student-btn w-12 h-12 rounded-xl font-bold text-base flex items-center justify-center shadow-sm";
+            btn.style.background = "#c6e9d9";
+            btn.style.color = "#1a1a2e";
+            btn.style.border = "2px solid #e0ddd5";
+            btn.textContent = i;
+            btn.setAttribute("aria-label", "Student " + i);
+            btn.addEventListener("click", () => { currentStudent = i; showView("student"); });
+            grid.appendChild(btn);
+        }
+    }
+
+    function buildStudentCheckboxes() {
+        const container = document.getElementById("student-checkboxes");
+        container.innerHTML = "";
+        for (let i = 1; i <= TOTAL_STUDENTS; i++) {
+            const label = document.createElement("label");
+            label.className = "flex items-center gap-1 cursor-pointer text-sm";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = i;
+            checkbox.className = "w-4 h-4 rounded";
+            checkbox.style.cursor = "pointer";
+            checkbox.setAttribute("data-student", i);
+            label.appendChild(checkbox);
+            const span = document.createElement("span");
+            span.textContent = i;
+            span.style.color = "#1a1a2e";
+            label.appendChild(span);
+            container.appendChild(label);
+        }
+    }
+
+    // =====================================================================
+    // ADMIN RENDERING
+    // =====================================================================
+    function renderAdmin() {
+        const tasks = getTasks();
+        const list = document.getElementById("admin-task-list");
+        const empty = document.getElementById("admin-empty");
+        empty.classList.toggle("hidden", tasks.length > 0);
+
+        const existingEls = new Map([...list.children].map(el => [el.dataset.id, el]));
+        const currentIds = new Set(tasks.map(t => t.task_id));
+
+        existingEls.forEach((el, id) => { if (!currentIds.has(id)) el.remove(); });
+
+        tasks.forEach((task, idx) => {
+            let el = list.querySelector(`[data-id="${task.task_id}"]`);
+            if (el) {
+                el.querySelector(".task-text").textContent = task.task_text;
+                const assignedNums = task.assigned_to ? task.assigned_to.split(",").sort((a, b) => parseInt(a) - parseInt(b)).join(", ") : "None";
+                el.querySelector(".assigned-text").textContent = "Assigned: " + assignedNums;
+                const actionArea = el.querySelector(".action-area");
+                renderDeleteButton(actionArea, task);
+                renderStudentDeleteButtons(el, task);
+            } else {
+                el = document.createElement("div");
+                el.className = "task-enter flex flex-col gap-3 bg-white rounded-xl px-4 py-3 shadow-sm";
+                el.dataset.id = task.task_id;
+                const assignedNums = task.assigned_to ? task.assigned_to.split(",").sort((a, b) => parseInt(a) - parseInt(b)).join(", ") : "None";
+                el.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="task-text font-medium" style="color:#1a1a2e;">${escHtml(task.task_text)}</span>
+          <div class="flex items-center gap-1 action-area"></div>
+        </div>
+        <p class="assigned-text text-xs" style="color:#999;">Assigned: ${escHtml(assignedNums)}</p>
+        <div class="student-delete-container flex gap-2 flex-wrap"></div>
+      `;
+                const actionArea = el.querySelector(".action-area");
+                renderDeleteButton(actionArea, task);
+                renderStudentDeleteButtons(el, task);
+                list.appendChild(el);
+            }
+        });
+
+        renderDashboard();
+    }
+
+    function renderDeleteButton(container, task) {
+        container.innerHTML = "";
+        const btnGroup = document.createElement("div");
+        btnGroup.className = "flex items-center gap-1";
+
+        if (deleteConfirmId === task.task_id) {
+            const confirmBtn = document.createElement("button");
+            confirmBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold text-white";
+            confirmBtn.style.background = "#e74c3c";
+            confirmBtn.textContent = "Confirm";
+            confirmBtn.addEventListener("click", () => deleteTask(task));
+
+            const cancelBtn = document.createElement("button");
+            cancelBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold";
+            cancelBtn.style.color = "#888";
+            cancelBtn.textContent = "Cancel";
+            cancelBtn.addEventListener("click", () => { deleteConfirmId = null; renderAdmin(); });
+
+            btnGroup.appendChild(confirmBtn);
+            btnGroup.appendChild(cancelBtn);
+        } else {
+            const editBtn = document.createElement("button");
+            editBtn.className = "p-2 rounded-lg hover:bg-green-50 transition-colors";
+            editBtn.style.background = "transparent";
+            editBtn.style.color = "#86efac";
+            editBtn.innerHTML = '<i data-lucide="pencil" style="width:18px;height:18px;"></i>';
+            editBtn.setAttribute("aria-label", "Edit task");
+            editBtn.addEventListener("click", () => openEditModal(task));
+
+            const delBtn = document.createElement("button");
+            delBtn.className = "p-2 rounded-lg hover:bg-red-50";
+            delBtn.style.color = "#e74c3c";
+            delBtn.innerHTML = '<i data-lucide="trash-2" style="width:18px;height:18px;"></i>';
+            delBtn.setAttribute("aria-label", "Delete task");
+            delBtn.addEventListener("click", () => { deleteConfirmId = task.task_id; renderAdmin(); lucide.createIcons(); });
+
+            btnGroup.appendChild(editBtn);
+            btnGroup.appendChild(delBtn);
+        }
+        container.appendChild(btnGroup);
+        lucide.createIcons();
+    }
+
+    function renderStudentDeleteButtons(container, task) {
+        const assignedStr = task.assigned_to || "";
+        const assigned = assignedStr ? assignedStr.split(",").map(s => parseInt(s.trim())).sort((a, b) => a - b) : [];
+
+        const deleteContainer = container.querySelector(".student-delete-container");
+        deleteContainer.innerHTML = "";
+
+        if (assigned.length === 0) return;
+
+        const label = document.createElement("p");
+        label.textContent = "Remove from student:";
+        label.className = "text-xs font-semibold w-full";
+        label.style.color = "#666";
+        deleteContainer.appendChild(label);
+
+        assigned.forEach(studentNum => {
+            const btn = document.createElement("button");
+            btn.className = "px-2 py-1 rounded-lg text-xs font-medium";
+            btn.style.background = "#ffe8e8";
+            btn.style.color = "#e74c3c";
+            btn.textContent = "Student " + studentNum + " \u2715";
+            btn.addEventListener("click", () => removeTaskFromStudent(task, studentNum));
+            deleteContainer.appendChild(btn);
+        });
+    }
+
+    function renderDashboard() {
+        const grid = document.getElementById("dashboard-grid");
+        grid.innerHTML = "";
+        const tasks = getTasks();
+
+        for (let studentNum = 1; studentNum <= TOTAL_STUDENTS; studentNum++) {
+            const studentTasks = getTasksForStudent(studentNum);
+            if (studentTasks.length === 0) continue;
+
+            const completed = studentTasks.filter(t => {
+                const comp = getCompletionsByTaskAndStudent(t.task_id, studentNum);
+                return comp.length > 0;
+            }).length;
+
+            const card = document.createElement("div");
+            card.className = "bg-white rounded-xl p-4 shadow-sm";
+            const percent = Math.round((completed / studentTasks.length) * 100);
+            const isComplete = percent === 100;
+            card.style.borderLeft = `4px solid ${isComplete ? "#86efac" : "#ef4444"}`;
+
+            const badgeBg = isComplete ? "#e8f5e9" : "#fee2e2";
+            const badgeColor = isComplete ? "#558b2f" : "#b91c1c";
+            const barColor = isComplete ? "#86efac" : "#ef4444";
+
+            const cardInner = document.createElement("div");
+            cardInner.innerHTML = `
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-semibold" style="color:#1a1a2e;">Student ${studentNum}</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:${badgeBg};color:${badgeColor};">${percent}%</span>
+          ${isComplete ? `<button class="p-1 rounded-lg hover:bg-red-50" style="color:#e74c3c;" aria-label="Delete student"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>` : ""}
+        </div>
+      </div>
+      <div class="text-xs mb-2" style="color:#666;">${completed}/${studentTasks.length} complete</div>
+      <div class="w-full h-2 rounded-full" style="background:#e9e5db; overflow:hidden;">
+        <div class="h-full" style="background:${barColor};width:${percent}%;transition:width 0.3s ease;"></div>
+      </div>
+    `;
+            card.appendChild(cardInner);
+
+            if (isComplete) {
+                const deleteBtn = cardInner.querySelector('button');
+                deleteBtn.addEventListener("click", () => removeAllTasksFromStudent(studentNum));
+            }
+
+            grid.appendChild(card);
+        }
+        lucide.createIcons();
+    }
+
+    // =====================================================================
+    // DATA OPERATIONS (using Firebase)
+    // =====================================================================
+    async function removeTaskFromStudent(task, studentNum) {
+        const assigned = task.assigned_to ? task.assigned_to.split(",").map(s => parseInt(s.trim())) : [];
+        const updated = assigned.filter(n => n !== studentNum);
+
+        const updatedTask = { ...task, assigned_to: updated.length > 0 ? updated.join(",") : "" };
+        const r = await fbUpdate(updatedTask);
+        if (r.isOk) showToast("Student removed from task!");
+        else showToast("Error updating task", "error");
+    }
+
+    async function removeAllTasksFromStudent(studentNum) {
+        const tasks = getTasksForStudent(studentNum);
+        for (const task of tasks) {
+            await removeTaskFromStudent(task, studentNum);
+        }
+        showToast("Student cleared from all tasks!");
+    }
+
+    // =====================================================================
+    // STUDENT VIEW
+    // =====================================================================
+    function renderStudent() {
+        if (!currentStudent) return;
+        const tasks = getTasksForStudent(currentStudent);
+        const list = document.getElementById("student-task-list");
+        const empty = document.getElementById("student-empty");
+        document.getElementById("student-num-display").textContent = currentStudent;
+        empty.classList.toggle("hidden", tasks.length > 0);
+
+        const doneCount = tasks.filter(t => {
+            const completion = getCompletionsByTaskAndStudent(t.task_id, currentStudent);
+            return completion.length > 0;
+        }).length;
+        const progressPercent = tasks.length > 0 ? (doneCount / tasks.length) * 100 : 0;
+        document.getElementById("progress-badge").textContent = doneCount + "/" + tasks.length;
+        document.getElementById("progress-fill").style.width = progressPercent + "%";
+
+        const existingEls = new Map([...list.children].map(el => [el.dataset.id, el]));
+        const currentIds = new Set(tasks.map(t => t.task_id));
+
+        existingEls.forEach((el, id) => { if (!currentIds.has(id)) el.remove(); });
+
+        tasks.forEach(task => {
+            const completions = getCompletionsByTaskAndStudent(task.task_id, currentStudent);
+            const done = completions.length > 0;
+            let el = list.querySelector(`[data-id="${task.task_id}"]`);
+            if (el) {
+                updateStudentTaskEl(el, task, done);
+            } else {
+                el = document.createElement("div");
+                el.className = "task-enter flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm cursor-pointer";
+                el.dataset.id = task.task_id;
+                el.innerHTML = `
+        <div class="custom-check w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0" style="border-color:#ccc;">
+          <i data-lucide="check" style="width:14px;height:14px;color:white;" class="check-icon hidden"></i>
+        </div>
+        <span class="task-text font-medium" style="color:#2d1b4e;"></span>
+      `;
+                updateStudentTaskEl(el, task, done);
+                el.addEventListener("click", () => toggleCompletion(task.task_id));
+                list.appendChild(el);
+            }
+        });
+        lucide.createIcons();
+    }
+
+    function updateStudentTaskEl(el, task, done) {
+        const check = el.querySelector(".custom-check");
+        const icon = el.querySelector(".check-icon");
+        const text = el.querySelector(".task-text");
+        text.textContent = task.task_text;
+        text.style.textDecoration = done ? "line-through" : "none";
+        text.style.color = done ? "#aaa" : "#2d1b4e";
+        if (done) { check.classList.add("checked"); icon.classList.remove("hidden"); }
+        else { check.classList.remove("checked"); icon.classList.add("hidden"); }
+    }
+
+    async function toggleCompletion(taskId) {
+        const completion = getCompletionsByTaskAndStudent(taskId, currentStudent);
+        if (completion.length > 0) {
+            const r = await fbDelete(completion[0]);
+            if (!r.isOk) showToast("Error updating", "error");
+        } else {
+            const r = await fbCreate({ type: "completion", task_id: taskId, task_text: "", assigned_to: String(currentStudent), completed: true, created_at: new Date().toISOString() });
+            if (!r.isOk) showToast("Error updating", "error");
+        }
+    }
+
+    async function addTask(text, assignedStudents) {
+        const taskId = "t_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+        const assignedStr = assignedStudents.join(",");
+        const r = await fbCreate({ type: "task", task_id: taskId, task_text: text, assigned_to: assignedStr, completed: false, created_at: new Date().toISOString() });
+        if (r.isOk) showToast("Task added!");
+        else showToast("Error adding task", "error");
+    }
+
+    async function deleteTask(task) {
+        const completions = allData.filter(r => r.type === "completion" && r.task_id === task.task_id);
+        for (const c of completions) { await fbDelete(c); }
+        const r = await fbDelete(task);
+        deleteConfirmId = null;
+        if (r.isOk) showToast("Task deleted!");
+        else showToast("Error deleting", "error");
+    }
+
+    function escHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+    // =====================================================================
+    // EDIT MODAL
+    // =====================================================================
+    function openEditModal(task) {
+        editingTask = task;
+        document.getElementById("edit-task-text").value = task.task_text;
+
+        const assigned = task.assigned_to ? task.assigned_to.split(",").map(s => parseInt(s.trim())) : [];
+        const container = document.getElementById("edit-student-checkboxes");
+        container.innerHTML = "";
+
+        for (let i = 1; i <= TOTAL_STUDENTS; i++) {
+            const label = document.createElement("label");
+            label.className = "flex items-center gap-1 cursor-pointer text-sm";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = i;
+            checkbox.checked = assigned.includes(i);
+            checkbox.className = "w-4 h-4 rounded";
+            checkbox.style.cursor = "pointer";
+            label.appendChild(checkbox);
+            const span = document.createElement("span");
+            span.textContent = i;
+            span.style.color = "#1a1a2e";
+            label.appendChild(span);
+            container.appendChild(label);
+        }
+
+        document.getElementById("edit-modal").classList.remove("hidden");
+    }
+
+    function closeEditModal() {
+        editingTask = null;
+        document.getElementById("edit-modal").classList.add("hidden");
+    }
+
+    async function saveEditTask() {
+        if (!editingTask) return;
+
+        const newText = document.getElementById("edit-task-text").value.trim();
+        if (!newText) { showToast("Task text cannot be empty", "error"); return; }
+
+        const selected = Array.from(document.querySelectorAll("#edit-student-checkboxes input:checked")).map(cb => parseInt(cb.value));
+
+        const updatedTask = {
+            ...editingTask,
+            task_text: newText,
+            assigned_to: selected.length > 0 ? selected.join(",") : ""
+        };
+
+        const r = await fbUpdate(updatedTask);
+        if (r.isOk) {
+            showToast("Task updated!");
+            closeEditModal();
+        } else {
+            showToast("Error updating task", "error");
+        }
+    }
+
+    // =====================================================================
+    // THEME (hardcoded defaults — replaces Canva Element SDK)
+    // =====================================================================
+    const defaultConfig = {
+        app_title: "Missing Work Checklist",
+        teacher_greeting: "Teacher Admin Panel",
+        background_color: "#ede9fe",
+        surface_color: "#ffffff",
+        text_color: "#2d1b4e",
+        primary_color: "#a78bfa",
+        secondary_color: "#e8f5e9",
+        font_family: "DM Sans",
+        font_size: 16
+    };
+
+    function applyConfig(config) {
+        const bg = config.background_color || defaultConfig.background_color;
+        const text = config.text_color || defaultConfig.text_color;
+        const primary = config.primary_color || defaultConfig.primary_color;
+        const secondary = config.secondary_color || defaultConfig.secondary_color;
+        const font = config.font_family || defaultConfig.font_family;
+        const size = config.font_size || defaultConfig.font_size;
+
+        document.getElementById("app").style.background = bg;
+        document.getElementById("main-title").textContent = config.app_title || defaultConfig.app_title;
+        document.getElementById("main-title").style.color = text;
+        document.getElementById("admin-title").textContent = config.teacher_greeting || defaultConfig.teacher_greeting;
+        document.getElementById("admin-title").style.color = text;
+
+        document.querySelectorAll(".font-display").forEach(el => el.style.fontFamily = `Fraunces, ${font}, serif`);
+        document.body.style.fontFamily = `${font}, sans-serif`;
+        document.body.style.fontSize = size + "px";
+
+        document.getElementById("admin-btn").style.background = text;
+        const submitBtn = document.querySelector("#add-task-form button[type='submit']");
+        if (submitBtn) submitBtn.style.background = primary;
+        document.getElementById("pw-submit").style.background = primary;
+
+        document.querySelectorAll("#pw-back, #admin-back, #student-back").forEach(el => el.style.color = primary);
+        document.getElementById("progress-badge").style.background = secondary;
+        document.getElementById("progress-badge").style.color = "#558b2f";
+
+        document.querySelectorAll(".custom-check.checked").forEach(el => {
+            el.style.background = primary;
+            el.style.borderColor = primary;
+        });
+
+        document.getElementById("progress-fill").style.background = "#86efac";
+    }
+
+    // =====================================================================
+    // INITIALIZATION
+    // =====================================================================
+    (async () => {
+        buildStudentGrid();
+        buildStudentCheckboxes();
+        applyConfig(defaultConfig);
+
+        // Events
+        document.getElementById("admin-btn").addEventListener("click", () => showView("password"));
+        document.getElementById("pw-back").addEventListener("click", () => { document.getElementById("pw-error").classList.add("hidden"); showView("select"); });
+        document.getElementById("admin-back").addEventListener("click", () => { deleteConfirmId = null; showView("select"); });
+        document.getElementById("student-back").addEventListener("click", () => { currentStudent = null; showView("select"); });
+
+        document.getElementById("toggle-dashboard").addEventListener("click", () => {
+            const dashSection = document.getElementById("dashboard-section");
+            const taskSection = document.getElementById("tasks-section");
+            const isHidden = dashSection.classList.contains("hidden");
+            dashSection.classList.toggle("hidden");
+            taskSection.classList.toggle("hidden");
+            if (isHidden) renderDashboard();
+        });
+
+        document.getElementById("edit-cancel").addEventListener("click", closeEditModal);
+        document.getElementById("edit-save").addEventListener("click", saveEditTask);
+
+        document.getElementById("pw-submit").addEventListener("click", (e) => {
+            e.preventDefault();
+            const val = document.getElementById("pw-input").value;
+            if (val === ADMIN_PASSWORD) {
+                document.getElementById("pw-input").value = "";
+                document.getElementById("pw-error").classList.add("hidden");
+                showView("admin");
+            } else {
+                document.getElementById("pw-error").classList.remove("hidden");
+            }
+        });
+        document.getElementById("pw-input").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") document.getElementById("pw-submit").click();
+        });
+
+        document.getElementById("add-task-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const input = document.getElementById("task-input");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const selected = Array.from(document.querySelectorAll("#student-checkboxes input:checked")).map(cb => parseInt(cb.value));
+            if (selected.length === 0) { showToast("Select at least one student", "error"); return; }
+
+            input.value = "";
+            document.querySelectorAll("#student-checkboxes input").forEach(cb => cb.checked = false);
+            await addTask(text, selected);
+        });
+
+        document.getElementById("select-all-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            const checkboxes = document.querySelectorAll("#student-checkboxes input");
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+        });
+
+        lucide.createIcons();
+    })();
+</script>
+</body>
+</html>
