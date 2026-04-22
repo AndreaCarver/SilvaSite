@@ -28,6 +28,13 @@
         @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
         .progress-bar-container { width: 100%; height: 8px; background: #e9e5db; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: #86efac; transition: width 0.3s ease; }
+        .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
+        .confetti-piece { position: absolute; top: -20px; border-radius: 2px; will-change: transform, opacity; }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(var(--spin, 720deg)); opacity: 0; }
+        }
         .priority-toggle input { display: none; }
         .priority-toggle { border: 2px solid #EDAE4C; background: transparent; color: #EDAE4C; transition: all 0.2s ease; }
         .priority-toggle.active { background: #EDAE4C; color: #fff; border-color: #EDAE4C; }
@@ -40,7 +47,22 @@
 <body class="h-full">
 <div id="app" class="h-full w-full overflow-auto school-bg" style="background-color: #ede9fe;">
     <!-- TOAST -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div><!-- EDIT TASK MODAL -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+    <!-- REDEEM MODAL -->
+    <div id="redeem-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
+            <h3 class="text-xl font-bold mb-2" style="color:#1a1a2e;">Redeem Tokens</h3>
+            <p class="text-sm mb-4" style="color:#666;">You have <span id="redeem-balance" class="font-bold" style="color:#b8860b;">0</span> &#129689;</p>
+            <label for="redeem-amount" class="sr-only">Amount</label>
+            <input id="redeem-amount" type="number" min="1" placeholder="How many tokens?" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            <p id="redeem-error" class="text-sm mb-3 hidden" style="color:#e74c3c;"></p>
+            <div class="flex gap-2 justify-end mt-3">
+                <button id="redeem-cancel" class="px-4 py-2 rounded-xl font-semibold" style="background:#e8e6ff;color:#6366f1;">Cancel</button>
+                <button id="redeem-confirm" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#b8860b;">Redeem</button>
+            </div>
+        </div>
+    </div>
+    <!-- EDIT TASK MODAL -->
     <div id="edit-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
             <h3 class="text-xl font-bold mb-4" style="color:#1a1a2e;">Edit Task</h3>
@@ -147,8 +169,12 @@
             <div class="flex items-center justify-between mb-6">
                 <button id="student-back" class="flex items-center gap-1 text-sm font-medium" style="color:#a78bfa;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
                 <h2 class="font-display text-2xl font-bold" style="color:#2d1b4e;">Student <span id="student-num-display"></span></h2>
-                <div id="progress-badge" class="text-sm font-semibold px-3 py-1 rounded-full" style="background:#e8f5e9;color:#558b2f;">
-                    0/0
+                <div class="flex items-center gap-2">
+                    <button id="redeem-btn" class="flex items-center gap-1 text-sm font-semibold px-3 py-1 rounded-full" style="background:#fdf6e3;color:#b8860b;" aria-label="Redeem tokens"><i data-lucide="shopping-cart" style="width:14px;height:14px;"></i> Redeem</button>
+                    <div id="token-badge" class="text-sm font-semibold px-3 py-1 rounded-full" style="background:#fdf6e3;color:#b8860b;">&#129689; 0</div>
+                    <div id="progress-badge" class="text-sm font-semibold px-3 py-1 rounded-full" style="background:#e8f5e9;color:#558b2f;">
+                        0/0
+                    </div>
                 </div>
             </div>
             <div class="mb-4">
@@ -188,6 +214,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const recordsRef = db.ref('records');
+    const tokensRef = db.ref('tokens');
 
     // =====================================================================
     // APP CONFIG
@@ -210,6 +237,10 @@
     // STATE
     // =====================================================================
     let allData = [];
+    let tokenData = {};
+    let recordsLoaded = false;
+    let tokensLoaded = false;
+    let backfillDone = false;
     let currentView = "select";
     let currentStudent = null;
     let deleteConfirmId = null;
@@ -228,9 +259,102 @@
             data.push(val);
         });
         allData = data;
+        recordsLoaded = true;
+        maybeBackfillTokens();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
     });
+
+    tokensRef.on('value', (snapshot) => {
+        tokenData = snapshot.val() || {};
+        tokensLoaded = true;
+        maybeBackfillTokens();
+        if (currentView === "admin") renderAdmin();
+        if (currentView === "student") renderStudent();
+    });
+
+    function getTokens(studentNum) {
+        return tokenData[String(studentNum)] || 0;
+    }
+
+    async function changeTokens(studentNum, delta) {
+        try {
+            await tokensRef.child(String(studentNum)).transaction(curr => Math.max(0, (curr || 0) + delta));
+            if (delta > 0) {
+                playCoinSound();
+                if (currentView === "student" && currentStudent === studentNum) {
+                    const badge = document.getElementById("token-badge");
+                    if (badge) {
+                        badge.classList.remove("check-pop");
+                        void badge.offsetWidth;
+                        badge.classList.add("check-pop");
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Token update error:", e);
+        }
+    }
+
+    let lastStudentComplete = null;
+
+    function showConfetti() {
+        const colors = ["#a78bfa", "#f4c542", "#86efac", "#ef4444", "#6366f1", "#f472b6", "#fbbf24"];
+        const container = document.createElement("div");
+        container.className = "confetti-container";
+        for (let i = 0; i < 100; i++) {
+            const piece = document.createElement("div");
+            piece.className = "confetti-piece";
+            const size = 8 + Math.random() * 6;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const left = Math.random() * 100;
+            const delay = Math.random() * 0.8;
+            const duration = 4 + Math.random() * 2.5;
+            const spin = (Math.random() * 1440 - 720) + "deg";
+            piece.style.cssText = `left:${left}%;width:${size}px;height:${size}px;background:${color};animation:confettiFall ${duration}s ease-in ${delay}s forwards;--spin:${spin};`;
+            container.appendChild(piece);
+        }
+        document.body.appendChild(container);
+        setTimeout(() => container.remove(), 7000);
+    }
+
+    let audioCtx = null;
+    function playCoinSound() {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === "suspended") audioCtx.resume();
+            const now = audioCtx.currentTime;
+            [988, 1319].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = "square";
+                osc.frequency.value = freq;
+                const start = now + i * 0.08;
+                const end = start + 0.15;
+                gain.gain.setValueAtTime(0, start);
+                gain.gain.linearRampToValueAtTime(0.15, start + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, end);
+                osc.connect(gain).connect(audioCtx.destination);
+                osc.start(start);
+                osc.stop(end);
+            });
+        } catch (e) {
+            console.error("Sound error:", e);
+        }
+    }
+
+    function maybeBackfillTokens() {
+        if (!recordsLoaded || !tokensLoaded || backfillDone) return;
+        backfillDone = true;
+        for (let i = 1; i <= TOTAL_STUDENTS; i++) {
+            const count = getTasksForStudent(i).filter(t => getCompletionsByTaskAndStudent(t.task_id, i).length > 0).length;
+            const existing = tokenData[String(i)];
+            if (existing != null && existing >= count) continue;
+            if (count > 0) {
+                tokensRef.child(String(i)).transaction(curr => (curr == null || curr < count) ? count : curr);
+            }
+        }
+    }
 
     // Create a record — replaces dataSdk.create()
     async function fbCreate(obj) {
@@ -323,7 +447,7 @@
             btn.style.border = "2px solid #e0ddd5";
             btn.textContent = i;
             btn.setAttribute("aria-label", "Student " + i);
-            btn.addEventListener("click", () => { currentStudent = i; showView("student"); });
+            btn.addEventListener("click", () => { currentStudent = i; lastStudentComplete = null; showView("student"); });
             grid.appendChild(btn);
         }
     }
@@ -540,7 +664,8 @@
       <div class="flex items-center justify-between mb-2">
         <span class="font-semibold" style="color:#1a1a2e;">Student ${studentNum}</span>
         <div class="flex items-center gap-2">
-          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:${badgeBg};color:${badgeColor};">${percent}%</span>
+          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#129689; ${getTokens(studentNum)}</span>
+          ${isComplete ? "" : `<span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:${badgeBg};color:${badgeColor};">${percent}%</span>`}
           ${isComplete ? `<button class="delete-student-btn p-1 rounded-lg hover:bg-red-50" style="color:#e74c3c;" aria-label="Delete student"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>` : ""}
         </div>
       </div>
@@ -575,7 +700,36 @@
 
         const tasks = getTasksForStudent(studentNum);
         const doneCount = tasks.filter(t => getCompletionsByTaskAndStudent(t.task_id, studentNum).length > 0).length;
-        document.getElementById("status-summary").textContent = doneCount + " of " + tasks.length + " tasks complete";
+        const summary = document.getElementById("status-summary");
+        summary.innerHTML = "";
+        const summaryText = document.createElement("span");
+        summaryText.textContent = doneCount + " of " + tasks.length + " tasks complete";
+        const sep = document.createElement("span");
+        sep.innerHTML = " &middot; ";
+        const tokenGroup = document.createElement("span");
+        tokenGroup.className = "inline-flex items-center gap-2 ml-1";
+        const minusBtn = document.createElement("button");
+        minusBtn.className = "w-6 h-6 rounded-full font-bold leading-none";
+        minusBtn.style.cssText = "background:#fdf6e3;color:#b8860b;border:1px solid #b8860b;";
+        minusBtn.textContent = "\u2212";
+        minusBtn.setAttribute("aria-label", "Take one token");
+        minusBtn.addEventListener("click", () => { if (getTokens(studentNum) > 0) changeTokens(studentNum, -1); });
+        const tokenCount = document.createElement("span");
+        tokenCount.className = "font-semibold";
+        tokenCount.style.color = "#b8860b";
+        tokenCount.innerHTML = "&#129689; " + getTokens(studentNum);
+        const plusBtn = document.createElement("button");
+        plusBtn.className = "w-6 h-6 rounded-full font-bold leading-none";
+        plusBtn.style.cssText = "background:#fdf6e3;color:#b8860b;border:1px solid #b8860b;";
+        plusBtn.textContent = "+";
+        plusBtn.setAttribute("aria-label", "Give one token");
+        plusBtn.addEventListener("click", () => changeTokens(studentNum, 1));
+        tokenGroup.appendChild(minusBtn);
+        tokenGroup.appendChild(tokenCount);
+        tokenGroup.appendChild(plusBtn);
+        summary.appendChild(summaryText);
+        summary.appendChild(sep);
+        summary.appendChild(tokenGroup);
 
         const list = document.getElementById("status-task-list");
         list.innerHTML = "";
@@ -706,6 +860,11 @@
         const progressPercent = tasks.length > 0 ? (doneCount / tasks.length) * 100 : 0;
         document.getElementById("progress-badge").textContent = doneCount + "/" + tasks.length;
         document.getElementById("progress-fill").style.width = progressPercent + "%";
+        document.getElementById("token-badge").innerHTML = "&#129689; " + getTokens(currentStudent);
+
+        const allDone = tasks.length > 0 && doneCount === tasks.length;
+        if (lastStudentComplete === false && allDone) showConfetti();
+        lastStudentComplete = allDone;
 
         renderStudentList(priorityList, priorityTasks);
         renderStudentList(list, regularTasks);
@@ -755,10 +914,12 @@
         const completion = getCompletionsByTaskAndStudent(taskId, target);
         if (completion.length > 0) {
             const r = await fbDelete(completion[0]);
-            if (!r.isOk) showToast("Error updating", "error");
+            if (r.isOk) changeTokens(target, -1);
+            else showToast("Error updating", "error");
         } else {
             const r = await fbCreate({ type: "completion", task_id: taskId, task_text: "", assigned_to: String(target), completed: true, created_at: new Date().toISOString() });
-            if (!r.isOk) showToast("Error updating", "error");
+            if (r.isOk) changeTokens(target, 1);
+            else showToast("Error updating", "error");
         }
     }
 
@@ -1014,6 +1175,40 @@
 
         document.getElementById("edit-cancel").addEventListener("click", closeEditModal);
         document.getElementById("edit-save").addEventListener("click", saveEditTask);
+
+        document.getElementById("redeem-btn").addEventListener("click", () => {
+            if (currentStudent == null) return;
+            document.getElementById("redeem-balance").textContent = getTokens(currentStudent);
+            document.getElementById("redeem-amount").value = "";
+            document.getElementById("redeem-error").classList.add("hidden");
+            document.getElementById("redeem-modal").classList.remove("hidden");
+            document.getElementById("redeem-amount").focus();
+        });
+        document.getElementById("redeem-cancel").addEventListener("click", () => {
+            document.getElementById("redeem-modal").classList.add("hidden");
+        });
+        document.getElementById("redeem-confirm").addEventListener("click", async () => {
+            const balance = getTokens(currentStudent);
+            const amount = parseInt(document.getElementById("redeem-amount").value, 10);
+            const err = document.getElementById("redeem-error");
+            if (!Number.isFinite(amount) || amount < 1) {
+                err.textContent = "Enter a number of 1 or more.";
+                err.classList.remove("hidden");
+                return;
+            }
+            if (amount > balance) {
+                err.textContent = "You only have " + balance + " tokens.";
+                err.classList.remove("hidden");
+                return;
+            }
+            err.classList.add("hidden");
+            await changeTokens(currentStudent, -amount);
+            document.getElementById("redeem-modal").classList.add("hidden");
+            showToast("Redeemed " + amount + " token" + (amount === 1 ? "" : "s") + "!");
+        });
+        document.getElementById("redeem-amount").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") document.getElementById("redeem-confirm").click();
+        });
 
         document.getElementById("pw-submit").addEventListener("click", (e) => {
             e.preventDefault();
