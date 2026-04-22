@@ -86,8 +86,8 @@
                 <button id="admin-back" class="flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
                 <h2 id="admin-title" class="font-display text-2xl font-bold" style="color:#1a1a2e;">Teacher Admin Panel</h2>
                 <div class="flex gap-2">
-                    <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
-                    <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
+                    <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
+                    <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
                 </div>
             </div><!-- DASHBOARD VIEW -->
             <div id="dashboard-section" class="hidden mb-6">
@@ -214,6 +214,7 @@
     let currentStudent = null;
     let deleteConfirmId = null;
     let editingTask = null;
+    let statusStudentNum = null;
 
     // =====================================================================
     // FIREBASE DATA LAYER
@@ -432,6 +433,9 @@
         });
 
         renderDashboard();
+        if (statusStudentNum != null && !document.getElementById("student-status-detail").classList.contains("hidden")) {
+            renderStudentStatus(statusStudentNum);
+        }
     }
 
     function renderDeleteButton(container, task) {
@@ -564,6 +568,7 @@
     }
 
     function renderStudentStatus(studentNum) {
+        statusStudentNum = studentNum;
         document.getElementById("dashboard-overview").classList.add("hidden");
         document.getElementById("student-status-detail").classList.remove("hidden");
         document.getElementById("status-student-num").textContent = studentNum;
@@ -578,12 +583,8 @@
         tasks.forEach(task => {
             const done = getCompletionsByTaskAndStudent(task.task_id, studentNum).length > 0;
             const el = document.createElement("div");
-            el.className = "flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm";
+            el.className = "flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm cursor-pointer";
             el.style.borderLeft = `4px solid ${done ? "#86efac" : "#ef4444"}`;
-
-            const statusBadge = done
-                ? '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#e8f5e9;color:#558b2f;">Done</span>'
-                : '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fee2e2;color:#b91c1c;">Not done</span>';
 
             const priorityHtml = task.task_priority
                 ? '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#11088; Top Priority</span>'
@@ -594,20 +595,29 @@
                 : "";
 
             const statusLinks = getLinks(task);
-            const linkHtml = statusLinks.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (statusLinks.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
+            const linkHtml = statusLinks.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="status-link-btn text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (statusLinks.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
 
             const descHtml = task.task_desc ? `<p class="text-xs mt-1" style="color:${done ? '#ccc' : '#666'};">${escHtml(task.task_desc)}</p>` : "";
 
+            const checkHtml = `<div class="custom-check w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 ${done ? 'checked' : ''}" style="border-color:${done ? '#a78bfa' : '#ccc'};${done ? 'background:#a78bfa;' : ''}">
+              ${done ? '<i data-lucide="check" style="width:14px;height:14px;color:white;"></i>' : ''}
+            </div>`;
+
             el.innerHTML = `
+        ${checkHtml}
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="font-medium" style="color:${done ? '#aaa' : '#1a1a2e'};${done ? 'text-decoration:line-through;' : ''}">${escHtml(task.task_text)}</span>
-            ${statusBadge}${priorityHtml}
+            ${priorityHtml}
           </div>
           ${descHtml}
           <div class="flex items-center gap-2 mt-1">${dueHtml}${linkHtml}</div>
         </div>
       `;
+            el.addEventListener("click", (e) => {
+                if (e.target.closest(".status-link-btn")) return;
+                toggleCompletion(task.task_id, studentNum);
+            });
             list.appendChild(el);
         });
         lucide.createIcons();
@@ -740,13 +750,14 @@
         }
     }
 
-    async function toggleCompletion(taskId) {
-        const completion = getCompletionsByTaskAndStudent(taskId, currentStudent);
+    async function toggleCompletion(taskId, studentNum) {
+        const target = studentNum != null ? studentNum : currentStudent;
+        const completion = getCompletionsByTaskAndStudent(taskId, target);
         if (completion.length > 0) {
             const r = await fbDelete(completion[0]);
             if (!r.isOk) showToast("Error updating", "error");
         } else {
-            const r = await fbCreate({ type: "completion", task_id: taskId, task_text: "", assigned_to: String(currentStudent), completed: true, created_at: new Date().toISOString() });
+            const r = await fbCreate({ type: "completion", task_id: taskId, task_text: "", assigned_to: String(target), completed: true, created_at: new Date().toISOString() });
             if (!r.isOk) showToast("Error updating", "error");
         }
     }
@@ -970,12 +981,15 @@
             const btnDash = document.getElementById("btn-dashboard");
             const btnTasks = document.getElementById("btn-tasks");
             if (view === "dashboard") {
+                statusStudentNum = null;
                 dashSection.classList.remove("hidden");
                 taskSection.classList.add("hidden");
                 btnDash.style.background = "#6366f1";
                 btnDash.style.color = "#fff";
+                btnDash.style.border = "1px solid #6366f1";
                 btnTasks.style.background = "#e8e6ff";
                 btnTasks.style.color = "#6366f1";
+                btnTasks.style.border = "1px solid #6366f1";
                 document.getElementById("dashboard-overview").classList.remove("hidden");
                 document.getElementById("student-status-detail").classList.add("hidden");
                 renderDashboard();
@@ -984,13 +998,16 @@
                 taskSection.classList.remove("hidden");
                 btnTasks.style.background = "#6366f1";
                 btnTasks.style.color = "#fff";
+                btnTasks.style.border = "1px solid #6366f1";
                 btnDash.style.background = "#e8e6ff";
                 btnDash.style.color = "#6366f1";
+                btnDash.style.border = "1px solid #6366f1";
             }
         }
         document.getElementById("btn-dashboard").addEventListener("click", () => setAdminView("dashboard"));
         document.getElementById("btn-tasks").addEventListener("click", () => setAdminView("tasks"));
         document.getElementById("status-back").addEventListener("click", () => {
+            statusStudentNum = null;
             document.getElementById("student-status-detail").classList.add("hidden");
             document.getElementById("dashboard-overview").classList.remove("hidden");
         });
@@ -1005,6 +1022,7 @@
                 document.getElementById("pw-input").value = "";
                 document.getElementById("pw-error").classList.add("hidden");
                 showView("admin");
+                setAdminView("tasks");
             } else {
                 document.getElementById("pw-error").classList.remove("hidden");
             }
