@@ -112,6 +112,12 @@
                     <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
                     <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
                 </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 mb-4">
+                <span class="text-xs font-medium" style="color:#666;">Students:</span>
+                <button id="students-minus" class="w-6 h-6 rounded-full font-bold leading-none" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;" aria-label="Decrease student count">&#8722;</button>
+                <span id="students-count" class="font-semibold text-sm min-w-[1.5rem] text-center" style="color:#1a1a2e;">26</span>
+                <button id="students-plus" class="w-6 h-6 rounded-full font-bold leading-none" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;" aria-label="Increase student count">+</button>
             </div><!-- DASHBOARD VIEW -->
             <div id="dashboard-section" class="hidden mb-6">
                 <!-- Student Status Detail (hidden by default) -->
@@ -123,10 +129,16 @@
                 </div>
                 <!-- Overview (default) -->
                 <div id="dashboard-overview">
+                    <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">Task Snapshot</h2>
+                    <div id="task-snapshot-list" class="flex flex-col gap-2 mb-6"></div>
+                    <p id="task-snapshot-empty" class="text-center py-4 mb-6 hidden" style="color:#aaa;">No tasks assigned yet.</p>
                     <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">In Progress</h2>
                     <div id="dashboard-grid-progress" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-6"></div>
                     <p id="dashboard-progress-empty" class="text-center py-4 mb-6 hidden" style="color:#aaa;">No students in progress.</p>
-                    <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">Complete</h2>
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="font-display text-2xl font-bold" style="color:#1a1a2e;">Complete</h2>
+                        <button id="remove-all-complete-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg" style="background:#ffe8e8;color:#e74c3c;border:1px solid #e74c3c;">Remove All</button>
+                    </div>
                     <div id="dashboard-grid-complete" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
                     <p id="dashboard-complete-empty" class="text-center py-4 hidden" style="color:#aaa;">No students completed yet.</p>
                 </div>
@@ -160,6 +172,9 @@
                         <button type="submit" class="px-5 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background:#6366f1;"> <i data-lucide="plus" style="width:18px;height:18px;"></i> Add </button>
                     </div>
                 </form>
+                <div class="flex justify-end mb-3">
+                    <button id="remove-all-tasks-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg" style="background:#ffe8e8;color:#e74c3c;border:1px solid #e74c3c;">Remove All Tasks</button>
+                </div>
                 <div id="admin-task-list" class="flex flex-col gap-2"></div>
                 <p id="admin-empty" class="text-center py-10" style="color:#aaa;">No tasks yet. Add one above!</p>
             </div>
@@ -216,6 +231,7 @@
     const db = firebase.database();
     const recordsRef = db.ref('records');
     const tokensRef = db.ref('tokens');
+    const totalStudentsRef = db.ref('config/totalStudents');
 
     // =====================================================================
     // APP CONFIG
@@ -224,7 +240,9 @@
     // limitation of client-side-only apps. For a classroom tool this is
     // generally acceptable, but be aware that tech-savvy students could find it.
     const ADMIN_PASSWORD = "Silva25-26";
-    const TOTAL_STUDENTS = 26;
+    let TOTAL_STUDENTS = 26;
+    const MIN_STUDENTS = 1;
+    const MAX_STUDENTS = 50;
 
     const COLORS = {
         lavender: "#a78bfa",
@@ -273,6 +291,29 @@
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
     });
+
+    totalStudentsRef.on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (typeof val === "number" && val >= MIN_STUDENTS && val <= MAX_STUDENTS) {
+            TOTAL_STUDENTS = val;
+        }
+        const countEl = document.getElementById("students-count");
+        if (countEl) countEl.textContent = TOTAL_STUDENTS;
+        buildStudentGrid();
+        buildStudentCheckboxes();
+        if (currentView === "admin") renderAdmin();
+        if (currentView === "student") renderStudent();
+    });
+
+    async function setTotalStudents(n) {
+        if (n < MIN_STUDENTS || n > MAX_STUDENTS) return;
+        try {
+            await totalStudentsRef.set(n);
+        } catch (e) {
+            console.error("Student count update error:", e);
+            showToast("Error updating count", "error");
+        }
+    }
 
     function getTokens(studentNum) {
         return tokenData[String(studentNum)] || 0;
@@ -482,6 +523,7 @@
         const list = document.getElementById("admin-task-list");
         const empty = document.getElementById("admin-empty");
         empty.classList.toggle("hidden", tasks.length > 0);
+        document.getElementById("remove-all-tasks-btn").classList.toggle("hidden", tasks.length === 0);
 
         const existingEls = new Map([...list.children].map(el => [el.dataset.id, el]));
         const currentIds = new Set(tasks.map(t => t.task_id));
@@ -632,7 +674,67 @@
         });
     }
 
+    function renderTaskSnapshot() {
+        const container = document.getElementById("task-snapshot-list");
+        const empty = document.getElementById("task-snapshot-empty");
+        container.innerHTML = "";
+
+        const tasks = getTasks()
+            .filter(t => t.assigned_to && t.assigned_to.trim() !== "")
+            .map(task => {
+                const assigned = task.assigned_to.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+                const notDone = assigned.filter(s => getCompletionsByTaskAndStudent(task.task_id, s).length === 0).sort((a, b) => a - b);
+                return { task, assigned, notDone };
+            })
+            .filter(t => t.notDone.length > 0);
+
+        empty.classList.toggle("hidden", tasks.length > 0);
+
+        tasks.forEach(({ task, assigned, notDone }) => {
+            const doneCount = assigned.length - notDone.length;
+
+            const el = document.createElement("div");
+            el.className = "bg-white rounded-xl px-4 py-3 shadow-sm";
+            el.style.borderLeft = "4px solid #fdba74";
+
+            const titleRow = document.createElement("div");
+            titleRow.className = "flex items-center justify-between gap-2 mb-2 flex-wrap";
+            const titleText = document.createElement("span");
+            titleText.className = "font-semibold";
+            titleText.style.color = "#1a1a2e";
+            titleText.textContent = task.task_text;
+            const stat = document.createElement("span");
+            stat.className = "text-xs font-semibold px-2 py-1 rounded-lg whitespace-nowrap";
+            stat.style.cssText = "background:#fff3e0;color:#e65100;";
+            stat.textContent = doneCount + "/" + assigned.length + " done";
+            titleRow.appendChild(titleText);
+            titleRow.appendChild(stat);
+            el.appendChild(titleRow);
+
+            const badgesRow = document.createElement("div");
+            badgesRow.className = "flex flex-wrap items-center gap-1";
+            const label = document.createElement("span");
+            label.className = "text-xs mr-1";
+            label.style.color = "#666";
+            label.textContent = "Working on it:";
+            badgesRow.appendChild(label);
+            notDone.forEach(s => {
+                const badge = document.createElement("button");
+                badge.className = "text-xs font-semibold px-2 py-1 rounded-lg";
+                badge.style.cssText = "background:#fee2e2;color:#b91c1c;";
+                badge.textContent = s;
+                badge.setAttribute("aria-label", "View student " + s);
+                badge.addEventListener("click", () => renderStudentStatus(s));
+                badgesRow.appendChild(badge);
+            });
+            el.appendChild(badgesRow);
+
+            container.appendChild(el);
+        });
+    }
+
     function renderDashboard() {
+        renderTaskSnapshot();
         const gridProgress = document.getElementById("dashboard-grid-progress");
         const gridComplete = document.getElementById("dashboard-grid-complete");
         gridProgress.innerHTML = "";
@@ -690,6 +792,7 @@
 
         document.getElementById("dashboard-progress-empty").classList.toggle("hidden", progressCount > 0);
         document.getElementById("dashboard-complete-empty").classList.toggle("hidden", completeCount > 0);
+        document.getElementById("remove-all-complete-btn").classList.toggle("hidden", completeCount === 0);
         lucide.createIcons();
     }
 
@@ -1168,6 +1271,40 @@
         }
         document.getElementById("btn-dashboard").addEventListener("click", () => setAdminView("dashboard"));
         document.getElementById("btn-tasks").addEventListener("click", () => setAdminView("tasks"));
+
+        document.getElementById("students-plus").addEventListener("click", () => {
+            if (TOTAL_STUDENTS < MAX_STUDENTS) setTotalStudents(TOTAL_STUDENTS + 1);
+        });
+        document.getElementById("students-minus").addEventListener("click", () => {
+            if (TOTAL_STUDENTS > MIN_STUDENTS) setTotalStudents(TOTAL_STUDENTS - 1);
+        });
+
+        document.getElementById("remove-all-tasks-btn").addEventListener("click", async () => {
+            const tasks = getTasks();
+            if (tasks.length === 0) return;
+            if (!confirm("Remove all " + tasks.length + " tasks? This cannot be undone.")) return;
+            for (const task of tasks) {
+                const completions = allData.filter(r => r.type === "completion" && r.task_id === task.task_id);
+                for (const c of completions) await fbDelete(c);
+                await fbDelete(task);
+            }
+            deleteConfirmId = null;
+            showToast("All tasks removed!");
+        });
+
+        document.getElementById("remove-all-complete-btn").addEventListener("click", async () => {
+            const completeStudents = [];
+            for (let i = 1; i <= TOTAL_STUDENTS; i++) {
+                const studentTasks = getTasksForStudent(i);
+                if (studentTasks.length === 0) continue;
+                const done = studentTasks.filter(t => getCompletionsByTaskAndStudent(t.task_id, i).length > 0).length;
+                if (done === studentTasks.length) completeStudents.push(i);
+            }
+            if (completeStudents.length === 0) return;
+            if (!confirm("Clear all tasks from " + completeStudents.length + " complete student" + (completeStudents.length === 1 ? "" : "s") + "?")) return;
+            for (const s of completeStudents) await removeAllTasksFromStudent(s);
+            showToast("Complete students cleared!");
+        });
         document.getElementById("status-back").addEventListener("click", () => {
             statusStudentNum = null;
             document.getElementById("student-status-detail").classList.add("hidden");
