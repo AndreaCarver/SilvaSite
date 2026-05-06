@@ -9,6 +9,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:wght@600;700;800&amp;display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
@@ -98,19 +99,25 @@
     <div id="view-password" class="h-full w-full flex flex-col items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
             <button id="pw-back" class="mb-4 flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
-            <h2 class="font-display text-2xl font-bold mb-1" style="color:#1a1a2e;">Admin Login</h2>
-            <p class="text-sm mb-5" style="color:#888;">Enter the teacher password</p><label for="pw-input" class="sr-only">Password</label> <input id="pw-input" type="password" placeholder="Password" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
-            <p id="pw-error" class="text-sm mb-3 hidden" style="color:#e74c3c;">Incorrect password</p><button id="pw-submit" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Enter</button>
+            <h2 class="font-display text-2xl font-bold mb-1" style="color:#1a1a2e;">Teacher Sign In</h2>
+            <p class="text-sm mb-5" style="color:#888;">Sign in with your teacher account</p>
+            <label for="pw-email" class="sr-only">Email</label>
+            <input id="pw-email" type="email" autocomplete="email" placeholder="Email" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            <label for="pw-input" class="sr-only">Password</label>
+            <input id="pw-input" type="password" autocomplete="current-password" placeholder="Password" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            <p id="pw-error" class="text-sm mb-3 hidden" style="color:#e74c3c;">Sign in failed</p>
+            <button id="pw-submit" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Sign In</button>
         </div>
     </div><!-- VIEW: Admin -->
     <div id="view-admin" class="h-full w-full flex flex-col p-4 hidden">
         <div class="max-w-4xl w-full mx-auto">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
                 <button id="admin-back" class="flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
                 <h2 id="admin-title" class="font-display text-2xl font-bold" style="color:#1a1a2e;">Teacher Admin Panel</h2>
-                <div class="flex gap-2">
+                <div class="flex gap-2 flex-wrap">
                     <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
                     <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
+                    <button id="admin-signout" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#fee2e2;color:#b91c1c;border:1px solid #b91c1c;"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Sign Out</button>
                 </div>
             </div>
             <div class="flex items-center justify-end gap-2 mb-4">
@@ -229,6 +236,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const auth = firebase.auth();
     const recordsRef = db.ref('records');
     const tokensRef = db.ref('tokens');
     const totalStudentsRef = db.ref('config/totalStudents');
@@ -236,10 +244,6 @@
     // =====================================================================
     // APP CONFIG
     // =====================================================================
-    // Note: The admin password is visible in the page source. This is a
-    // limitation of client-side-only apps. For a classroom tool this is
-    // generally acceptable, but be aware that tech-savvy students could find it.
-    const ADMIN_PASSWORD = "Silva25-26";
     let TOTAL_STUDENTS = 26;
     const MIN_STUDENTS = 1;
     const MAX_STUDENTS = 50;
@@ -265,6 +269,28 @@
     let deleteConfirmId = null;
     let editingTask = null;
     let statusStudentNum = null;
+    let isAdminAuthed = false;
+    let adminCheckPromise = Promise.resolve();
+
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            isAdminAuthed = false;
+            adminCheckPromise = Promise.resolve();
+            if (currentView === "admin") showView("select");
+            return;
+        }
+        adminCheckPromise = db.ref('admins/' + user.uid).get()
+            .then(snap => {
+                isAdminAuthed = snap.exists() && snap.val() === true;
+                if (!isAdminAuthed && currentView === "admin") {
+                    showView("select");
+                }
+            })
+            .catch(err => {
+                console.error("Admin check error:", err);
+                isAdminAuthed = false;
+            });
+    });
 
     // =====================================================================
     // FIREBASE DATA LAYER
@@ -1235,8 +1261,23 @@
         applyConfig(defaultConfig);
 
         // Events
-        document.getElementById("admin-btn").addEventListener("click", () => { showView("password"); document.getElementById("pw-input").focus(); });
-        document.getElementById("pw-back").addEventListener("click", () => { document.getElementById("pw-error").classList.add("hidden"); showView("select"); });
+        document.getElementById("admin-btn").addEventListener("click", async () => {
+            await adminCheckPromise;
+            if (isAdminAuthed) {
+                showView("admin");
+                setAdminView("tasks");
+            } else {
+                showView("password");
+                const emailInput = document.getElementById("pw-email");
+                if (emailInput.value) document.getElementById("pw-input").focus();
+                else emailInput.focus();
+            }
+        });
+        document.getElementById("pw-back").addEventListener("click", () => {
+            document.getElementById("pw-error").classList.add("hidden");
+            document.getElementById("pw-input").value = "";
+            showView("select");
+        });
         document.getElementById("admin-back").addEventListener("click", () => { deleteConfirmId = null; showView("select"); });
         document.getElementById("student-back").addEventListener("click", () => { currentStudent = null; showView("select"); });
 
@@ -1348,20 +1389,61 @@
             if (e.key === "Enter") document.getElementById("redeem-confirm").click();
         });
 
-        document.getElementById("pw-submit").addEventListener("click", (e) => {
+        document.getElementById("pw-submit").addEventListener("click", async (e) => {
             e.preventDefault();
-            const val = document.getElementById("pw-input").value;
-            if (val === ADMIN_PASSWORD) {
+            const email = document.getElementById("pw-email").value.trim();
+            const password = document.getElementById("pw-input").value;
+            const errEl = document.getElementById("pw-error");
+            if (!email || !password) {
+                errEl.textContent = "Enter your email and password";
+                errEl.classList.remove("hidden");
+                return;
+            }
+            const submitBtn = document.getElementById("pw-submit");
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Signing in…";
+            try {
+                const cred = await auth.signInWithEmailAndPassword(email, password);
+                const snap = await db.ref('admins/' + cred.user.uid).get();
+                if (!snap.exists() || snap.val() !== true) {
+                    await auth.signOut();
+                    errEl.textContent = "This account isn't on the admin list. Contact the site owner.";
+                    errEl.classList.remove("hidden");
+                    return;
+                }
+                isAdminAuthed = true;
                 document.getElementById("pw-input").value = "";
-                document.getElementById("pw-error").classList.add("hidden");
+                errEl.classList.add("hidden");
                 showView("admin");
                 setAdminView("tasks");
-            } else {
-                document.getElementById("pw-error").classList.remove("hidden");
+            } catch (err) {
+                errEl.textContent = "Sign in failed. Check your email and password.";
+                errEl.classList.remove("hidden");
+                console.error("Sign in error:", err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+        document.getElementById("pw-email").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                document.getElementById("pw-input").focus();
             }
         });
         document.getElementById("pw-input").addEventListener("keydown", (e) => {
             if (e.key === "Enter") document.getElementById("pw-submit").click();
+        });
+        document.getElementById("admin-signout").addEventListener("click", async () => {
+            try {
+                await auth.signOut();
+                showToast("Signed out");
+                showView("select");
+            } catch (err) {
+                console.error("Sign out error:", err);
+                showToast("Error signing out", "error");
+            }
         });
 
         document.getElementById("add-task-form").addEventListener("submit", async (e) => {
