@@ -713,7 +713,8 @@
                 renderDeleteButton(actionArea, task);
                 renderStudentDeleteButtons(el, task);
             }
-            list.appendChild(el);
+            const refNode = list.children[idx];
+            if (refNode !== el) list.insertBefore(el, refNode || null);
         });
 
         renderDashboard();
