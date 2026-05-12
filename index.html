@@ -180,8 +180,13 @@
                         <button type="submit" class="px-5 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background:#6366f1;"> <i data-lucide="plus" style="width:18px;height:18px;"></i> Add </button>
                     </div>
                 </form>
-                <div class="flex justify-end mb-3">
-                    <button id="remove-all-tasks-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg" style="background:#ffe8e8;color:#e74c3c;border:1px solid #e74c3c;">Remove All Tasks</button>
+                <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                    <div id="bulk-action-bar" class="items-center gap-2" style="display:none;">
+                        <span class="text-xs font-semibold" style="color:#1a1a2e;"><span id="bulk-selected-count">0</span> selected</span>
+                        <button id="bulk-delete-btn" class="text-xs font-semibold px-3 py-2 rounded-lg text-white" style="background:#e74c3c;">Delete Selected</button>
+                        <button id="bulk-clear-btn" class="text-xs font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Clear</button>
+                    </div>
+                    <button id="remove-all-tasks-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg ml-auto" style="background:#ffe8e8;color:#e74c3c;border:1px solid #e74c3c;">Remove All Tasks</button>
                 </div>
                 <div id="admin-task-list" class="flex flex-col gap-2"></div>
                 <p id="admin-empty" class="text-center py-10" style="color:#aaa;">No tasks yet. Add one above!</p>
@@ -271,6 +276,7 @@
     let deleteConfirmId = null;
     let editingTask = null;
     let statusStudentNum = null;
+    let selectedTaskIds = new Set();
     let isAdminAuthed = false;
     let adminCheckPromise = Promise.resolve();
 
@@ -477,6 +483,11 @@
     function getCompletionsByTaskAndStudent(taskId, studentNum) {
         return allData.filter(r => r.type === "completion" && r.task_id === taskId && r.assigned_to === String(studentNum));
     }
+    function isTaskAllComplete(task) {
+        const assigned = task.assigned_to ? task.assigned_to.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n)) : [];
+        if (assigned.length === 0) return false;
+        return assigned.every(num => getCompletionsByTaskAndStudent(task.task_id, num).length > 0);
+    }
 
     // =====================================================================
     // TOAST NOTIFICATIONS
@@ -546,6 +557,14 @@
     // =====================================================================
     // ADMIN RENDERING
     // =====================================================================
+    function updateBulkBar() {
+        const bar = document.getElementById("bulk-action-bar");
+        const count = document.getElementById("bulk-selected-count");
+        if (!bar || !count) return;
+        count.textContent = selectedTaskIds.size;
+        bar.style.display = selectedTaskIds.size > 0 ? "flex" : "none";
+    }
+
     function renderAdmin() {
         const tasks = getTasks();
         const list = document.getElementById("admin-task-list");
@@ -558,10 +577,17 @@
 
         existingEls.forEach((el, id) => { if (!currentIds.has(id)) el.remove(); });
 
+        for (const id of [...selectedTaskIds]) { if (!currentIds.has(id)) selectedTaskIds.delete(id); }
+        updateBulkBar();
+
         tasks.forEach((task, idx) => {
             let el = list.querySelector(`[data-id="${task.task_id}"]`);
             if (el) {
                 el.querySelector(".task-text").textContent = task.task_text;
+                const indicator = el.querySelector(".task-all-complete-indicator");
+                if (indicator) indicator.style.display = isTaskAllComplete(task) ? "inline-flex" : "none";
+                const cb = el.querySelector(".task-select-checkbox");
+                if (cb) cb.checked = selectedTaskIds.has(task.task_id);
                 // Update description
                 let descEl = el.querySelector(".task-desc");
                 if (task.task_desc) {
@@ -608,10 +634,16 @@
                 const linkHtml = linksArr.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="admin-link-badge text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (linksArr.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
                 const dueHtml = task.task_due ? `<span class="task-due text-xs font-medium px-2 py-1 rounded-lg" style="background:#fff3e0;color:#e65100;">Due: ${fmtDue(task.task_due)}</span>` : "";
                 const descHtml = task.task_desc ? `<p class="task-desc text-xs" style="color:#666;">${escHtml(task.task_desc)}</p>` : "";
+                const allCompleteInit = isTaskAllComplete(task);
+                const isSelected = selectedTaskIds.has(task.task_id);
                 el.innerHTML = `
-        <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <input type="checkbox" class="task-select-checkbox w-4 h-4 cursor-pointer flex-shrink-0" data-task-id="${task.task_id}" ${isSelected ? 'checked' : ''}>
           <span class="task-text font-medium text-xl" style="color:#1a1a2e;">${escHtml(task.task_text)}</span>
-          <div class="flex items-center gap-1 action-area"></div>
+          <span class="task-all-complete-indicator" title="All assigned students completed" style="color:#22c55e;display:${allCompleteInit ? 'inline-flex' : 'none'};align-items:center;gap:4px;font-size:0.875rem;font-weight:600;">
+            <i data-lucide="check-circle-2" style="width:22px;height:22px;"></i> All students done
+          </span>
+          <div class="flex items-center gap-1 action-area ml-auto"></div>
         </div>
         ${descHtml}
         <div class="flex items-center gap-2 flex-wrap">
@@ -1320,6 +1352,37 @@
         });
         document.getElementById("students-minus").addEventListener("click", () => {
             if (TOTAL_STUDENTS > MIN_STUDENTS) setTotalStudents(TOTAL_STUDENTS - 1);
+        });
+
+        document.getElementById("admin-task-list").addEventListener("change", (e) => {
+            const cb = e.target.closest(".task-select-checkbox");
+            if (!cb) return;
+            const id = cb.dataset.taskId;
+            if (cb.checked) selectedTaskIds.add(id);
+            else selectedTaskIds.delete(id);
+            updateBulkBar();
+        });
+
+        document.getElementById("bulk-clear-btn").addEventListener("click", () => {
+            selectedTaskIds.clear();
+            document.querySelectorAll(".task-select-checkbox").forEach(cb => { cb.checked = false; });
+            updateBulkBar();
+        });
+
+        document.getElementById("bulk-delete-btn").addEventListener("click", async () => {
+            if (selectedTaskIds.size === 0) return;
+            const ids = [...selectedTaskIds];
+            if (!confirm("Delete " + ids.length + " selected task" + (ids.length === 1 ? "" : "s") + "? This cannot be undone.")) return;
+            const tasksToDelete = getTasks().filter(t => ids.includes(t.task_id));
+            for (const task of tasksToDelete) {
+                const completions = allData.filter(r => r.type === "completion" && r.task_id === task.task_id);
+                for (const c of completions) await fbDelete(c);
+                await fbDelete(task);
+            }
+            selectedTaskIds.clear();
+            deleteConfirmId = null;
+            updateBulkBar();
+            showToast(ids.length + " task" + (ids.length === 1 ? "" : "s") + " deleted!");
         });
 
         document.getElementById("remove-all-tasks-btn").addEventListener("click", async () => {
