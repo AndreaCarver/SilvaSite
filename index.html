@@ -566,7 +566,11 @@
     }
 
     function renderAdmin() {
-        const tasks = getTasks();
+        const tasks = getTasks().slice().sort((a, b) => {
+            const aDone = isTaskAllComplete(a) ? 1 : 0;
+            const bDone = isTaskAllComplete(b) ? 1 : 0;
+            return bDone - aDone;
+        });
         const list = document.getElementById("admin-task-list");
         const empty = document.getElementById("admin-empty");
         empty.classList.toggle("hidden", tasks.length > 0);
@@ -655,8 +659,8 @@
                 const actionArea = el.querySelector(".action-area");
                 renderDeleteButton(actionArea, task);
                 renderStudentDeleteButtons(el, task);
-                list.appendChild(el);
             }
+            list.appendChild(el);
         });
 
         renderDashboard();
