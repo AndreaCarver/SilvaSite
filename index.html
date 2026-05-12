@@ -111,13 +111,14 @@
     </div><!-- VIEW: Admin -->
     <div id="view-admin" class="h-full w-full flex flex-col p-4 hidden">
         <div class="max-w-4xl w-full mx-auto">
-            <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
-                <button id="admin-back" class="flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
-                <h2 id="admin-title" class="font-display text-2xl font-bold" style="color:#1a1a2e;">Teacher Admin Panel</h2>
-                <div class="flex gap-2 flex-wrap">
+            <div class="grid grid-cols-3 items-center gap-2 mb-6">
+                <div class="flex justify-start gap-2 flex-wrap">
+                    <button id="admin-signout" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#fee2e2;color:#b91c1c;border:1px solid #b91c1c;"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Sign Out</button>
+                </div>
+                <h2 id="admin-title" class="font-display text-2xl font-bold text-center" style="color:#1a1a2e;">Teacher Admin Panel</h2>
+                <div class="flex justify-end gap-2 flex-wrap">
                     <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
                     <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
-                    <button id="admin-signout" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#fee2e2;color:#b91c1c;border:1px solid #b91c1c;"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Sign Out</button>
                 </div>
             </div>
             <div class="flex items-center justify-end gap-2 mb-4">
@@ -129,7 +130,7 @@
             <div id="dashboard-section" class="hidden mb-6">
                 <!-- Student Status Detail (hidden by default) -->
                 <div id="student-status-detail" class="hidden">
-                    <button id="status-back" class="flex items-center gap-1 text-sm font-medium mb-4" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back to Overview</button>
+                    <button id="status-back" class="flex items-center gap-1 text-sm font-medium mb-4 px-3 py-2 rounded-lg" style="color:#6366f1;border:1px solid #6366f1;background:#e8e6ff;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back to Overview</button>
                     <h3 class="font-semibold text-lg mb-1" style="color:#1a1a2e;">Student <span id="status-student-num"></span></h3>
                     <p id="status-summary" class="text-sm mb-4" style="color:#666;"></p>
                     <div id="status-task-list" class="flex flex-col gap-2"></div>
@@ -186,6 +187,7 @@
                 <p id="admin-empty" class="text-center py-10" style="color:#aaa;">No tasks yet. Add one above!</p>
             </div>
         </div>
+        <button id="admin-back" class="flex items-center gap-1 text-sm font-semibold px-4 py-2 rounded-lg shadow-md" style="position:fixed;bottom:1rem;right:1rem;background:#fee2e2;color:#b91c1c;border:1px solid #b91c1c;z-index:50;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Student View</button>
     </div><!-- VIEW: Student -->
     <div id="view-student" class="h-full w-full flex flex-col p-4 hidden">
         <div class="max-w-2xl w-full mx-auto">
@@ -1240,7 +1242,7 @@
         if (submitBtn) submitBtn.style.background = primary;
         document.getElementById("pw-submit").style.background = primary;
 
-        document.querySelectorAll("#pw-back, #admin-back, #student-back").forEach(el => el.style.color = primary);
+        document.querySelectorAll("#pw-back, #student-back").forEach(el => el.style.color = primary);
         document.getElementById("progress-badge").style.background = secondary;
         document.getElementById("progress-badge").style.color = "#558b2f";
 
