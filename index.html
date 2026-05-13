@@ -253,10 +253,11 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
-    // Scope: when teacherUid is null we read/write the legacy shared paths
-    // ('records', 'tokens', 'config/totalStudents'). Later steps will set it
-    // to a Firebase auth UID and route everything under 'teachers/<uid>/...'.
-    let teacherUid = null;
+    // Scope: teacherUid points the app at teachers/<uid>/... in Firebase.
+    // For now, hardcoded to the original classroom owner so the same index.html
+    // serves both the teacher and her students (students don't auth). A future
+    // step will make this dynamic via auth + a classroom code in the URL.
+    let teacherUid = "0EehpKZp12Q6jnoygjtHYozzFf22";
     function recordsRef()       { return teacherUid ? db.ref('teachers/' + teacherUid + '/records')               : db.ref('records'); }
     function tokensRef()        { return teacherUid ? db.ref('teachers/' + teacherUid + '/tokens')                : db.ref('tokens'); }
     function totalStudentsRef() { return teacherUid ? db.ref('teachers/' + teacherUid + '/config/totalStudents')  : db.ref('config/totalStudents'); }
