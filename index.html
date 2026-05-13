@@ -299,9 +299,11 @@
         if (!user) {
             isAdminAuthed = false;
             adminCheckPromise = Promise.resolve();
+            subscribeToScope(DEFAULT_TEACHER_UID);
             if (currentView === "admin") showView("select");
             return;
         }
+        subscribeToScope(user.uid);
         adminCheckPromise = db.ref('admins/' + user.uid).get()
             .then(snap => {
                 isAdminAuthed = snap.exists() && snap.val() === true;
