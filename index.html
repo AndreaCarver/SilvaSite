@@ -138,6 +138,9 @@
             <p id="pw-hint" class="text-xs mb-2 hidden" style="color:#888;">Password must be at least 6 characters.</p>
             <p id="pw-error" class="text-sm mb-3 hidden" style="color:#e74c3c;">Sign in failed</p>
             <button id="pw-submit" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Sign In</button>
+            <p id="pw-forgot-row" class="text-xs text-center mt-3" style="color:#666;">
+                <button id="pw-forgot" type="button" class="font-semibold" style="color:#6366f1;">Forgot password?</button>
+            </p>
             <p class="text-sm text-center mt-4" style="color:#666;">
                 <span id="pw-toggle-prompt">Need an account?</span>
                 <button id="pw-toggle" type="button" class="font-semibold ml-1" style="color:#6366f1;">Create one</button>
@@ -1675,6 +1678,7 @@
             const pwInput = document.getElementById("pw-input");
             const error = document.getElementById("pw-error");
             error.classList.add("hidden");
+            const forgotRow = document.getElementById("pw-forgot-row");
             if (mode === "signup") {
                 title.textContent = "Create Teacher Account";
                 subtitle.textContent = "Set up your own classroom";
@@ -1683,6 +1687,7 @@
                 toggle.textContent = "Sign in";
                 hint.classList.remove("hidden");
                 pwInput.setAttribute("autocomplete", "new-password");
+                if (forgotRow) forgotRow.classList.add("hidden");
             } else {
                 title.textContent = "Teacher Sign In";
                 subtitle.textContent = "Sign in with your teacher account";
@@ -1691,11 +1696,63 @@
                 toggle.textContent = "Create one";
                 hint.classList.add("hidden");
                 pwInput.setAttribute("autocomplete", "current-password");
+                if (forgotRow) forgotRow.classList.remove("hidden");
             }
         }
         document.getElementById("pw-toggle").addEventListener("click", (e) => {
             e.preventDefault();
             setAuthMode(authMode === "signup" ? "signin" : "signup");
+        });
+
+        document.getElementById("pw-forgot").addEventListener("click", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("pw-email").value.trim();
+            const errEl = document.getElementById("pw-error");
+            if (!email) {
+                errEl.textContent = "Enter your email above first, then click Forgot password.";
+                errEl.classList.remove("hidden");
+                document.getElementById("pw-email").focus();
+                return;
+            }
+            const btn = document.getElementById("pw-forgot");
+            const origText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "Sending…";
+            try {
+                await auth.sendPasswordResetEmail(email);
+                errEl.classList.add("hidden");
+                showToast("Reset email sent — check your inbox.");
+            } catch (err) {
+                if (err.code === "auth/invalid-email") {
+                    errEl.textContent = "That doesn't look like a valid email address.";
+                } else if (err.code === "auth/user-not-found") {
+                    errEl.textContent = "No account found with that email.";
+                } else {
+                    errEl.textContent = "Couldn't send the reset email. Try again.";
+                }
+                errEl.classList.remove("hidden");
+                console.error("Password reset error:", err);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = origText;
+            }
+        });
+
+        // Backdrop click and Escape key close any open modal.
+        document.getElementById("redeem-modal").addEventListener("click", (e) => {
+            if (e.target.id === "redeem-modal") document.getElementById("redeem-modal").classList.add("hidden");
+        });
+        document.getElementById("edit-modal").addEventListener("click", (e) => {
+            if (e.target.id === "edit-modal") closeEditModal();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key !== "Escape") return;
+            const settings = document.getElementById("settings-modal");
+            const redeem = document.getElementById("redeem-modal");
+            const edit = document.getElementById("edit-modal");
+            if (settings && !settings.classList.contains("hidden")) { closeSettingsModal(); return; }
+            if (redeem && !redeem.classList.contains("hidden")) { redeem.classList.add("hidden"); return; }
+            if (edit && !edit.classList.contains("hidden")) { closeEditModal(); return; }
         });
 
         document.getElementById("pw-submit").addEventListener("click", async (e) => {
