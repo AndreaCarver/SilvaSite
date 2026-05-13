@@ -121,6 +121,13 @@
                     <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
                 </div>
             </div>
+            <div id="migration-banner" class="hidden mb-4 p-4 rounded-xl flex items-center justify-between gap-3 flex-wrap" style="background:#fff3e0;border:1px solid #e65100;">
+                <div class="flex items-center gap-2 flex-1 min-w-0">
+                    <i data-lucide="info" style="width:18px;height:18px;color:#e65100;flex-shrink:0;"></i>
+                    <span class="text-sm font-medium" style="color:#1a1a2e;">One-time setup: copy your data into your personal teacher namespace. Existing data is left untouched.</span>
+                </div>
+                <button id="migrate-btn" class="text-xs font-semibold px-3 py-2 rounded-lg text-white" style="background:#6366f1;">Migrate Data</button>
+            </div>
             <div class="flex items-center justify-end gap-2 mb-4">
                 <span class="text-xs font-medium" style="color:#666;">Students:</span>
                 <button id="students-minus" class="w-6 h-6 rounded-full font-bold leading-none" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;" aria-label="Decrease student count">&#8722;</button>
@@ -246,9 +253,13 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
-    const recordsRef = db.ref('records');
-    const tokensRef = db.ref('tokens');
-    const totalStudentsRef = db.ref('config/totalStudents');
+    // Scope: when teacherUid is null we read/write the legacy shared paths
+    // ('records', 'tokens', 'config/totalStudents'). Later steps will set it
+    // to a Firebase auth UID and route everything under 'teachers/<uid>/...'.
+    let teacherUid = null;
+    function recordsRef()       { return teacherUid ? db.ref('teachers/' + teacherUid + '/records')               : db.ref('records'); }
+    function tokensRef()        { return teacherUid ? db.ref('teachers/' + teacherUid + '/tokens')                : db.ref('tokens'); }
+    function totalStudentsRef() { return teacherUid ? db.ref('teachers/' + teacherUid + '/config/totalStudents')  : db.ref('config/totalStudents'); }
 
     // =====================================================================
     // APP CONFIG
@@ -306,7 +317,7 @@
     // FIREBASE DATA LAYER
     // =====================================================================
     // Listen for real-time changes — this replaces Canva's dataSdk.init()
-    recordsRef.on('value', (snapshot) => {
+    recordsRef().on('value', (snapshot) => {
         const data = [];
         snapshot.forEach((child) => {
             const val = child.val();
@@ -320,7 +331,7 @@
         if (currentView === "student") renderStudent();
     });
 
-    tokensRef.on('value', (snapshot) => {
+    tokensRef().on('value', (snapshot) => {
         tokenData = snapshot.val() || {};
         tokensLoaded = true;
         maybeBackfillTokens();
@@ -328,7 +339,7 @@
         if (currentView === "student") renderStudent();
     });
 
-    totalStudentsRef.on('value', (snapshot) => {
+    totalStudentsRef().on('value', (snapshot) => {
         const val = snapshot.val();
         if (typeof val === "number" && val >= MIN_STUDENTS && val <= MAX_STUDENTS) {
             TOTAL_STUDENTS = val;
@@ -344,7 +355,7 @@
     async function setTotalStudents(n) {
         if (n < MIN_STUDENTS || n > MAX_STUDENTS) return;
         try {
-            await totalStudentsRef.set(n);
+            await totalStudentsRef().set(n);
         } catch (e) {
             console.error("Student count update error:", e);
             showToast("Error updating count", "error");
@@ -357,7 +368,7 @@
 
     async function changeTokens(studentNum, delta) {
         try {
-            await tokensRef.child(String(studentNum)).transaction(curr => Math.max(0, (curr || 0) + delta));
+            await tokensRef().child(String(studentNum)).transaction(curr => Math.max(0, (curr || 0) + delta));
             if (delta > 0) {
                 playCoinSound();
                 if (currentView === "student" && currentStudent === studentNum) {
@@ -429,7 +440,7 @@
             const existing = tokenData[String(i)];
             if (existing != null && existing >= count) continue;
             if (count > 0) {
-                tokensRef.child(String(i)).transaction(curr => (curr == null || curr < count) ? count : curr);
+                tokensRef().child(String(i)).transaction(curr => (curr == null || curr < count) ? count : curr);
             }
         }
     }
@@ -437,7 +448,7 @@
     // Create a record — replaces dataSdk.create()
     async function fbCreate(obj) {
         try {
-            await recordsRef.push(obj);
+            await recordsRef().push(obj);
             return { isOk: true };
         } catch (e) {
             console.error("Firebase create error:", e);
@@ -451,7 +462,7 @@
             const key = obj._key;
             const data = { ...obj };
             delete data._key;
-            await recordsRef.child(key).update(data);
+            await recordsRef().child(key).update(data);
             return { isOk: true };
         } catch (e) {
             console.error("Firebase update error:", e);
@@ -462,7 +473,7 @@
     // Delete a record — replaces dataSdk.delete()
     async function fbDelete(obj) {
         try {
-            await recordsRef.child(obj._key).remove();
+            await recordsRef().child(obj._key).remove();
             return { isOk: true };
         } catch (e) {
             console.error("Firebase delete error:", e);
@@ -565,6 +576,7 @@
         currentView = name;
         if (name === "admin") renderAdmin();
         if (name === "student") renderStudent();
+        if (name === "admin" && typeof window.checkMigrationBanner === "function") window.checkMigrationBanner();
     }
 
     // =====================================================================
@@ -1570,6 +1582,80 @@
                 showToast("Error signing out", "error");
             }
         });
+
+        document.getElementById("migrate-btn").addEventListener("click", async () => {
+            const user = auth.currentUser;
+            if (!user) { showToast("Sign in first", "error"); return; }
+            if (!confirm("Copy all of your tasks, completions, tokens, and config into your personal teacher namespace? Your existing data will NOT be deleted.")) return;
+
+            const btn = document.getElementById("migrate-btn");
+            const origText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "Migrating…";
+
+            try {
+                const [recordsSnap, tokensSnap, configSnap, destSnap] = await Promise.all([
+                    db.ref("records").get(),
+                    db.ref("tokens").get(),
+                    db.ref("config/totalStudents").get(),
+                    db.ref("teachers/" + user.uid).get(),
+                ]);
+
+                if (destSnap.exists()) {
+                    if (!confirm("Destination teachers/" + user.uid + " already has data. Overwrite it with the legacy data?")) {
+                        btn.disabled = false;
+                        btn.textContent = origText;
+                        return;
+                    }
+                }
+
+                const updates = {};
+                if (recordsSnap.exists()) updates["teachers/" + user.uid + "/records"] = recordsSnap.val();
+                if (tokensSnap.exists()) updates["teachers/" + user.uid + "/tokens"] = tokensSnap.val();
+                if (configSnap.exists()) updates["teachers/" + user.uid + "/config/totalStudents"] = configSnap.val();
+
+                if (Object.keys(updates).length === 0) {
+                    showToast("No legacy data found — nothing to migrate", "error");
+                    btn.disabled = false;
+                    btn.textContent = origText;
+                    return;
+                }
+
+                await db.ref().update(updates);
+
+                const recordsObj = recordsSnap.val() || {};
+                const taskCount = Object.values(recordsObj).filter(v => v && v.type === "task").length;
+                const completionCount = Object.values(recordsObj).filter(v => v && v.type === "completion").length;
+                const tokenRowCount = Object.keys(tokensSnap.val() || {}).length;
+
+                showToast("Migrated: " + taskCount + " tasks, " + completionCount + " completions, " + tokenRowCount + " token rows");
+                document.getElementById("migration-banner").classList.add("hidden");
+            } catch (err) {
+                console.error("Migration error:", err);
+                showToast("Migration failed — see console", "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = origText;
+            }
+        });
+
+        async function checkMigrationBanner() {
+            const banner = document.getElementById("migration-banner");
+            if (!banner) return;
+            const user = auth.currentUser;
+            console.log("[migration] checkMigrationBanner — user:", user && user.uid);
+            if (!user) { banner.classList.add("hidden"); return; }
+            try {
+                const snap = await db.ref("teachers/" + user.uid).get();
+                console.log("[migration] teachers/" + user.uid + " exists?", snap.exists());
+                banner.classList.toggle("hidden", snap.exists());
+            } catch (e) {
+                console.error("[migration] check failed — showing banner anyway:", e);
+                banner.classList.remove("hidden");
+            }
+        }
+        auth.onAuthStateChanged(() => { checkMigrationBanner(); });
+        window.checkMigrationBanner = checkMigrationBanner;
 
         document.getElementById("add-task-form").addEventListener("submit", async (e) => {
             e.preventDefault();
