@@ -254,13 +254,14 @@
     const db = firebase.database();
     const auth = firebase.auth();
     // Scope: teacherUid points the app at teachers/<uid>/... in Firebase.
-    // For now, hardcoded to the original classroom owner so the same index.html
-    // serves both the teacher and her students (students don't auth). A future
-    // step will make this dynamic via auth + a classroom code in the URL.
-    let teacherUid = "0EehpKZp12Q6jnoygjtHYozzFf22";
-    function recordsRef()       { return teacherUid ? db.ref('teachers/' + teacherUid + '/records')               : db.ref('records'); }
-    function tokensRef()        { return teacherUid ? db.ref('teachers/' + teacherUid + '/tokens')                : db.ref('tokens'); }
-    function totalStudentsRef() { return teacherUid ? db.ref('teachers/' + teacherUid + '/config/totalStudents')  : db.ref('config/totalStudents'); }
+    // DEFAULT_TEACHER_UID is the fallback classroom (used when no other scope
+    // has been set). Later steps will swap teacherUid based on auth state or a
+    // classroom code in the URL via subscribeToScope().
+    const DEFAULT_TEACHER_UID = "0EehpKZp12Q6jnoygjtHYozzFf22";
+    let teacherUid = DEFAULT_TEACHER_UID;
+    function recordsRef()       { return db.ref('teachers/' + teacherUid + '/records'); }
+    function tokensRef()        { return db.ref('teachers/' + teacherUid + '/tokens'); }
+    function totalStudentsRef() { return db.ref('teachers/' + teacherUid + '/config/totalStudents'); }
 
     // =====================================================================
     // APP CONFIG
@@ -317,8 +318,8 @@
     // =====================================================================
     // FIREBASE DATA LAYER
     // =====================================================================
-    // Listen for real-time changes — this replaces Canva's dataSdk.init()
-    recordsRef().on('value', (snapshot) => {
+    // Named handlers so we can detach them via .off() when the scope changes.
+    function _recordsHandler(snapshot) {
         const data = [];
         snapshot.forEach((child) => {
             const val = child.val();
@@ -330,17 +331,17 @@
         maybeBackfillTokens();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
-    });
+    }
 
-    tokensRef().on('value', (snapshot) => {
+    function _tokensHandler(snapshot) {
         tokenData = snapshot.val() || {};
         tokensLoaded = true;
         maybeBackfillTokens();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
-    });
+    }
 
-    totalStudentsRef().on('value', (snapshot) => {
+    function _totalStudentsHandler(snapshot) {
         const val = snapshot.val();
         if (typeof val === "number" && val >= MIN_STUDENTS && val <= MAX_STUDENTS) {
             TOTAL_STUDENTS = val;
@@ -351,7 +352,38 @@
         buildStudentCheckboxes();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
-    });
+    }
+
+    // Tracks the currently-attached listeners so we can detach them cleanly
+    // when subscribeToScope() switches teacherUid.
+    let _activeSubs = [];
+
+    function subscribeToScope(uid) {
+        if (!uid) uid = DEFAULT_TEACHER_UID;
+        if (uid === teacherUid && _activeSubs.length > 0) return; // no-op
+
+        // Detach previous subscriptions, if any.
+        _activeSubs.forEach(({ ref, event, handler }) => {
+            try { ref.off(event, handler); } catch (e) { /* ignore */ }
+        });
+        _activeSubs = [];
+
+        // Reset cached state so the new scope's data fully replaces the old.
+        teacherUid = uid;
+        allData = [];
+        tokenData = {};
+        recordsLoaded = false;
+        tokensLoaded = false;
+        backfillDone = false;
+
+        // Attach fresh listeners under the new scope.
+        const recRef = recordsRef();        recRef.on("value", _recordsHandler);        _activeSubs.push({ ref: recRef, event: "value", handler: _recordsHandler });
+        const tokRef = tokensRef();         tokRef.on("value", _tokensHandler);         _activeSubs.push({ ref: tokRef, event: "value", handler: _tokensHandler });
+        const cfgRef = totalStudentsRef();  cfgRef.on("value", _totalStudentsHandler);  _activeSubs.push({ ref: cfgRef, event: "value", handler: _totalStudentsHandler });
+    }
+
+    // Initial attach using the default classroom scope.
+    subscribeToScope(DEFAULT_TEACHER_UID);
 
     async function setTotalStudents(n) {
         if (n < MIN_STUDENTS || n > MAX_STUDENTS) return;
