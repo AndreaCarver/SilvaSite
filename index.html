@@ -64,6 +64,35 @@
             </div>
         </div>
     </div>
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-display text-xl font-bold" style="color:#1a1a2e;">Account Settings</h3>
+                <button id="settings-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
+            </div>
+            <div class="mb-5">
+                <p class="text-xs font-semibold mb-1" style="color:#666;">EMAIL</p>
+                <p id="settings-email" class="text-sm" style="color:#1a1a2e;">—</p>
+            </div>
+            <div class="mb-5">
+                <p class="text-xs font-semibold mb-2" style="color:#666;">SHARE WITH STUDENTS</p>
+                <p class="text-xs mb-2" style="color:#666;">Send students this link. They don't need to sign in.</p>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <code id="settings-url" class="text-xs px-3 py-2 rounded-lg flex-1 min-w-0 break-all" style="background:#f5f3ff;color:#4c1d95;">—</code>
+                    <button id="settings-copy-url" class="text-xs font-semibold px-3 py-2 rounded-lg text-white whitespace-nowrap" style="background:#6366f1;">Copy link</button>
+                </div>
+                <p id="settings-preview-note" class="hidden text-xs mt-2" style="color:#888;font-style:italic;">Preview mode — the live URL will be your deployed site address with <code>?c=&lt;code&gt;</code> appended.</p>
+            </div>
+            <div class="mb-2">
+                <p class="text-xs font-semibold mb-2" style="color:#666;">CHANGE PASSWORD</p>
+                <input id="settings-current-password" type="password" placeholder="Current password" autocomplete="current-password" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+                <input id="settings-new-password" type="password" placeholder="New password (6+ characters)" autocomplete="new-password" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+                <p id="settings-password-message" class="text-sm mb-2 hidden"></p>
+                <button id="settings-update-password" class="text-xs font-semibold px-4 py-2 rounded-lg text-white" style="background:#6366f1;">Update password</button>
+            </div>
+        </div>
+    </div>
     <!-- EDIT TASK MODAL -->
     <div id="edit-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
@@ -94,7 +123,8 @@
             <h1 id="main-title" class="font-display text-4xl md:text-5xl font-bold mb-2" style="color: #2d1b4e;">Missing Work Checklist</h1>
             <p class="text-lg" style="color: #555;">Select your student number to see your missing work</p>
         </div>
-        <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 gap-3 max-w-xl mb-8" id="student-grid"></div><button id="admin-btn" class="student-btn mt-4 px-6 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background: #2d1b4e;"> <i data-lucide="lock" style="width:18px;height:18px;"></i> Teacher Admin </button>
+        <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 gap-3 max-w-xl mb-8" id="student-grid"></div>
+        <button id="admin-btn" class="student-btn mt-4 px-6 py-3 rounded-xl font-semibold text-white flex items-center gap-2" style="background: #2d1b4e;"> <i data-lucide="lock" style="width:18px;height:18px;"></i> Teacher Admin </button>
     </div><!-- VIEW: Password -->
     <div id="view-password" class="h-full w-full flex flex-col items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
@@ -119,6 +149,7 @@
             <div class="grid grid-cols-3 items-center gap-2 mb-6">
                 <div class="flex justify-start gap-2 flex-wrap">
                     <button id="admin-signout" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#fee2e2;color:#b91c1c;border:1px solid #b91c1c;"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Sign Out</button>
+                    <button id="admin-settings" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</button>
                 </div>
                 <h2 id="admin-title" class="font-display text-2xl font-bold text-center" style="color:#1a1a2e;">Teacher Admin Panel</h2>
                 <div class="flex justify-end gap-2 flex-wrap">
@@ -132,23 +163,6 @@
                     <span class="text-sm font-medium" style="color:#1a1a2e;">One-time setup: copy your data into your personal teacher namespace. Existing data is left untouched.</span>
                 </div>
                 <button id="migrate-btn" class="text-xs font-semibold px-3 py-2 rounded-lg text-white" style="background:#6366f1;">Migrate Data</button>
-            </div>
-            <div id="share-classroom-card" class="hidden mb-4 p-4 rounded-xl bg-white shadow-sm" style="border:1px solid #e8e6ff;">
-                <div class="flex items-center gap-2 mb-3">
-                    <i data-lucide="share-2" style="width:18px;height:18px;color:#6366f1;"></i>
-                    <span class="text-sm font-semibold" style="color:#1a1a2e;">Share with students</span>
-                </div>
-                <div class="flex items-center gap-2 flex-wrap mb-3">
-                    <span class="text-xs font-medium" style="color:#666;">Classroom code:</span>
-                    <code id="share-classroom-code" class="text-lg font-bold px-3 py-1 rounded-lg" style="background:#f5f3ff;color:#4c1d95;letter-spacing:0.15em;"></code>
-                    <button id="share-classroom-copy-code" class="text-xs font-semibold px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Copy code</button>
-                </div>
-                <div id="share-classroom-link-row" class="flex items-center gap-2 flex-wrap">
-                    <span class="text-xs font-medium" style="color:#666;">Link:</span>
-                    <code id="share-classroom-url" class="text-xs px-3 py-2 rounded-lg flex-1 min-w-0 break-all" style="background:#f5f3ff;color:#4c1d95;"></code>
-                    <button id="share-classroom-copy" class="text-xs font-semibold px-3 py-2 rounded-lg text-white whitespace-nowrap" style="background:#6366f1;">Copy link</button>
-                </div>
-                <p id="share-classroom-preview-note" class="hidden text-xs mt-2" style="color:#888;font-style:italic;">Preview mode — the live URL will be your deployed site address with <code>?c=&lt;code&gt;</code> appended.</p>
             </div>
             <div class="flex items-center justify-end gap-2 mb-4">
                 <span class="text-xs font-medium" style="color:#666;">Students:</span>
@@ -458,28 +472,6 @@
         return code;
     }
 
-    async function updateShareCard() {
-        const card = document.getElementById("share-classroom-card");
-        if (!card) return;
-        const user = auth.currentUser;
-        if (!user) { card.classList.add("hidden"); return; }
-        try {
-            const code = await ensureClassroomCode(user.uid);
-            document.getElementById("share-classroom-code").textContent = code;
-            const isHttp = location.protocol === "http:" || location.protocol === "https:";
-            const url = isHttp
-                ? (location.origin + location.pathname + "?c=" + code)
-                : ("?c=" + code);
-            document.getElementById("share-classroom-url").textContent = url;
-            document.getElementById("share-classroom-preview-note").classList.toggle("hidden", isHttp);
-            card.classList.remove("hidden");
-        } catch (e) {
-            console.error("Share card error:", e);
-            card.classList.add("hidden");
-        }
-    }
-    window.updateShareCard = updateShareCard;
-
     async function resolveInitialScope() {
         const params = new URLSearchParams(location.search);
         const code = params.get("c");
@@ -722,7 +714,6 @@
         if (name === "admin") renderAdmin();
         if (name === "student") renderStudent();
         if (name === "admin" && typeof window.checkMigrationBanner === "function") window.checkMigrationBanner();
-        if (name === "admin" && typeof window.updateShareCard === "function") window.updateShareCard();
     }
 
     // =====================================================================
@@ -1797,9 +1788,40 @@
             }
         });
 
-        document.getElementById("share-classroom-copy").addEventListener("click", async () => {
-            const url = document.getElementById("share-classroom-url").textContent;
-            if (!url) return;
+        async function openSettingsModal() {
+            const user = auth.currentUser;
+            if (!user) { showToast("Sign in first", "error"); return; }
+            document.getElementById("settings-email").textContent = user.email || "—";
+            try {
+                const code = await ensureClassroomCode(user.uid);
+                const isHttp = location.protocol === "http:" || location.protocol === "https:";
+                const url = isHttp
+                    ? (location.origin + location.pathname + "?c=" + code)
+                    : ("?c=" + code);
+                document.getElementById("settings-url").textContent = url;
+                document.getElementById("settings-preview-note").classList.toggle("hidden", isHttp);
+            } catch (e) {
+                document.getElementById("settings-url").textContent = "(error)";
+            }
+            document.getElementById("settings-current-password").value = "";
+            document.getElementById("settings-new-password").value = "";
+            const msg = document.getElementById("settings-password-message");
+            msg.classList.add("hidden");
+            msg.textContent = "";
+            document.getElementById("settings-modal").classList.remove("hidden");
+        }
+        function closeSettingsModal() {
+            document.getElementById("settings-modal").classList.add("hidden");
+        }
+        document.getElementById("admin-settings").addEventListener("click", openSettingsModal);
+        document.getElementById("settings-close").addEventListener("click", closeSettingsModal);
+        document.getElementById("settings-modal").addEventListener("click", (e) => {
+            // Click on the backdrop (the modal element itself, not its inner card) closes.
+            if (e.target.id === "settings-modal") closeSettingsModal();
+        });
+        document.getElementById("settings-copy-url").addEventListener("click", async () => {
+            const url = document.getElementById("settings-url").textContent;
+            if (!url || url === "—") return;
             try {
                 await navigator.clipboard.writeText(url);
                 showToast("Link copied!");
@@ -1807,14 +1829,51 @@
                 showToast("Couldn't copy — select the link and copy manually.", "error");
             }
         });
-        document.getElementById("share-classroom-copy-code").addEventListener("click", async () => {
-            const code = document.getElementById("share-classroom-code").textContent;
-            if (!code) return;
+        document.getElementById("settings-update-password").addEventListener("click", async () => {
+            const currentPw = document.getElementById("settings-current-password").value;
+            const newPw = document.getElementById("settings-new-password").value;
+            const msg = document.getElementById("settings-password-message");
+            msg.classList.add("hidden");
+            if (!currentPw || !newPw) {
+                msg.textContent = "Enter both your current password and a new password.";
+                msg.style.color = "#e74c3c";
+                msg.classList.remove("hidden");
+                return;
+            }
+            if (newPw.length < 6) {
+                msg.textContent = "New password must be at least 6 characters.";
+                msg.style.color = "#e74c3c";
+                msg.classList.remove("hidden");
+                return;
+            }
+            const btn = document.getElementById("settings-update-password");
+            const origText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "Updating…";
             try {
-                await navigator.clipboard.writeText(code);
-                showToast("Code copied!");
-            } catch (e) {
-                showToast("Couldn't copy — select the code and copy manually.", "error");
+                const user = auth.currentUser;
+                const cred = firebase.auth.EmailAuthProvider.credential(user.email, currentPw);
+                await user.reauthenticateWithCredential(cred);
+                await user.updatePassword(newPw);
+                msg.textContent = "Password updated.";
+                msg.style.color = "#22c55e";
+                msg.classList.remove("hidden");
+                document.getElementById("settings-current-password").value = "";
+                document.getElementById("settings-new-password").value = "";
+            } catch (err) {
+                if (err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+                    msg.textContent = "Current password is incorrect.";
+                } else if (err.code === "auth/weak-password") {
+                    msg.textContent = "New password is too weak.";
+                } else {
+                    msg.textContent = "Couldn't update password: " + (err.message || "unknown error");
+                }
+                msg.style.color = "#e74c3c";
+                msg.classList.remove("hidden");
+                console.error("Password update error:", err);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = origText;
             }
         });
 
