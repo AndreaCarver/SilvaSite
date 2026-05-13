@@ -99,14 +99,19 @@
     <div id="view-password" class="h-full w-full flex flex-col items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
             <button id="pw-back" class="mb-4 flex items-center gap-1 text-sm font-medium" style="color:#6366f1;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
-            <h2 class="font-display text-2xl font-bold mb-1" style="color:#1a1a2e;">Teacher Sign In</h2>
-            <p class="text-sm mb-5" style="color:#888;">Sign in with your teacher account</p>
+            <h2 id="pw-title" class="font-display text-2xl font-bold mb-1" style="color:#1a1a2e;">Teacher Sign In</h2>
+            <p id="pw-subtitle" class="text-sm mb-5" style="color:#888;">Sign in with your teacher account</p>
             <label for="pw-email" class="sr-only">Email</label>
             <input id="pw-email" type="email" autocomplete="email" placeholder="Email" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
             <label for="pw-input" class="sr-only">Password</label>
             <input id="pw-input" type="password" autocomplete="current-password" placeholder="Password" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            <p id="pw-hint" class="text-xs mb-2 hidden" style="color:#888;">Password must be at least 6 characters.</p>
             <p id="pw-error" class="text-sm mb-3 hidden" style="color:#e74c3c;">Sign in failed</p>
             <button id="pw-submit" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Sign In</button>
+            <p class="text-sm text-center mt-4" style="color:#666;">
+                <span id="pw-toggle-prompt">Need an account?</span>
+                <button id="pw-toggle" type="button" class="font-semibold ml-1" style="color:#6366f1;">Create one</button>
+            </p>
         </div>
     </div><!-- VIEW: Admin -->
     <div id="view-admin" class="h-full w-full flex flex-col p-4 hidden">
@@ -127,6 +132,23 @@
                     <span class="text-sm font-medium" style="color:#1a1a2e;">One-time setup: copy your data into your personal teacher namespace. Existing data is left untouched.</span>
                 </div>
                 <button id="migrate-btn" class="text-xs font-semibold px-3 py-2 rounded-lg text-white" style="background:#6366f1;">Migrate Data</button>
+            </div>
+            <div id="share-classroom-card" class="hidden mb-4 p-4 rounded-xl bg-white shadow-sm" style="border:1px solid #e8e6ff;">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="share-2" style="width:18px;height:18px;color:#6366f1;"></i>
+                    <span class="text-sm font-semibold" style="color:#1a1a2e;">Share with students</span>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap mb-3">
+                    <span class="text-xs font-medium" style="color:#666;">Classroom code:</span>
+                    <code id="share-classroom-code" class="text-lg font-bold px-3 py-1 rounded-lg" style="background:#f5f3ff;color:#4c1d95;letter-spacing:0.15em;"></code>
+                    <button id="share-classroom-copy-code" class="text-xs font-semibold px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Copy code</button>
+                </div>
+                <div id="share-classroom-link-row" class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-medium" style="color:#666;">Link:</span>
+                    <code id="share-classroom-url" class="text-xs px-3 py-2 rounded-lg flex-1 min-w-0 break-all" style="background:#f5f3ff;color:#4c1d95;"></code>
+                    <button id="share-classroom-copy" class="text-xs font-semibold px-3 py-2 rounded-lg text-white whitespace-nowrap" style="background:#6366f1;">Copy link</button>
+                </div>
+                <p id="share-classroom-preview-note" class="hidden text-xs mt-2" style="color:#888;font-style:italic;">Preview mode — the live URL will be your deployed site address with <code>?c=&lt;code&gt;</code> appended.</p>
             </div>
             <div class="flex items-center justify-end gap-2 mb-4">
                 <span class="text-xs font-medium" style="color:#666;">Students:</span>
@@ -304,9 +326,14 @@
             return;
         }
         subscribeToScope(user.uid);
-        adminCheckPromise = db.ref('admins/' + user.uid).get()
-            .then(snap => {
-                isAdminAuthed = snap.exists() && snap.val() === true;
+        adminCheckPromise = Promise.all([
+            db.ref('teachers/' + user.uid + '/profile').get(),
+            db.ref('admins/' + user.uid).get()
+        ])
+            .then(([profileSnap, adminSnap]) => {
+                const isProfile = profileSnap.exists();
+                const isLegacyAdmin = adminSnap.exists() && adminSnap.val() === true;
+                isAdminAuthed = isProfile || isLegacyAdmin;
                 if (!isAdminAuthed && currentView === "admin") {
                     showView("select");
                 }
@@ -386,6 +413,89 @@
 
     // Initial attach using the default classroom scope.
     subscribeToScope(DEFAULT_TEACHER_UID);
+
+    // =====================================================================
+    // CLASSROOM CODES
+    // =====================================================================
+    const CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // no 0,1,I,L,O
+    const CODE_LENGTH = 6;
+
+    function generateClassroomCode() {
+        let code = "";
+        for (let i = 0; i < CODE_LENGTH; i++) {
+            code += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+        }
+        return code;
+    }
+
+    async function createUniqueClassroomCode(uid) {
+        for (let attempt = 0; attempt < 10; attempt++) {
+            const code = generateClassroomCode();
+            try {
+                // Rules require !data.exists() — this fails if someone already owns the code.
+                await db.ref("classroomCodes/" + code).set(uid);
+                return code;
+            } catch (e) {
+                if (attempt === 9) throw e;
+            }
+        }
+        throw new Error("Could not allocate classroom code");
+    }
+
+    async function ensureClassroomCode(uid) {
+        const profileRef = db.ref("teachers/" + uid + "/profile");
+        const snap = await profileRef.get();
+        const existing = snap.val();
+        if (existing && existing.classroomCode) return existing.classroomCode;
+        const code = await createUniqueClassroomCode(uid);
+        const updates = { classroomCode: code };
+        if (!snap.exists()) {
+            const user = auth.currentUser;
+            if (user && user.email) updates.email = user.email;
+            updates.createdAt = new Date().toISOString();
+        }
+        await profileRef.update(updates);
+        return code;
+    }
+
+    async function updateShareCard() {
+        const card = document.getElementById("share-classroom-card");
+        if (!card) return;
+        const user = auth.currentUser;
+        if (!user) { card.classList.add("hidden"); return; }
+        try {
+            const code = await ensureClassroomCode(user.uid);
+            document.getElementById("share-classroom-code").textContent = code;
+            const isHttp = location.protocol === "http:" || location.protocol === "https:";
+            const url = isHttp
+                ? (location.origin + location.pathname + "?c=" + code)
+                : ("?c=" + code);
+            document.getElementById("share-classroom-url").textContent = url;
+            document.getElementById("share-classroom-preview-note").classList.toggle("hidden", isHttp);
+            card.classList.remove("hidden");
+        } catch (e) {
+            console.error("Share card error:", e);
+            card.classList.add("hidden");
+        }
+    }
+    window.updateShareCard = updateShareCard;
+
+    async function resolveInitialScope() {
+        const params = new URLSearchParams(location.search);
+        const code = params.get("c");
+        if (!code) return;
+        try {
+            const snap = await db.ref("classroomCodes/" + code.toUpperCase()).get();
+            if (snap.exists() && typeof snap.val() === "string") {
+                subscribeToScope(snap.val());
+            } else {
+                showToast("Classroom code not found", "error");
+            }
+        } catch (e) {
+            console.error("Classroom code resolution error:", e);
+        }
+    }
+    resolveInitialScope();
 
     async function setTotalStudents(n) {
         if (n < MIN_STUDENTS || n > MAX_STUDENTS) return;
@@ -612,6 +722,7 @@
         if (name === "admin") renderAdmin();
         if (name === "student") renderStudent();
         if (name === "admin" && typeof window.checkMigrationBanner === "function") window.checkMigrationBanner();
+        if (name === "admin" && typeof window.updateShareCard === "function") window.updateShareCard();
     }
 
     // =====================================================================
@@ -1561,6 +1672,41 @@
             if (e.key === "Enter") document.getElementById("redeem-confirm").click();
         });
 
+        let authMode = "signin"; // or "signup"
+        function setAuthMode(mode) {
+            authMode = mode;
+            const title = document.getElementById("pw-title");
+            const subtitle = document.getElementById("pw-subtitle");
+            const submit = document.getElementById("pw-submit");
+            const toggle = document.getElementById("pw-toggle");
+            const togglePrompt = document.getElementById("pw-toggle-prompt");
+            const hint = document.getElementById("pw-hint");
+            const pwInput = document.getElementById("pw-input");
+            const error = document.getElementById("pw-error");
+            error.classList.add("hidden");
+            if (mode === "signup") {
+                title.textContent = "Create Teacher Account";
+                subtitle.textContent = "Set up your own classroom";
+                submit.textContent = "Create Account";
+                togglePrompt.textContent = "Already have an account?";
+                toggle.textContent = "Sign in";
+                hint.classList.remove("hidden");
+                pwInput.setAttribute("autocomplete", "new-password");
+            } else {
+                title.textContent = "Teacher Sign In";
+                subtitle.textContent = "Sign in with your teacher account";
+                submit.textContent = "Sign In";
+                togglePrompt.textContent = "Need an account?";
+                toggle.textContent = "Create one";
+                hint.classList.add("hidden");
+                pwInput.setAttribute("autocomplete", "current-password");
+            }
+        }
+        document.getElementById("pw-toggle").addEventListener("click", (e) => {
+            e.preventDefault();
+            setAuthMode(authMode === "signup" ? "signin" : "signup");
+        });
+
         document.getElementById("pw-submit").addEventListener("click", async (e) => {
             e.preventDefault();
             const email = document.getElementById("pw-email").value.trim();
@@ -1574,25 +1720,58 @@
             const submitBtn = document.getElementById("pw-submit");
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
-            submitBtn.textContent = "Signing in…";
+            submitBtn.textContent = authMode === "signup" ? "Creating account…" : "Signing in…";
             try {
-                const cred = await auth.signInWithEmailAndPassword(email, password);
-                const snap = await db.ref('admins/' + cred.user.uid).get();
-                if (!snap.exists() || snap.val() !== true) {
-                    await auth.signOut();
-                    errEl.textContent = "This account isn't on the admin list. Contact the site owner.";
-                    errEl.classList.remove("hidden");
-                    return;
+                if (authMode === "signup") {
+                    const cred = await auth.createUserWithEmailAndPassword(email, password);
+                    const uid = cred.user.uid;
+                    const code = await createUniqueClassroomCode(uid);
+                    const updates = {};
+                    updates["teachers/" + uid + "/profile"] = { email, classroomCode: code, createdAt: new Date().toISOString() };
+                    updates["teachers/" + uid + "/config/totalStudents"] = 26;
+                    await db.ref().update(updates);
+                    isAdminAuthed = true;
+                    document.getElementById("pw-input").value = "";
+                    errEl.classList.add("hidden");
+                    showView("admin");
+                    setAdminView("tasks");
+                    showToast("Account created!");
+                } else {
+                    const cred = await auth.signInWithEmailAndPassword(email, password);
+                    const [profileSnap, adminSnap] = await Promise.all([
+                        db.ref("teachers/" + cred.user.uid + "/profile").get(),
+                        db.ref("admins/" + cred.user.uid).get()
+                    ]);
+                    const isProfile = profileSnap.exists();
+                    const isLegacyAdmin = adminSnap.exists() && adminSnap.val() === true;
+                    if (!isProfile && !isLegacyAdmin) {
+                        await auth.signOut();
+                        errEl.textContent = "This account isn't a teacher. Create a new account instead.";
+                        errEl.classList.remove("hidden");
+                        return;
+                    }
+                    isAdminAuthed = true;
+                    document.getElementById("pw-input").value = "";
+                    errEl.classList.add("hidden");
+                    showView("admin");
+                    setAdminView("tasks");
                 }
-                isAdminAuthed = true;
-                document.getElementById("pw-input").value = "";
-                errEl.classList.add("hidden");
-                showView("admin");
-                setAdminView("tasks");
             } catch (err) {
-                errEl.textContent = "Sign in failed. Check your email and password.";
+                if (authMode === "signup") {
+                    if (err.code === "auth/email-already-in-use") {
+                        errEl.textContent = "An account with this email already exists. Try signing in instead.";
+                    } else if (err.code === "auth/weak-password") {
+                        errEl.textContent = "Password is too weak. Use at least 6 characters.";
+                    } else if (err.code === "auth/invalid-email") {
+                        errEl.textContent = "Please enter a valid email address.";
+                    } else {
+                        errEl.textContent = "Sign up failed: " + (err.message || "unknown error");
+                    }
+                } else {
+                    errEl.textContent = "Sign in failed. Check your email and password.";
+                }
                 errEl.classList.remove("hidden");
-                console.error("Sign in error:", err);
+                console.error("Auth error:", err);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
@@ -1615,6 +1794,27 @@
             } catch (err) {
                 console.error("Sign out error:", err);
                 showToast("Error signing out", "error");
+            }
+        });
+
+        document.getElementById("share-classroom-copy").addEventListener("click", async () => {
+            const url = document.getElementById("share-classroom-url").textContent;
+            if (!url) return;
+            try {
+                await navigator.clipboard.writeText(url);
+                showToast("Link copied!");
+            } catch (e) {
+                showToast("Couldn't copy — select the link and copy manually.", "error");
+            }
+        });
+        document.getElementById("share-classroom-copy-code").addEventListener("click", async () => {
+            const code = document.getElementById("share-classroom-code").textContent;
+            if (!code) return;
+            try {
+                await navigator.clipboard.writeText(code);
+                showToast("Code copied!");
+            } catch (e) {
+                showToast("Couldn't copy — select the code and copy manually.", "error");
             }
         });
 
