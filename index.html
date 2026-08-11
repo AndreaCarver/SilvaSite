@@ -387,7 +387,6 @@
     let tokenData = {};
     let recordsLoaded = false;
     let tokensLoaded = false;
-    let backfillDone = false;
     let currentView = "select";
     let currentStudent = null;
     let deleteConfirmId = null;
@@ -437,7 +436,6 @@
         });
         allData = data;
         recordsLoaded = true;
-        maybeBackfillTokens();
         updateLoadingOverlay();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
@@ -446,7 +444,6 @@
     function _tokensHandler(snapshot) {
         tokenData = snapshot.val() || {};
         tokensLoaded = true;
-        maybeBackfillTokens();
         updateLoadingOverlay();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
@@ -485,7 +482,6 @@
         tokenData = {};
         recordsLoaded = false;
         tokensLoaded = false;
-        backfillDone = false;
 
         // Attach fresh listeners under the new scope.
         const recRef = recordsRef();        recRef.on("value", _recordsHandler);        _activeSubs.push({ ref: recRef, event: "value", handler: _recordsHandler });
@@ -635,19 +631,6 @@
             });
         } catch (e) {
             console.error("Sound error:", e);
-        }
-    }
-
-    function maybeBackfillTokens() {
-        if (!recordsLoaded || !tokensLoaded || backfillDone) return;
-        backfillDone = true;
-        for (let i = 1; i <= TOTAL_STUDENTS; i++) {
-            const count = getTasksForStudent(i).filter(t => getCompletionsByTaskAndStudent(t.task_id, i).length > 0).length;
-            const existing = tokenData[String(i)];
-            if (existing != null && existing >= count) continue;
-            if (count > 0) {
-                tokensRef().child(String(i)).transaction(curr => (curr == null || curr < count) ? count : curr);
-            }
         }
     }
 
