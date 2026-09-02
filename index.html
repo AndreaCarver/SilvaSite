@@ -143,6 +143,7 @@
             </div>
             <div class="mb-3">
                 <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign all to students:</p>
+                <div id="bulk-group-chips" class="flex flex-wrap items-center gap-2 mb-2"></div>
                 <div id="bulk-student-checkboxes" class="grid grid-cols-5 sm:grid-cols-7 gap-2"></div>
             </div>
             <div class="flex justify-between items-center mb-3">
@@ -151,6 +152,34 @@
             </div>
             <p id="bulk-error" class="text-sm mb-2 hidden" style="color:#e74c3c;"></p>
             <button id="bulk-submit" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Add all tasks</button>
+        </div>
+    </div>
+    <!-- GROUPS MODAL -->
+    <div id="groups-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="font-display text-xl font-bold" style="color:#1a1a2e;">Student Groups</h3>
+                <button id="groups-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
+            </div>
+            <p class="text-xs mb-4" style="color:#666;">Save a set of students as a group, then assign them to a task with one click.</p>
+            <div id="groups-list" class="flex flex-col gap-2 mb-4"></div>
+            <p id="groups-empty" class="text-center text-sm py-4 mb-2 hidden" style="color:#aaa;">No groups yet. Create your first one below.</p>
+            <div class="rounded-xl p-4" style="background:#f5f3ff;">
+                <p id="group-form-title" class="text-sm font-semibold mb-2" style="color:#1a1a2e;">New group</p>
+                <label for="group-name-input" class="sr-only">Group name</label>
+                <input id="group-name-input" type="text" placeholder="Group name (e.g. Period 1)" maxlength="40" class="w-full border-2 rounded-xl px-4 py-3 mb-3 text-base" style="border-color:#ddd;">
+                <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Students in this group:</p>
+                <div id="group-student-checkboxes" class="grid grid-cols-5 sm:grid-cols-7 gap-2 mb-3"></div>
+                <div class="flex items-center gap-3 mb-3 flex-wrap">
+                    <button type="button" id="group-select-all" class="text-xs font-medium px-3 py-1 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Select All</button>
+                    <span id="group-count-hint" class="text-xs" style="color:#666;">0 students selected</span>
+                </div>
+                <p id="group-error" class="text-sm mb-2 hidden" style="color:#e74c3c;"></p>
+                <div class="flex gap-2">
+                    <button id="group-save" class="flex-1 py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Save group</button>
+                    <button id="group-cancel-edit" class="hidden px-4 py-3 rounded-xl font-semibold" style="background:#e8e6ff;color:#6366f1;">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- EDIT TASK MODAL -->
@@ -169,6 +198,7 @@
             </div>
             <div class="mb-4">
                 <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign to students:</p>
+                <div id="edit-group-chips" class="flex flex-wrap items-center gap-2 mb-2"></div>
                 <div id="edit-student-checkboxes" class="grid grid-cols-5 sm:grid-cols-7 gap-2 max-h-48 overflow-y-auto"></div>
             </div>
             <div class="flex gap-2 justify-end">
@@ -260,7 +290,10 @@
             <div id="tasks-section">
                 <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                     <h2 class="font-display text-2xl font-bold" style="color:#1a1a2e;">Create Task</h2>
-                    <button id="bulk-add-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-plus" style="width:16px;height:16px;"></i> Bulk Add</button>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button id="groups-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="users" style="width:16px;height:16px;"></i> Groups</button>
+                        <button id="bulk-add-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-plus" style="width:16px;height:16px;"></i> Bulk Add</button>
+                    </div>
                 </div>
                 <form id="add-task-form" class="mb-6 bg-white rounded-xl p-4 shadow-sm">
                     <div class="flex gap-2 mb-4">
@@ -281,6 +314,7 @@
                     </div>
                     <div class="mb-4">
                         <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign to students:</p>
+                        <div id="task-group-chips" class="flex flex-wrap items-center gap-2 mb-2"></div>
                         <div id="student-checkboxes" class="grid grid-cols-5 sm:grid-cols-7 gap-2"></div>
                     </div>
                     <div class="flex items-center mb-3">
@@ -364,6 +398,7 @@
     function recordsRef()       { return db.ref('teachers/' + teacherUid + '/records'); }
     function tokensRef()        { return db.ref('teachers/' + teacherUid + '/tokens'); }
     function totalStudentsRef() { return db.ref('teachers/' + teacherUid + '/config/totalStudents'); }
+    function groupsRef()        { return db.ref('teachers/' + teacherUid + '/groups'); }
 
     // =====================================================================
     // APP CONFIG
@@ -395,16 +430,20 @@
     let selectedTaskIds = new Set();
     let isAdminAuthed = false;
     let adminCheckPromise = Promise.resolve();
+    let groupData = {};       // groupId -> { name, students, created_at }
+    let editingGroupId = null;
 
     auth.onAuthStateChanged((user) => {
         if (!user) {
             isAdminAuthed = false;
             adminCheckPromise = Promise.resolve();
             subscribeToScope(DEFAULT_TEACHER_UID);
+            subscribeToGroups(null);
             if (currentView === "admin") showView("select");
             return;
         }
         subscribeToScope(user.uid);
+        subscribeToGroups(user.uid);
         adminCheckPromise = Promise.all([
             db.ref('teachers/' + user.uid + '/profile').get(),
             db.ref('admins/' + user.uid).get()
@@ -458,6 +497,7 @@
         if (countEl) countEl.textContent = TOTAL_STUDENTS;
         buildStudentGrid();
         buildStudentCheckboxes();
+        renderAllGroupChips();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
     }
@@ -487,6 +527,33 @@
         const recRef = recordsRef();        recRef.on("value", _recordsHandler);        _activeSubs.push({ ref: recRef, event: "value", handler: _recordsHandler });
         const tokRef = tokensRef();         tokRef.on("value", _tokensHandler);         _activeSubs.push({ ref: tokRef, event: "value", handler: _tokensHandler });
         const cfgRef = totalStudentsRef();  cfgRef.on("value", _totalStudentsHandler);  _activeSubs.push({ ref: cfgRef, event: "value", handler: _totalStudentsHandler });
+    }
+
+    // Groups are teacher-only data: students never read them, so this listener is
+    // driven by auth state rather than by the classroom scope.
+    function _groupsHandler(snapshot) {
+        groupData = snapshot.val() || {};
+        renderAllGroupChips();
+        if (currentView === "admin") renderAdmin();
+        if (!document.getElementById("groups-modal").classList.contains("hidden")) renderGroupsList();
+    }
+
+    let _groupSub = null;
+
+    function subscribeToGroups(uid) {
+        if (_groupSub) {
+            try { _groupSub.ref.off("value", _groupSub.handler); } catch (e) { /* ignore */ }
+            _groupSub = null;
+        }
+        groupData = {};
+        if (!uid) {
+            renderAllGroupChips();
+            if (currentView === "admin") renderAdmin();
+            return;
+        }
+        const ref = db.ref("teachers/" + uid + "/groups");
+        ref.on("value", _groupsHandler);
+        _groupSub = { ref, handler: _groupsHandler };
     }
 
     // Initial attach using the default classroom scope.
@@ -692,6 +759,97 @@
     }
 
     // =====================================================================
+    // STUDENT GROUPS
+    // =====================================================================
+    function parseStudentList(str) {
+        return String(str || "").split(",").map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n)).sort((a, b) => a - b);
+    }
+    function getGroups() {
+        return Object.keys(groupData)
+            .map(id => ({ id, name: (groupData[id] && groupData[id].name) || "Untitled", students: parseStudentList(groupData[id] && groupData[id].students) }))
+            .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+    }
+    function getGroupById(id) {
+        return getGroups().find(g => g.id === id) || null;
+    }
+
+    // Each entry pairs a chip row with the student checkbox grid it controls.
+    const GROUP_CHIP_TARGETS = [
+        ["task-group-chips", "student-checkboxes"],
+        ["bulk-group-chips", "bulk-student-checkboxes"],
+        ["edit-group-chips", "edit-student-checkboxes"]
+    ];
+
+    function groupCheckboxes(checkboxContainerId, group) {
+        const boxes = [...document.querySelectorAll("#" + checkboxContainerId + " input[type=checkbox]")];
+        return boxes.filter(cb => group.students.includes(parseInt(cb.value, 10)));
+    }
+
+    function applyGroupToCheckboxes(group, checkboxContainerId) {
+        const targets = groupCheckboxes(checkboxContainerId, group);
+        if (targets.length === 0) {
+            showToast("No students from " + group.name + " are in range", "error");
+            return;
+        }
+        const allChecked = targets.every(cb => cb.checked);
+        targets.forEach(cb => { cb.checked = !allChecked; });
+    }
+
+    function refreshGroupChipStates(chipContainerId, checkboxContainerId) {
+        const c = document.getElementById(chipContainerId);
+        if (!c) return;
+        c.querySelectorAll(".group-chip").forEach(btn => {
+            const g = getGroupById(btn.dataset.groupId);
+            const targets = g ? groupCheckboxes(checkboxContainerId, g) : [];
+            const active = targets.length > 0 && targets.every(cb => cb.checked);
+            btn.style.cssText = active
+                ? "background:#6366f1;color:#fff;border:1px solid #6366f1;"
+                : "background:#e8e6ff;color:#6366f1;border:1px solid #c7d2fe;";
+        });
+    }
+
+    function renderGroupChips(chipContainerId, checkboxContainerId) {
+        const c = document.getElementById(chipContainerId);
+        if (!c) return;
+        c.innerHTML = "";
+        const groups = getGroups();
+
+        const label = document.createElement("span");
+        label.className = "text-xs font-semibold";
+        label.style.color = "#666";
+        label.textContent = groups.length > 0 ? "Groups:" : "No groups yet.";
+        c.appendChild(label);
+
+        groups.forEach(g => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "group-chip text-xs font-semibold px-3 py-1 rounded-full";
+            btn.dataset.groupId = g.id;
+            btn.textContent = g.name + " · " + g.students.length;
+            btn.title = "Students " + (g.students.join(", ") || "none");
+            btn.addEventListener("click", () => {
+                applyGroupToCheckboxes(g, checkboxContainerId);
+                refreshGroupChipStates(chipContainerId, checkboxContainerId);
+            });
+            c.appendChild(btn);
+        });
+
+        const manage = document.createElement("button");
+        manage.type = "button";
+        manage.className = "text-xs font-medium px-3 py-1 rounded-full";
+        manage.style.cssText = "background:transparent;color:#6366f1;border:1px dashed #a5b4fc;";
+        manage.textContent = groups.length > 0 ? "Manage" : "+ New group";
+        manage.addEventListener("click", openGroupsModal);
+        c.appendChild(manage);
+
+        refreshGroupChipStates(chipContainerId, checkboxContainerId);
+    }
+
+    function renderAllGroupChips() {
+        GROUP_CHIP_TARGETS.forEach(([chipId, cbId]) => renderGroupChips(chipId, cbId));
+    }
+
+    // =====================================================================
     // TOAST NOTIFICATIONS
     // =====================================================================
     function showToast(msg, type = "success") {
@@ -892,6 +1050,7 @@
                 const actionArea = el.querySelector(".action-area");
                 renderDeleteButton(actionArea, task);
                 renderStudentDeleteButtons(el, task);
+                renderTaskGroupButtons(el, task);
             } else {
                 el = document.createElement("div");
                 el.className = "task-enter flex flex-col gap-3 bg-white rounded-xl px-4 py-3 shadow-sm";
@@ -919,10 +1078,12 @@
           ${priorityHtml}${linkHtml}${dueHtml}
         </div>
         <div class="student-delete-container flex gap-2 flex-wrap"></div>
+        <div class="task-group-container flex gap-2 flex-wrap items-center"></div>
       `;
                 const actionArea = el.querySelector(".action-area");
                 renderDeleteButton(actionArea, task);
                 renderStudentDeleteButtons(el, task);
+                renderTaskGroupButtons(el, task);
             }
             const refNode = list.children[idx];
             if (refNode !== el) list.insertBefore(el, refNode || null);
@@ -1001,6 +1162,199 @@
             btn.addEventListener("click", () => removeTaskFromStudent(task, studentNum));
             deleteContainer.appendChild(btn);
         });
+    }
+
+    // One-click assign/unassign of a whole group on an existing task.
+    function renderTaskGroupButtons(container, task) {
+        const wrap = container.querySelector(".task-group-container");
+        if (!wrap) return;
+        wrap.innerHTML = "";
+        const groups = getGroups();
+        if (groups.length === 0) return;
+
+        const assigned = new Set(parseStudentList(task.assigned_to));
+
+        const label = document.createElement("p");
+        label.textContent = "Assign group:";
+        label.className = "text-xs font-semibold w-full";
+        label.style.color = "#666";
+        wrap.appendChild(label);
+
+        groups.forEach(g => {
+            const full = g.students.length > 0 && g.students.every(n => assigned.has(n));
+            const btn = document.createElement("button");
+            btn.className = "px-2 py-1 rounded-lg text-xs font-semibold";
+            btn.style.cssText = full ? "background:#6366f1;color:#fff;" : "background:#e8e6ff;color:#6366f1;";
+            btn.textContent = (full ? "✓ " : "+ ") + g.name;
+            btn.setAttribute("aria-label", (full ? "Remove " : "Assign ") + g.name);
+            btn.title = full
+                ? "Remove " + g.name + " (" + g.students.join(", ") + ") from this task"
+                : "Assign " + g.name + " (" + g.students.join(", ") + ") to this task";
+            btn.addEventListener("click", () => toggleGroupOnTask(task, g));
+            wrap.appendChild(btn);
+        });
+    }
+
+    async function toggleGroupOnTask(task, group) {
+        const assigned = new Set(parseStudentList(task.assigned_to));
+        const full = group.students.length > 0 && group.students.every(n => assigned.has(n));
+        group.students.forEach(n => { if (full) assigned.delete(n); else assigned.add(n); });
+        const updated = [...assigned].sort((a, b) => a - b);
+        const r = await fbUpdate({ ...task, assigned_to: updated.join(",") });
+        if (r.isOk) showToast(full ? group.name + " removed from task" : group.name + " assigned!");
+        else showToast("Error updating task", "error");
+    }
+
+    // =====================================================================
+    // GROUPS MODAL
+    // =====================================================================
+    function updateGroupCountHint() {
+        const n = document.querySelectorAll("#group-student-checkboxes input:checked").length;
+        document.getElementById("group-count-hint").textContent = n + " student" + (n === 1 ? "" : "s") + " selected";
+    }
+
+    function resetGroupForm() {
+        editingGroupId = null;
+        document.getElementById("group-form-title").textContent = "New group";
+        document.getElementById("group-name-input").value = "";
+        document.getElementById("group-save").textContent = "Save group";
+        document.getElementById("group-cancel-edit").classList.add("hidden");
+        document.getElementById("group-error").classList.add("hidden");
+        buildStudentCheckboxes("group-student-checkboxes");
+        updateGroupCountHint();
+    }
+
+    function startGroupEdit(id) {
+        const g = getGroupById(id);
+        if (!g) return;
+        editingGroupId = id;
+        document.getElementById("group-form-title").textContent = "Edit group";
+        document.getElementById("group-name-input").value = g.name;
+        document.getElementById("group-save").textContent = "Save changes";
+        document.getElementById("group-cancel-edit").classList.remove("hidden");
+        document.getElementById("group-error").classList.add("hidden");
+        buildStudentCheckboxes("group-student-checkboxes");
+        document.querySelectorAll("#group-student-checkboxes input").forEach(cb => {
+            cb.checked = g.students.includes(parseInt(cb.value, 10));
+        });
+        updateGroupCountHint();
+        document.getElementById("group-name-input").focus();
+    }
+
+    function renderGroupsList() {
+        const list = document.getElementById("groups-list");
+        const empty = document.getElementById("groups-empty");
+        if (!list) return;
+        list.innerHTML = "";
+        const groups = getGroups();
+        empty.classList.toggle("hidden", groups.length > 0);
+
+        groups.forEach(g => {
+            const row = document.createElement("div");
+            row.className = "flex items-center gap-2 rounded-xl px-3 py-2";
+            row.style.cssText = "background:#fff;border:1px solid #e5e7eb;";
+
+            const info = document.createElement("div");
+            info.className = "flex-1 min-w-0";
+            const name = document.createElement("p");
+            name.className = "font-semibold text-sm";
+            name.style.color = "#1a1a2e";
+            name.textContent = g.name;
+            const members = document.createElement("p");
+            members.className = "text-xs break-words";
+            members.style.color = "#666";
+            members.textContent = g.students.length > 0 ? "Students " + g.students.join(", ") : "No students";
+            info.appendChild(name);
+            info.appendChild(members);
+            row.appendChild(info);
+
+            const editBtn = document.createElement("button");
+            editBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold flex-shrink-0";
+            editBtn.style.cssText = "background:#e8e6ff;color:#6366f1;";
+            editBtn.textContent = "Edit";
+            editBtn.setAttribute("aria-label", "Edit group " + g.name);
+            editBtn.addEventListener("click", () => startGroupEdit(g.id));
+            row.appendChild(editBtn);
+
+            const delBtn = document.createElement("button");
+            delBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold flex-shrink-0";
+            delBtn.style.cssText = "background:#ffe8e8;color:#e74c3c;";
+            delBtn.textContent = "Delete";
+            delBtn.setAttribute("aria-label", "Delete group " + g.name);
+            delBtn.addEventListener("click", () => deleteGroup(g));
+            row.appendChild(delBtn);
+
+            list.appendChild(row);
+        });
+    }
+
+    async function deleteGroup(group) {
+        if (!confirm("Delete the group \"" + group.name + "\"? Tasks already assigned to these students are not changed.")) return;
+        try {
+            await groupsRef().child(group.id).remove();
+            if (editingGroupId === group.id) resetGroupForm();
+            showToast("Group deleted!");
+        } catch (e) {
+            console.error("Group delete error:", e);
+            showToast("Error deleting group", "error");
+        }
+    }
+
+    async function saveGroup() {
+        const err = document.getElementById("group-error");
+        err.classList.add("hidden");
+        const name = document.getElementById("group-name-input").value.trim();
+        if (!name) {
+            err.textContent = "Give the group a name.";
+            err.classList.remove("hidden");
+            return;
+        }
+        const selected = [...document.querySelectorAll("#group-student-checkboxes input:checked")]
+            .map(cb => parseInt(cb.value, 10)).sort((a, b) => a - b);
+        if (selected.length === 0) {
+            err.textContent = "Pick at least one student.";
+            err.classList.remove("hidden");
+            return;
+        }
+        if (getGroups().some(g => g.id !== editingGroupId && g.name.toLowerCase() === name.toLowerCase())) {
+            err.textContent = "A group with that name already exists.";
+            err.classList.remove("hidden");
+            return;
+        }
+
+        const btn = document.getElementById("group-save");
+        const origText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+        try {
+            if (editingGroupId) {
+                await groupsRef().child(editingGroupId).update({ name, students: selected.join(",") });
+                showToast("Group updated!");
+            } else {
+                await groupsRef().push({ name, students: selected.join(","), created_at: new Date().toISOString() });
+                showToast("Group created!");
+            }
+            resetGroupForm();
+        } catch (e) {
+            console.error("Group save error:", e);
+            err.textContent = "Couldn't save the group. Try again.";
+            err.classList.remove("hidden");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = origText;
+        }
+    }
+
+    function openGroupsModal() {
+        if (!auth.currentUser) { showToast("Sign in first", "error"); return; }
+        renderGroupsList();
+        resetGroupForm();
+        document.getElementById("groups-modal").classList.remove("hidden");
+        setTimeout(() => document.getElementById("group-name-input").focus(), 0);
+    }
+
+    function closeGroupsModal() {
+        document.getElementById("groups-modal").classList.add("hidden");
     }
 
     function renderTaskSnapshot() {
@@ -1465,6 +1819,7 @@
             container.appendChild(label);
         }
 
+        renderGroupChips("edit-group-chips", "edit-student-checkboxes");
         document.getElementById("edit-modal").classList.remove("hidden");
     }
 
@@ -1561,7 +1916,33 @@
     (async () => {
         buildStudentGrid();
         buildStudentCheckboxes();
+        renderAllGroupChips();
         applyConfig(defaultConfig);
+
+        // Keep each group chip row's active state in sync with its checkbox grid.
+        GROUP_CHIP_TARGETS.forEach(([chipId, cbId]) => {
+            const cont = document.getElementById(cbId);
+            if (cont) cont.addEventListener("change", () => refreshGroupChipStates(chipId, cbId));
+        });
+
+        document.getElementById("groups-btn").addEventListener("click", openGroupsModal);
+        document.getElementById("groups-close").addEventListener("click", closeGroupsModal);
+        document.getElementById("groups-modal").addEventListener("click", (e) => {
+            if (e.target.id === "groups-modal") closeGroupsModal();
+        });
+        document.getElementById("group-save").addEventListener("click", (e) => { e.preventDefault(); saveGroup(); });
+        document.getElementById("group-cancel-edit").addEventListener("click", (e) => { e.preventDefault(); resetGroupForm(); });
+        document.getElementById("group-name-input").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); saveGroup(); }
+        });
+        document.getElementById("group-student-checkboxes").addEventListener("change", updateGroupCountHint);
+        document.getElementById("group-select-all").addEventListener("click", (e) => {
+            e.preventDefault();
+            const boxes = document.querySelectorAll("#group-student-checkboxes input");
+            const allChecked = [...boxes].every(cb => cb.checked);
+            boxes.forEach(cb => { cb.checked = !allChecked; });
+            updateGroupCountHint();
+        });
 
         // Events
         document.getElementById("admin-btn").addEventListener("click", async () => {
@@ -1810,6 +2191,8 @@
             const redeem = document.getElementById("redeem-modal");
             const edit = document.getElementById("edit-modal");
             const bulk = document.getElementById("bulk-modal");
+            const groups = document.getElementById("groups-modal");
+            if (groups && !groups.classList.contains("hidden")) { closeGroupsModal(); return; }
             if (settings && !settings.classList.contains("hidden")) { closeSettingsModal(); return; }
             if (redeem && !redeem.classList.contains("hidden")) { redeem.classList.add("hidden"); return; }
             if (edit && !edit.classList.contains("hidden")) { closeEditModal(); return; }
@@ -2079,6 +2462,7 @@
         }
         function openBulkModal() {
             buildStudentCheckboxes("bulk-student-checkboxes");
+            renderGroupChips("bulk-group-chips", "bulk-student-checkboxes");
             document.getElementById("bulk-tasks-input").value = "";
             document.getElementById("bulk-task-due").value = "";
             const prio = document.getElementById("bulk-task-priority");
@@ -2104,6 +2488,7 @@
             const boxes = document.querySelectorAll("#bulk-student-checkboxes input");
             const allChecked = [...boxes].every(cb => cb.checked);
             boxes.forEach(cb => { cb.checked = !allChecked; });
+            refreshGroupChipStates("bulk-group-chips", "bulk-student-checkboxes");
         });
         document.getElementById("bulk-task-priority").addEventListener("change", (e) => {
             e.target.parentElement.classList.toggle("active", e.target.checked);
@@ -2180,6 +2565,7 @@
             document.getElementById("task-priority").checked = false;
             document.getElementById("task-priority").parentElement.classList.remove("active");
             document.querySelectorAll("#student-checkboxes input").forEach(cb => cb.checked = false);
+            refreshGroupChipStates("task-group-chips", "student-checkboxes");
             await addTask(text, desc, selected, link, dueDate, priority);
         });
 
@@ -2188,6 +2574,7 @@
             const checkboxes = document.querySelectorAll("#student-checkboxes input");
             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
             checkboxes.forEach(cb => cb.checked = !allChecked);
+            refreshGroupChipStates("task-group-chips", "student-checkboxes");
         });
 
         document.querySelectorAll(".priority-toggle input").forEach(cb => {
