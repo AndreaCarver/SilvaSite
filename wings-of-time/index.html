@@ -819,13 +819,12 @@ function fkey(a,b){return Math.min(a,b)+'x'+Math.max(a,b);}
 function hero(){for(var i=0;i<HEROES.length;i++){if(HEROES[i].id===save.hero)return HEROES[i];}return HEROES[0];}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function heroName(){return (save.names&&save.names.hero)||hero().name;}
-var TESTALL=false;
 function petOwned(n){
   var h=hatchedList();
   if(n===13){for(var t=2;t<=12;t++){if(h.indexOf(t)<0)return false;}return true;}
   return h.indexOf(n)>=0;
 }
-function hatchedList(){if(TESTALL)return [2,3,4,5,6,7,8,9,10,11,12];return Array.isArray(save.hatched)?save.hatched:[];}
+function hatchedList(){return Array.isArray(save.hatched)?save.hatched:[];}
 var AV={
   card:[{n:'None',k:'none',s:0},{n:'Castle bedroom',k:'bedroom',s:1},{n:'Throne room',k:'throne',u:3,s:3},{n:'Sunset ramparts',k:'ramparts',u:7,s:7},{n:'Dragon hoard',k:'hoard',u:11,s:11},{n:'Soccer field',k:'soccer',u:5,s:5},{n:'Mountain peak',k:'peak',u:9,s:9}],
   skin:[{n:'None',k:'none'},{n:'Dragon gamer',k:'gamer',u:2},{n:'Caped hero',k:'hero',u:3},{n:'Dragon knight',k:'knight',u:5},{n:'Symbiote',k:'dragon',u:15},{n:'Soccer kit',k:'soccer',s:0.1},{n:'Striped kit',k:'stripe',s:0.2,u:20},{n:'Hooped kit',k:'hoops',s:0.3,u:21},{n:'Goalkeeper kit',k:'keeper',s:0.4,u:23},{n:'Crimson Symbiote',k:'dragon',body:'#D61F45',gc:'#FF5A6E',u:25},{n:'Jade Symbiote',k:'dragon',body:'#12A87A',gc:'#3DDC97',u:26},{n:'Topaz Symbiote',k:'dragon',body:'#E58E00',gc:'#FFC83D',u:27},{n:'Sapphire Symbiote',k:'dragon',body:'#1F5FD6',gc:'#4DA3FF',u:28}],
@@ -898,7 +897,7 @@ function hairFront(){
 }
 function avStar(cx,cy,R,r,fill){var p=[];for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5,rad=i%2?r:R;p.push((cx+rad*Math.cos(a)).toFixed(1)+','+(cy+rad*Math.sin(a)).toFixed(1));}return '<polygon points="'+p.join(' ')+'" fill="'+fill+'"/>';}
 function symGlow(kind){var o=AV[kind][avSel(kind)];return (o&&o.gc)||'#B79CFF';}
-function avUnlocked(o){return TESTALL||!o.u||(save.bossWins||0)>=o.u;}
+function avUnlocked(o){return !o.u||(save.bossWins||0)>=o.u;}
 function avSel(g){
   var v=save.av&&save.av[g];
   if(typeof v!=='number'||v<0||v>=AV[g].length)return 0;
@@ -1434,7 +1433,7 @@ function renderAvatarPanel(){
     if(r[0]==='skin'&&skinOn)h+='<span class="avhint">'+(kit?'Hides armor and head. Tabard color sets the kit color.':((skinK==='knight'||skinK==='hero')?'Hides armor, tabard, cloak, and head.':'Hides armor, tabard, and head.'))+'</span>';
     h+='</div>'+swRow+'</div>';
   });
-  h+='</div></div><p class="note" id="avmsg">Boss wins: '+(save.bossWins||0)+'. Beat the final dragon to unlock new gear.'+(TESTALL?' Test mode is on: everything is unlocked.':'')+'</p>';
+  h+='</div></div><p class="note" id="avmsg">Boss wins: '+(save.bossWins||0)+'. Beat the final dragon to unlock new gear.'+'</p>';
   el.innerHTML=h;
   document.getElementById('avctl').onclick=function(ev){
     var b=ev.target.closest('button');if(!b)return;
@@ -2263,7 +2262,6 @@ function renderHome(){
   h+=nestHtml()+'</div>';
   h+=yardHtml(trouble);
   h+='<div class="topline full"><button class="small-btn" id="snd">Sound: '+(save.sound?'on':'off')+'</button>'+
-  '<button class="small-btn" id="testall">Test: unlock all gear'+(TESTALL?' (on)':'')+'</button>'+
   '<button class="small-btn" id="reset">Reset progress</button></div>';
   $app.innerHTML=h+'</div>';
   equalizeWalls();
@@ -2289,7 +2287,6 @@ function renderHome(){
   $('#go').onclick=function(){kickoff(function(){window.scrollTo(0,0);newGame(false);});};
   $app.querySelectorAll('[data-timer]').forEach(function(b){b.onclick=function(){save.timer=+b.getAttribute('data-timer');persist();renderHome();};});
   var f=$('#focus');if(f)f.onclick=function(){kickoff(function(){window.scrollTo(0,0);newGame(true);});};
-  $('#testall').onclick=function(){TESTALL=!TESTALL;renderHome();};
   $('#snd').onclick=function(){save.sound=!save.sound;persist();if(save.sound)SFX.good();renderHome();};
   $('#reset').onclick=function(){
     askConfirm('Erase all eggs and fact history?','ERASE','CANCEL',function(){save.stats={};save.eggs=[];save.eggSets=[];save.hatched=[];save.r2={};save.babyNames={};save.symSeen=false;save.best=0;save.bossWins=0;save.av={skin:0,armor:0,tabard:0,cloak:0,head:0,hair:0,haircol:0,shield:0,sword:0,pet:0};persist();renderHome();});
