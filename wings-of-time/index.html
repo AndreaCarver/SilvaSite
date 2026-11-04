@@ -828,15 +828,15 @@ function hatchedList(){return Array.isArray(save.hatched)?save.hatched:[];}
 /* after boss win 36, a new reward unlocks every 5 wins: 41, 46, 51, 56, ... */
 var AV={
   card:[{n:'None',k:'none',s:0},{n:'Castle bedroom',k:'bedroom',s:1},{n:'Throne room',k:'throne',u:3,s:3},{n:'Sunset ramparts',k:'ramparts',u:7,s:7},{n:'Dragon hoard',k:'hoard',u:11,s:11},{n:'Soccer field',k:'soccer',u:5,s:5},{n:'Mountain peak',k:'peak',u:9,s:9},{n:'Pirate ship',k:'ship',u:29,s:29},{n:'Under the sea',k:'sea',u:36,s:36}],
-  skin:[{n:'None',k:'none'},{n:'Dragon gamer',k:'gamer',u:2},{n:'Caped hero',k:'hero',u:3},{n:'Dragon knight',k:'knight',u:5},{n:'Symbiote',k:'dragon',u:15},{n:'Soccer kit',k:'soccer',s:0.1},{n:'Striped kit',k:'stripe',s:0.2,u:20},{n:'Hooped kit',k:'hoops',s:0.3,u:21},{n:'Goalkeeper kit',k:'keeper',s:0.4,u:23},{n:'Crimson Symbiote',k:'dragon',body:'#D61F45',gc:'#FF5A6E',u:25},{n:'Jade Symbiote',k:'dragon',body:'#12A87A',gc:'#3DDC97',u:26},{n:'Topaz Symbiote',k:'dragon',body:'#E58E00',gc:'#FFC83D',u:27},{n:'Sapphire Symbiote',k:'dragon',body:'#1F5FD6',gc:'#4DA3FF',u:28},{n:'Pirate skipper',k:'pskipper',u:30,s:5.1},{n:'Pirate captain',k:'pcaptain',u:31,s:5.2},{n:'Peg-leg pirate',k:'pegleg',u:32,s:5.3},{n:'Naval captain',k:'naval',u:33,s:5.4},{n:'Blue shark',k:'shark',u:34,s:5.5},{n:'Kraken',k:'kraken',u:35,s:5.6},{n:'Fire drake rider',k:'drake',u:41,s:6.1},{n:'Thunder hoodie',k:'zap',u:46,s:6.2},{n:'Fox scout',k:'fox',u:51,s:6.3},{n:'Shadow spikes',k:'spook',u:56,s:6.4}],
+  skin:[{n:'None',k:'none'},{n:'Dragon gamer',k:'gamer',u:2},{n:'Caped hero',k:'hero',u:3},{n:'Dragon knight',k:'knight',u:5},{n:'Symbiote',k:'dragon',u:15},{n:'Soccer kit',k:'soccer',s:0.1},{n:'Striped kit',k:'stripe',s:0.2,u:20},{n:'Hooped kit',k:'hoops',s:0.3,u:21},{n:'Goalkeeper kit',k:'keeper',s:0.4,u:23},{n:'Crimson Symbiote',k:'dragon',body:'#D61F45',gc:'#FF5A6E',u:25},{n:'Jade Symbiote',k:'dragon',body:'#12A87A',gc:'#3DDC97',u:26},{n:'Topaz Symbiote',k:'dragon',body:'#E58E00',gc:'#FFC83D',u:27},{n:'Sapphire Symbiote',k:'dragon',body:'#1F5FD6',gc:'#4DA3FF',u:28},{n:'Pirate skipper',k:'pskipper',u:30,s:5.1},{n:'Pirate captain',k:'pcaptain',u:31,s:5.2},{n:'Peg-leg pirate',k:'pegleg',u:32,s:5.3},{n:'Naval captain',k:'naval',u:33,s:5.4},{n:'Blue shark',k:'shark',u:34,s:5.5},{n:'Kraken',k:'kraken',u:35,s:5.6},{n:'Fire drake rider',k:'drake',u:41,s:6.1},{n:'Thunder hoodie',k:'zap',u:46,s:6.2},{n:'Fox scout',k:'fox',u:51,s:6.3},{n:'Shadow spikes',k:'spook',u:56,s:6.4},{n:'Kitty overalls',k:'kitty',u:61,s:6.5},{n:'Floppy bunny',k:'bunny',u:66,s:6.6},{n:'Beret puppy',k:'puppy',u:71,s:6.7},{n:'Froggy dress',k:'frog',u:76,s:6.8}],
   armor:[{n:'None',k:'none'},{n:'Cloth tunic',k:'tunic'},{n:'Chainmail',k:'chain',u:1},{n:'Steel armor',k:'plate',u:1},{n:'Gold armor',k:'gold',u:9},{n:'Lace-up tunic',k:'lace',s:1.3},{n:'Chevron tunic',k:'chev',s:1.5},{n:'Vest tunic',k:'vest',s:1.7}],
   tabard:[{n:'Blue',c:'#378ADD'},{n:'Red',c:'#E24B4A'},{n:'Green',c:'#639922'},{n:'Purple',c:'#7F77DD'},{n:'Black',c:'#2C2C2A'}],
   cloak:[{n:'None',c:null},{n:'Red',c:'#E24B4A'},{n:'Blue',c:'#378ADD'},{n:'Green',c:'#639922'},{n:'Black',c:'#2C2C2A',u:3},{n:'Royal purple',c:'#534AB7',u:11}],
   head:[{n:'None',k:'none'},{n:'Hood',k:'hood'},{n:'Knight helmet',k:'helm'},{n:'Plumed helmet',k:'plume',u:2},{n:'Great helm',k:'great',u:5},{n:'Dragon helm',k:'dragon',u:12},{n:'Crown',k:'crown',u:7},{n:'Gold helmet',k:'ghelm',s:4.1,u:16},{n:'Gold plumed helmet',k:'gplume',s:4.2,u:17},{n:'Gold great helm',k:'ggreat',s:4.3,u:18},{n:'Winged helmet',k:'wing',s:4.4,u:19},{n:'Pirate hat',k:'phat',s:5.1,u:8},{n:'Pirate bandana',k:'bandana',s:5.2,u:2}],
   hair:[{n:'None',k:'none'},{n:'Short',k:'short'},{n:'Spiky',k:'spiky'},{n:'Curly',k:'curly'},{n:'Ponytail',k:'pony',u:4},{n:'Long',k:'long',u:6},{n:'Mohawk',k:'mohawk',u:10},{n:'Cropped',k:'mullet',u:24},{n:'Fluffy',k:'fluffy',u:3,s:3.5}],
   haircol:[{n:'Black',c:'#2d2a32'},{n:'Brown',c:'#7a4a2a'},{n:'Blonde',c:'#e6b84d'},{n:'Red',c:'#c0472f'},{n:'Blue',c:'#3b82f6'},{n:'Pink',c:'#ec6fa8'},{n:'Green',c:'#3fae6a'}],
-  shield:[{n:'None',k:'none'},{n:'Wooden',k:'wood'},{n:'Steel',k:'steel'},{n:'Symbiote Shield',k:'crest',u:13,full:true},{n:'Soccer ball',k:'ball'},{n:'Crimson Symbiote Shield',k:'crest',gc:'#FF5A6E',u:25,full:true},{n:'Jade Symbiote Shield',k:'crest',gc:'#3DDC97',u:26,full:true},{n:'Topaz Symbiote Shield',k:'crest',gc:'#FFC83D',u:27,full:true},{n:'Sapphire Symbiote Shield',k:'crest',gc:'#4DA3FF',u:28,full:true},{n:'Crossbones shield',k:'bones',u:18,full:true}],
-  sword:[{n:'None',c:null},{n:'Wooden',c:'#B4803E',gd:'#6B4F3A'},{n:'Steel',c:'#D3D1C7',gd:'#BA7517'},{n:'Dragon fang',c:'#1D9E75',gd:'#EF9F27',wings:true,u:4},{n:'Golden',c:'#EF9F27',gd:'#BA7517',u:8},{n:'Trophy',c:'#EF9F27',gd:'#BA7517',trophy:true,u:22},{n:'Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,u:14,full:true},{n:'Crimson Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#FF5A6E',u:25,full:true},{n:'Jade Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#3DDC97',u:26,full:true},{n:'Topaz Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#FFC83D',u:27,full:true},{n:'Sapphire Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#4DA3FF',u:28,full:true},{n:'Pirate cutlass',c:'#D3D1C7',gd:'#EF9F27',cutlass:true,u:16,full:true}],
+  shield:[{n:'None',k:'none'},{n:'Wooden',k:'wood'},{n:'Steel',k:'steel'},{n:'Symbiote Shield',k:'crest',u:13,full:true},{n:'Soccer ball',k:'ball'},{n:'Crimson Symbiote Shield',k:'crest',gc:'#FF5A6E',u:25,full:true},{n:'Jade Symbiote Shield',k:'crest',gc:'#3DDC97',u:26,full:true},{n:'Topaz Symbiote Shield',k:'crest',gc:'#FFC83D',u:27,full:true},{n:'Sapphire Symbiote Shield',k:'crest',gc:'#4DA3FF',u:28,full:true},{n:'Crossbones shield',k:'bones',u:18,full:true},{n:'Cake shield',k:'cake',u:81,full:true}],
+  sword:[{n:'None',c:null},{n:'Wooden',c:'#B4803E',gd:'#6B4F3A'},{n:'Steel',c:'#D3D1C7',gd:'#BA7517'},{n:'Dragon fang',c:'#1D9E75',gd:'#EF9F27',wings:true,u:4},{n:'Golden',c:'#EF9F27',gd:'#BA7517',u:8},{n:'Trophy',c:'#EF9F27',gd:'#BA7517',trophy:true,u:22},{n:'Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,u:14,full:true},{n:'Crimson Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#FF5A6E',u:25,full:true},{n:'Jade Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#3DDC97',u:26,full:true},{n:'Topaz Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#FFC83D',u:27,full:true},{n:'Sapphire Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#4DA3FF',u:28,full:true},{n:'Pirate cutlass',c:'#D3D1C7',gd:'#EF9F27',cutlass:true,u:16,full:true},{n:'Lollipop sword',c:'#FFC9DE',gd:'#BFE6FF',lolly:true,u:86,full:true}],
   eyes:[{n:'None',k:'none'},{n:'Eyepatch',k:'patch',u:4,full:true}],
   ears:[{n:'None',k:'none'},{n:'Pirate earrings',k:'hoops',u:6,full:true}],
   beard:[{n:'None',k:'none'},{n:'Pirate beard',k:'beard',u:10,full:true}]
@@ -1080,6 +1080,19 @@ function shieldSvg(sh,hand){
     g+='<circle cx="66" cy="172" r="8" fill="'+hand+'"/>';
     return g;
   }
+  if(sh==='cake'){
+    /* a round cake seen from above */
+    function ring(n,rad,start,draw){var o='';for(var i=0;i<n;i++){var a=start+i*2*Math.PI/n;o+=draw(38+rad*Math.cos(a),162+rad*Math.sin(a),i,a);}return o;}
+    g+='<circle cx="38" cy="162" r="28" fill="#FFFDF8"/><circle cx="38" cy="162" r="24" fill="#FFC9DE"/>';
+    g+=ring(16,24.5,0,function(x,y){return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="4.4" fill="#FFFDF8"/>';});
+    var SP=['#BFE6FF','#D9CCFF','#FFE08A'];
+    g+=ring(9,16,0.3,function(x,y,i,a){return '<rect x="'+(x-3).toFixed(1)+'" y="'+(y-1.2).toFixed(1)+'" width="6" height="2.4" rx="1.2" fill="'+SP[i%3]+'" transform="rotate('+Math.round(a*180/Math.PI+40+i*25)+' '+x.toFixed(1)+' '+y.toFixed(1)+')"/>';});
+    g+='<circle cx="38" cy="162" r="11.5" fill="#FFF7E3"/>';
+    g+=ring(8,9,0,function(x,y){return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2.8" fill="#C9F2E0"/>';});
+    g+='<circle cx="38" cy="162" r="6" fill="#FF9DBB"/><circle cx="36" cy="160" r="1.7" fill="#fff" opacity=".85"/><path d="M 38 157 C 39 154, 41 152, 44 151" fill="none" stroke="#9BD8B4" stroke-width="2" stroke-linecap="round"/>';
+    g+='<circle cx="66" cy="172" r="8" fill="'+hand+'"/>';
+    return g;
+  }
   if(sh==='crest'){
     var SHP='M 14 120 L 62 120 L 62 162 Q 62 192 38 204 Q 14 192 14 162 Z';
     g+='<g class="tglow">'+[[14,0.1],[10,0.16],[6.5,0.28]].map(function(h){return '<path d="'+SHP+'" fill="none" stroke="'+symGlow('shield')+'" stroke-width="'+h[0]+'" stroke-linejoin="round" opacity="'+h[1]+'"/>';}).join('')+'</g>';
@@ -1117,6 +1130,17 @@ function swordSvg(sw,hand){
       '<path d="M 136 158 C 136 136, 138 112, 146 90" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>'+
       '<rect x="122" y="160" width="24" height="6" rx="3" fill="'+sw.gd+'"/><path d="M 124 166 Q 118 180 130 188 L 138 188" fill="none" stroke="'+sw.gd+'" stroke-width="3" stroke-linecap="round"/>'+
       '<rect x="131" y="166" width="6" height="16" rx="2" fill="#5C4033"/><circle cx="134" cy="185" r="4" fill="'+sw.gd+'"/></g><circle cx="134" cy="172" r="8" fill="'+hand+'"/>';
+  }
+  if(sw.lolly){
+    var LC=['#FFC9DE','#FFF1B8','#C9F2E0','#BFE6FF','#D9CCFF','#FFC9DE','#FFF1B8','#BFE6FF'],LR=21,lw='';
+    LC.forEach(function(col,i){
+      var a=i*Math.PI/4,b=(i+1)*Math.PI/4;
+      lw+='<path d="M 134 88 L '+(134+LR*Math.cos(a)).toFixed(1)+' '+(88+LR*Math.sin(a)).toFixed(1)+' A '+LR+' '+LR+' 0 0 1 '+(134+LR*Math.cos(b)).toFixed(1)+' '+(88+LR*Math.sin(b)).toFixed(1)+' Z" fill="'+col+'"/>';
+    });
+    return '<g transform="rotate(14 134 172)"><rect x="131" y="104" width="6" height="82" rx="3" fill="#FFFDF8"/>'+
+      '<path d="M 131 118 L 137 124 M 131 130 L 137 136 M 131 142 L 137 148" stroke="#FFC9DE" stroke-width="2.4" stroke-linecap="round"/>'+lw+
+      '<circle cx="134" cy="88" r="'+LR+'" fill="none" stroke="#FFFDF8" stroke-width="2.5"/><circle cx="134" cy="88" r="5" fill="#FFFDF8"/><path d="M 120 80 C 122 74, 127 70, 133 69" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>'+
+      '<path d="M 134 112 C 124 104, 118 112, 122 118 C 126 121, 131 116, 134 112 C 144 104, 150 112, 146 118 C 142 121, 137 116, 134 112 Z" fill="#BFE6FF"/><circle cx="134" cy="112" r="3" fill="#9CCFF0"/></g><circle cx="134" cy="172" r="8" fill="'+hand+'"/>';
   }
   if(sw.trophy){
     return '<g transform="rotate(14 134 172)"><rect x="130" y="84" width="8" height="68" rx="2" fill="'+sw.c+'"/><path d="M 130 84 L 134 70 L 138 84 Z" fill="'+sw.c+'"/>'+
@@ -1336,7 +1360,7 @@ function parrotSvg(){
     '<path d="M 20 62 L 18 70 M 22 62 L 22 70 M 30 62 L 30 70 M 32 62 L 34 70" stroke="#6b625a" stroke-width="2.4" stroke-linecap="round"/>'+
     '</g></g>';
 }
-var CREATURES=['shark','kraken','drake','zap','fox','spook'];
+var CREATURES=['shark','kraken','drake','zap','fox','spook','kitty','bunny','puppy','frog'];
 function creatureSvg(kind){
   if(kind!=='shark'&&kind!=='kraken')return costumeSvg(kind);
   var sh=AV.shield[avSel('shield')].k,sw=AV.sword[avSel('sword')],g='',K='#141518',skin='#e2e4e5';
@@ -1405,6 +1429,16 @@ function costumeSvg(kind){
   function legs(c){return '<path d="'+LEGL+'" fill="'+c+'"/><path d="'+LEGR+'" fill="'+c+'"/>';}
   function arms(c){return '<path d="'+ARML+'" fill="'+c+'"/><path d="'+ARMR+'" fill="'+c+'"/>';}
   function hands(){return '<circle cx="67" cy="172" r="7.5" fill="'+S+'"/><circle cx="133" cy="172" r="7.5" fill="'+S+'"/>';}
+  function feet(c){return '<ellipse cx="85" cy="211" rx="14" ry="7.5" fill="'+c+'"/><ellipse cx="115" cy="211" rx="14" ry="7.5" fill="'+c+'"/>';}
+  /* a hood with the face showing through; rim keeps the edge visible on pale colors */
+  function hood(c,rim){
+    var hole='M 60 60 C 60 42, 80 34, 100 34 C 120 34, 140 42, 140 60 C 140 80, 122 98, 100 98 C 78 98, 60 80, 60 60 Z';
+    return '<path fill-rule="evenodd" d="M 100 14 C 136 14, 156 38, 156 68 C 156 96, 136 110, 100 110 C 64 110, 44 96, 44 68 C 44 38, 64 14, 100 14 Z '+hole+'" fill="'+c+'"/><path d="'+hole+'" fill="none" stroke="'+rim+'" stroke-width="2.5"/>';
+  }
+  function bow(x,y){
+    var R='#E0352B',RD='#A92018';
+    return '<g transform="translate('+x+' '+y+')"><path d="M 0 0 C -12 -14, -24 -10, -22 2 C -21 12, -10 10, 0 0 Z" fill="'+R+'"/><path d="M 0 0 C 12 -14, 24 -10, 22 2 C 21 12, 10 10, 0 0 Z" fill="'+R+'"/><circle r="4.5" fill="'+RD+'"/></g>';
+  }
   g+='<ellipse cx="100" cy="221" rx="50" ry="6" fill="#000" opacity="0.12"/>';
   g+='<defs><clipPath id="'+uid+'a"><path d="'+ARML+'"/><path d="'+ARMR+'"/></clipPath><clipPath id="'+uid+'l"><path d="'+LEGL+'"/><path d="'+LEGR+'"/></clipPath><clipPath id="'+uid+'t"><path d="'+TORSO+'"/></clipPath></defs>';
   if(kind==='drake'){
@@ -1478,6 +1512,53 @@ function costumeSvg(kind){
     g+=FACE;
     g+='<path d="M 52 68 C 46 36, 74 16, 102 16 C 132 16, 154 38, 148 70 C 146 60, 140 52, 132 46 C 136 56, 134 62, 128 66 C 124 56, 116 48, 106 44 C 106 54, 98 60, 88 60 C 92 54, 92 48, 90 44 C 72 48, 60 56, 52 68 Z" fill="'+P+'"/>';
     g+='<path d="M 72 34 C 84 26, 104 24, 118 30" fill="none" stroke="'+PD+'" stroke-width="2.5" stroke-linecap="round"/>';
+  }
+  if(kind==='kitty'){
+    var CW='#FFFFFF',CG='#D5D9DF',CB='#2F6FC4',CBD='#1F4F93',CP='#F7A8C0',CL='#EF9F27';
+    g+='<path d="M 118 168 C 146 178, 166 168, 162 146 C 160 134, 172 128, 178 138" fill="none" stroke="'+CW+'" stroke-width="12" stroke-linecap="round"/>';
+    g+=legs(CB)+limbs('l',196,6,CBD)+feet(CW);
+    g+='<path d="'+TORSO+'" fill="'+CW+'"/>';
+    g+='<path d="M 85 114 L 115 114 L 121 157 L 79 157 Z" fill="'+CB+'"/><rect x="70" y="146" width="60" height="12" fill="'+CB+'" clip-path="url(#'+uid+'t)"/>';
+    g+='<path d="M 88 116 L 82 101 M 112 116 L 118 101" stroke="'+CB+'" stroke-width="6" stroke-linecap="round" fill="none"/>';
+    g+='<circle cx="90" cy="120" r="2.6" fill="'+CL+'"/><circle cx="110" cy="120" r="2.6" fill="'+CL+'"/><path d="M 91 130 L 109 130 L 109 141 Q 100 146 91 141 Z" fill="none" stroke="'+CBD+'" stroke-width="2"/>';
+    g+=arms(CW)+hands();
+    g+=both('M 54 36 L 47.7 2.8 Q 46 -6 53.7 -1.4 L 90 20 Z',CW);
+    g+=both('M 60 28 L 56.9 10.9 Q 56 6 60.3 8.5 L 80 20 Z',CP);
+    g+=FACE+hood(CW,CG);
+    g+='<path d="M 72 80 L 50 74 M 72 85 L 48 85 M 72 90 L 50 96 M 128 80 L 150 74 M 128 85 L 152 85 M 128 90 L 150 96" stroke="#55585F" stroke-width="2" stroke-linecap="round" fill="none"/>';
+    g+=bow(60,33);
+  }
+  if(kind==='bunny'){
+    var BW='#FFFFFF',BG='#D5D9DF',BP='#F7A8C0';
+    g+=[[146,146,11],[158,156,11],[150,168,11],[136,160,11],[148,157,10]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="'+BW+'"/>';}).join('');
+    g+=legs(BW)+feet(BW);
+    g+='<path d="'+TORSO+'" fill="'+BW+'"/><circle cx="100" cy="130" r="18" fill="#A9D8F5"/>';
+    g+=arms(BW)+hands();
+    g+=FACE+hood(BW,BG);
+    g+='<circle cx="54" cy="72" r="4.5" fill="'+BP+'"/><circle cx="146" cy="72" r="4.5" fill="'+BP+'"/>';
+    g+=both('M 76 26 C 52 8, 26 22, 22 62 C 18 100, 20 134, 32 142 C 44 148, 48 118, 46 88 C 44 62, 54 42, 80 34 Z',BW,' stroke="'+BG+'" stroke-width="2" stroke-linejoin="round"');
+  }
+  if(kind==='puppy'){
+    var DY='#FBE89A',DD='#E8CC6A',DB='#7A4A2A',DL='#96623C';
+    g+='<path d="M 122 150 C 136 144, 152 144, 156 152 C 158 162, 144 168, 126 164 Z" fill="'+DY+'"/>';
+    g+=legs(DY)+feet(DD);
+    g+='<path d="'+TORSO+'" fill="'+DY+'"/><circle cx="100" cy="130" r="18" fill="'+DB+'"/>';
+    g+=arms(DY)+hands();
+    g+=FACE+hood(DY,DD);
+    g+=both('M 60 28 C 42 20, 26 36, 28 60 C 30 80, 46 86, 54 74 C 60 62, 58 46, 70 34 Z',DD);
+    g+='<path d="M 62 28 C 66 8, 126 0, 142 20 C 148 30, 128 36, 100 36 C 80 36, 58 38, 62 28 Z" fill="'+DB+'"/><path d="M 72 24 C 84 14, 106 10, 122 13" fill="none" stroke="'+DL+'" stroke-width="2.5" stroke-linecap="round"/><path d="M 98 8 C 98 2, 104 0, 106 5 Z" fill="'+DB+'"/>';
+  }
+  if(kind==='frog'){
+    var GL='#B9E68C',GM='#94CF62',GD='#2E7D3E',GE='#1F5A2B';
+    g+=legs(GL)+feet(GM);
+    g+='<path d="'+TORSO+'" fill="'+GL+'"/>';
+    g+='<path d="M 80 104 L 120 104 L 142 182 L 58 182 Z" fill="'+GD+'"/><path d="M 80 104 Q 100 114 120 104" fill="none" stroke="'+GE+'" stroke-width="3"/><path d="M 60 176 L 140 176" stroke="'+GE+'" stroke-width="3"/>';
+    g+=arms(GL)+hands();
+    g+=both('M 58 40 C 50 20, 58 4, 74 4 C 90 4, 96 20, 90 34 Z',GL);
+    g+=FACE+hood(GL,GM);
+    g+='<circle cx="74" cy="18" r="7.5" fill="#fff"/><circle cx="126" cy="18" r="7.5" fill="#fff"/><circle cx="74" cy="19" r="4" fill="#17181C"/><circle cx="126" cy="19" r="4" fill="#17181C"/>';
+    g+='<circle cx="54" cy="72" r="4.5" fill="#F7A8C0"/><circle cx="146" cy="72" r="4.5" fill="#F7A8C0"/>';
+    g+=bow(100,118);
   }
   g+=shieldSvg(sh,S);
   g+=swordSvg(sw,S);
