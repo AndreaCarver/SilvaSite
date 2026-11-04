@@ -825,14 +825,15 @@ function petOwned(n){
   return h.indexOf(n)>=0;
 }
 function hatchedList(){return Array.isArray(save.hatched)?save.hatched:[];}
+/* after boss win 36, a new reward unlocks every 5 wins: 41, 46, 51, 56, ... */
 var AV={
   card:[{n:'None',k:'none',s:0},{n:'Castle bedroom',k:'bedroom',s:1},{n:'Throne room',k:'throne',u:3,s:3},{n:'Sunset ramparts',k:'ramparts',u:7,s:7},{n:'Dragon hoard',k:'hoard',u:11,s:11},{n:'Soccer field',k:'soccer',u:5,s:5},{n:'Mountain peak',k:'peak',u:9,s:9},{n:'Pirate ship',k:'ship',u:29,s:29},{n:'Under the sea',k:'sea',u:36,s:36}],
-  skin:[{n:'None',k:'none'},{n:'Dragon gamer',k:'gamer',u:2},{n:'Caped hero',k:'hero',u:3},{n:'Dragon knight',k:'knight',u:5},{n:'Symbiote',k:'dragon',u:15},{n:'Soccer kit',k:'soccer',s:0.1},{n:'Striped kit',k:'stripe',s:0.2,u:20},{n:'Hooped kit',k:'hoops',s:0.3,u:21},{n:'Goalkeeper kit',k:'keeper',s:0.4,u:23},{n:'Crimson Symbiote',k:'dragon',body:'#D61F45',gc:'#FF5A6E',u:25},{n:'Jade Symbiote',k:'dragon',body:'#12A87A',gc:'#3DDC97',u:26},{n:'Topaz Symbiote',k:'dragon',body:'#E58E00',gc:'#FFC83D',u:27},{n:'Sapphire Symbiote',k:'dragon',body:'#1F5FD6',gc:'#4DA3FF',u:28},{n:'Pirate skipper',k:'pskipper',u:30,s:5.1},{n:'Pirate captain',k:'pcaptain',u:31,s:5.2},{n:'Peg-leg pirate',k:'pegleg',u:32,s:5.3},{n:'Naval captain',k:'naval',u:33,s:5.4},{n:'Blue shark',k:'shark',u:34,s:5.5},{n:'Kraken',k:'kraken',u:35,s:5.6}],
+  skin:[{n:'None',k:'none'},{n:'Dragon gamer',k:'gamer',u:2},{n:'Caped hero',k:'hero',u:3},{n:'Dragon knight',k:'knight',u:5},{n:'Symbiote',k:'dragon',u:15},{n:'Soccer kit',k:'soccer',s:0.1},{n:'Striped kit',k:'stripe',s:0.2,u:20},{n:'Hooped kit',k:'hoops',s:0.3,u:21},{n:'Goalkeeper kit',k:'keeper',s:0.4,u:23},{n:'Crimson Symbiote',k:'dragon',body:'#D61F45',gc:'#FF5A6E',u:25},{n:'Jade Symbiote',k:'dragon',body:'#12A87A',gc:'#3DDC97',u:26},{n:'Topaz Symbiote',k:'dragon',body:'#E58E00',gc:'#FFC83D',u:27},{n:'Sapphire Symbiote',k:'dragon',body:'#1F5FD6',gc:'#4DA3FF',u:28},{n:'Pirate skipper',k:'pskipper',u:30,s:5.1},{n:'Pirate captain',k:'pcaptain',u:31,s:5.2},{n:'Peg-leg pirate',k:'pegleg',u:32,s:5.3},{n:'Naval captain',k:'naval',u:33,s:5.4},{n:'Blue shark',k:'shark',u:34,s:5.5},{n:'Kraken',k:'kraken',u:35,s:5.6},{n:'Fire drake rider',k:'drake',u:41,s:6.1},{n:'Thunder hoodie',k:'zap',u:46,s:6.2},{n:'Fox scout',k:'fox',u:51,s:6.3},{n:'Shadow spikes',k:'spook',u:56,s:6.4}],
   armor:[{n:'None',k:'none'},{n:'Cloth tunic',k:'tunic'},{n:'Chainmail',k:'chain',u:1},{n:'Steel armor',k:'plate',u:1},{n:'Gold armor',k:'gold',u:9},{n:'Lace-up tunic',k:'lace',s:1.3},{n:'Chevron tunic',k:'chev',s:1.5},{n:'Vest tunic',k:'vest',s:1.7}],
   tabard:[{n:'Blue',c:'#378ADD'},{n:'Red',c:'#E24B4A'},{n:'Green',c:'#639922'},{n:'Purple',c:'#7F77DD'},{n:'Black',c:'#2C2C2A'}],
   cloak:[{n:'None',c:null},{n:'Red',c:'#E24B4A'},{n:'Blue',c:'#378ADD'},{n:'Green',c:'#639922'},{n:'Black',c:'#2C2C2A',u:3},{n:'Royal purple',c:'#534AB7',u:11}],
   head:[{n:'None',k:'none'},{n:'Hood',k:'hood'},{n:'Knight helmet',k:'helm'},{n:'Plumed helmet',k:'plume',u:2},{n:'Great helm',k:'great',u:5},{n:'Dragon helm',k:'dragon',u:12},{n:'Crown',k:'crown',u:7},{n:'Gold helmet',k:'ghelm',s:4.1,u:16},{n:'Gold plumed helmet',k:'gplume',s:4.2,u:17},{n:'Gold great helm',k:'ggreat',s:4.3,u:18},{n:'Winged helmet',k:'wing',s:4.4,u:19},{n:'Pirate hat',k:'phat',s:5.1,u:8},{n:'Pirate bandana',k:'bandana',s:5.2,u:2}],
-  hair:[{n:'None',k:'none'},{n:'Short',k:'short'},{n:'Spiky',k:'spiky'},{n:'Curly',k:'curly'},{n:'Ponytail',k:'pony',u:4},{n:'Long',k:'long',u:6},{n:'Mohawk',k:'mohawk',u:10},{n:'Cropped',k:'mullet',u:24}],
+  hair:[{n:'None',k:'none'},{n:'Short',k:'short'},{n:'Spiky',k:'spiky'},{n:'Curly',k:'curly'},{n:'Ponytail',k:'pony',u:4},{n:'Long',k:'long',u:6},{n:'Mohawk',k:'mohawk',u:10},{n:'Cropped',k:'mullet',u:24},{n:'Fluffy',k:'fluffy',u:3,s:3.5}],
   haircol:[{n:'Black',c:'#2d2a32'},{n:'Brown',c:'#7a4a2a'},{n:'Blonde',c:'#e6b84d'},{n:'Red',c:'#c0472f'},{n:'Blue',c:'#3b82f6'},{n:'Pink',c:'#ec6fa8'},{n:'Green',c:'#3fae6a'}],
   shield:[{n:'None',k:'none'},{n:'Wooden',k:'wood'},{n:'Steel',k:'steel'},{n:'Symbiote Shield',k:'crest',u:13,full:true},{n:'Soccer ball',k:'ball'},{n:'Crimson Symbiote Shield',k:'crest',gc:'#FF5A6E',u:25,full:true},{n:'Jade Symbiote Shield',k:'crest',gc:'#3DDC97',u:26,full:true},{n:'Topaz Symbiote Shield',k:'crest',gc:'#FFC83D',u:27,full:true},{n:'Sapphire Symbiote Shield',k:'crest',gc:'#4DA3FF',u:28,full:true},{n:'Crossbones shield',k:'bones',u:18,full:true}],
   sword:[{n:'None',c:null},{n:'Wooden',c:'#B4803E',gd:'#6B4F3A'},{n:'Steel',c:'#D3D1C7',gd:'#BA7517'},{n:'Dragon fang',c:'#1D9E75',gd:'#EF9F27',wings:true,u:4},{n:'Golden',c:'#EF9F27',gd:'#BA7517',u:8},{n:'Trophy',c:'#EF9F27',gd:'#BA7517',trophy:true,u:22},{n:'Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,u:14,full:true},{n:'Crimson Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#FF5A6E',u:25,full:true},{n:'Jade Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#3DDC97',u:26,full:true},{n:'Topaz Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#FFC83D',u:27,full:true},{n:'Sapphire Symbiote Sword',c:'#141518',gd:'#5A6068',sym:true,gc:'#4DA3FF',u:28,full:true},{n:'Pirate cutlass',c:'#D3D1C7',gd:'#EF9F27',cutlass:true,u:16,full:true}],
@@ -865,9 +866,19 @@ function crestEmblem(tx,ty,sc,fill,extra){
 function hairKind(){return AV.hair[avSel('hair')].k;}
 function hairCol(){return AV.haircol[avSel('haircol')].c;}
 function hairHi(c){var r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);var lum=(0.299*r+0.587*g+0.114*b)/255;return lum<0.5?{c:'#ffffff',o:'0.22'}:{c:'#000000',o:'0.18'};}
+function fluffyBack(c){return '<path d="M 100 6 C 126 2, 150 14, 164 38 C 176 58, 184 84, 176 100 C 170 94, 166 92, 160 92 C 164 104, 160 116, 150 122 C 148 114, 144 106, 138 100 L 62 100 C 56 106, 52 114, 50 122 C 40 116, 36 104, 40 92 C 34 92, 30 94, 24 100 C 16 84, 24 58, 36 38 C 50 14, 74 10, 100 6 Z" fill="'+c+'"/>';}
+function fluffyFront(c,plain){return '<path d="M 50 74 C 40 40, 66 12, 102 12 C 112 6, 120 8, 124 14 C 146 22, 158 46, 150 76 C 148 62, 142 52, 134 46 C 136 60, 128 68, 116 68 C 120 58, 118 50, 112 44 C 102 52, 84 54, 70 50 C 60 56, 54 64, 50 74 Z" fill="'+c+'"/>'+(plain?'':'<path d="M 66 34 C 80 24, 96 22, 110 26 M 118 28 C 128 32, 136 40, 140 48" fill="none" stroke="'+darkOf(c)+'" stroke-width="2.5" stroke-linecap="round"/>');}
+function fluffyBand(){
+  /* a hat, bandana or crown replaces the headband, but only on outfits that actually show them */
+  var hd=AV.head[avSel('head')].k,sk=AV.skin[avSel('skin')].k;
+  if((hd==='phat'||hd==='bandana'||hd==='crown')&&(sk==='none'||PIRATES.indexOf(sk)>=0))return '';
+  /* one even arc, mirrored around the middle of the head */
+  return '<path d="M 58 55 C 60 16, 140 16, 142 55" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>';
+}
 function hairBack(){
   var k=hairKind(),c=hairCol();
   if(k==='long')return '<path d="M 50 56 C 40 92, 42 132, 58 154 C 68 140, 72 110, 66 78 Z" fill="'+c+'"/><path d="M 150 56 C 160 92, 158 132, 142 154 C 132 140, 128 110, 134 78 Z" fill="'+c+'"/>';
+  if(k==='fluffy')return fluffyBack(c);
   if(k==='pony')return '<path d="M 136 42 C 164 34, 178 62, 164 92 C 160 78, 152 62, 136 56 Z" fill="'+c+'"/>';
   return '';
 }
@@ -887,6 +898,7 @@ function hairFront(){
     return m;
   }
   if(k==='long')return cap;
+  if(k==='fluffy')return fluffyFront(c,true)+fluffyBand();
   if(k==='pony')return cap+'<circle cx="136" cy="49" r="4" fill="#E24B4A"/>';
   if(k==='spiky')return '<path transform="translate(0 4)" d="M 48 55 L 48 35 Q 52 10 70 10 L 75 -5 Q 78 -8 81 -5 L 86 10 L 93 -10 Q 97 -14 101 -10 L 106 10 L 115 -8 Q 118 -11 121 -8 L 126 10 L 135 -4 Q 138 -7 141 -4 L 146 10 Q 152 10 152 35 L 152 55 L 152 62 Q 148 64 144 62 L 136 50 Q 100 42 64 50 L 56 62 Q 52 64 48 62 Z" fill="'+c+'"/>';
   if(k==='curly'){
@@ -1324,8 +1336,9 @@ function parrotSvg(){
     '<path d="M 20 62 L 18 70 M 22 62 L 22 70 M 30 62 L 30 70 M 32 62 L 34 70" stroke="#6b625a" stroke-width="2.4" stroke-linecap="round"/>'+
     '</g></g>';
 }
-var CREATURES=['shark','kraken'];
+var CREATURES=['shark','kraken','drake','zap','fox','spook'];
 function creatureSvg(kind){
+  if(kind!=='shark'&&kind!=='kraken')return costumeSvg(kind);
   var sh=AV.shield[avSel('shield')].k,sw=AV.sword[avSel('sword')],g='',K='#141518',skin='#e2e4e5';
   var pn=save.av&&save.av.pet,hasPet=(typeof pn==='number'&&pn>0&&petOwned(pn));
   var shark=(kind==='shark');
@@ -1380,6 +1393,96 @@ function creatureSvg(kind){
   g+=swordSvg(sw,skin);
   if(hasPet)g+=petSvg(pn);
   return '<svg width="100%" viewBox="0 -12 200 242" role="img" aria-label="Your knight avatar in a '+(shark?'blue shark':'kraken')+' costume"><title>Your knight avatar</title>'+g+'</svg>';
+}
+/* creature-themed outfits, drawn facing forward like everything else */
+function costumeSvg(kind){
+  var sh=AV.shield[avSel('shield')].k,sw=AV.sword[avSel('sword')],g='',S='#e2e4e5',uid='k'+(PCN++);
+  var pn=save.av&&save.av.pet,hasPet=(typeof pn==='number'&&pn>0&&petOwned(pn));
+  var EYES='<ellipse cx="83" cy="72" rx="5" ry="7.5" fill="#111111"/><ellipse cx="117" cy="72" rx="5" ry="7.5" fill="#111111"/>';
+  var FACE='<path d="'+HEAD+'" fill="'+S+'"/>'+EYES;
+  function both(d,fill,extra){return '<path d="'+d+'" fill="'+fill+'"'+(extra||'')+'/><path d="'+mirrorPath(d)+'" fill="'+fill+'"'+(extra||'')+'/>';}
+  function limbs(id,y,h,c){return '<rect x="50" y="'+y+'" width="100" height="'+h+'" fill="'+c+'" clip-path="url(#'+uid+id+')"/>';}
+  function legs(c){return '<path d="'+LEGL+'" fill="'+c+'"/><path d="'+LEGR+'" fill="'+c+'"/>';}
+  function arms(c){return '<path d="'+ARML+'" fill="'+c+'"/><path d="'+ARMR+'" fill="'+c+'"/>';}
+  function hands(){return '<circle cx="67" cy="172" r="7.5" fill="'+S+'"/><circle cx="133" cy="172" r="7.5" fill="'+S+'"/>';}
+  g+='<ellipse cx="100" cy="221" rx="50" ry="6" fill="#000" opacity="0.12"/>';
+  g+='<defs><clipPath id="'+uid+'a"><path d="'+ARML+'"/><path d="'+ARMR+'"/></clipPath><clipPath id="'+uid+'l"><path d="'+LEGL+'"/><path d="'+LEGR+'"/></clipPath><clipPath id="'+uid+'t"><path d="'+TORSO+'"/></clipPath></defs>';
+  if(kind==='drake'){
+    var O='#F47B16',OD='#C95C08',T='#2A9D97',J='#7C7F85',JD='#5E6167',B='#17181C';
+    g+=both('M 80 112 C 62 90, 38 86, 22 96 C 28 104, 30 112, 28 122 C 36 116, 44 120, 46 130 C 54 122, 64 122, 76 130 Z',T,' stroke="'+O+'" stroke-width="4" stroke-linejoin="round"');
+    g+='<path d="M 116 176 C 138 190, 160 184, 170 164 C 174 156, 184 160, 180 170 C 172 198, 146 210, 114 194 Z" fill="'+O+'"/><path d="M 124 188 C 142 196, 160 188, 170 172" fill="none" stroke="#FFD27A" stroke-width="4" stroke-linecap="round"/>';
+    g+='<path d="M 176 164 C 166 150, 172 138, 178 124 C 181 138, 192 142, 190 156 C 189 164, 182 168, 176 164 Z" fill="#F4581B"/><path d="M 178 162 C 174 154, 176 146, 179 140 C 181 148, 186 150, 185 157 C 184 162, 181 164, 178 162 Z" fill="#FFD23F"/>';
+    g+=legs(S)+limbs('l',142,38,O)+limbs('l',176,4,OD);
+    g+=limbs('l',188,30,B);
+    g+='<ellipse cx="85" cy="212" rx="14" ry="7" fill="'+B+'"/><ellipse cx="115" cy="212" rx="14" ry="7" fill="'+B+'"/>';
+    g+='<path d="'+TORSO+'" fill="'+B+'"/><rect x="70" y="150" width="60" height="7" fill="'+O+'" clip-path="url(#'+uid+'t)"/>';
+    g+=both('M 82 100 L 92 100 L 92 160 L 72 160 C 70 130, 72 108, 82 100 Z',J);
+    g+=both('M 88 100 L 96 124 L 88 130 L 80 112 Z',JD);
+    g+=both('M 92 100 L 92 160','none',' stroke="'+O+'" stroke-width="2.5"');
+    g+=arms(J)+limbs('a',158,7,O)+hands();
+    g+=FACE;
+    g+=both('M 66 26 C 58 16, 54 6, 54 -6 C 66 2, 78 10, 84 20 Z',O);
+    g+='<path fill-rule="evenodd" d="M 100 10 C 136 10, 160 34, 160 66 C 160 94, 138 112, 100 112 C 62 112, 40 94, 40 66 C 40 34, 64 10, 100 10 Z M 60 58 C 74 50, 126 50, 140 58 C 146 76, 134 98, 100 98 C 66 98, 54 76, 60 58 Z" fill="'+O+'"/>';
+    g+='<path d="M 44 54 C 64 30, 136 30, 156 54 L 150 62 C 128 46, 72 46, 50 62 Z" fill="'+J+'"/><path d="M 56 46 C 76 34, 124 34, 144 46" fill="none" stroke="#C9CCD1" stroke-width="3" stroke-linecap="round"/>';
+    g+='<path d="M 60 96 C 74 110, 126 110, 140 96" fill="none" stroke="'+OD+'" stroke-width="3" stroke-linecap="round"/>';
+  }
+  if(kind==='zap'){
+    var Y='#FFD52E',YD='#E0AC12',BR='#6B4226',R='#E0433A',C='#F6E3B0',K='#1F1D24';
+    g+='<path d="M 118 146 L 150 138 L 138 122 L 176 102 L 192 112 L 170 132 L 180 144 L 136 170 Z" fill="'+Y+'"/><path d="M 118 146 L 134 142 L 136 170 L 122 164 Z" fill="'+BR+'"/>';
+    g+=legs(S);
+    g+='<path d="M 70 144 C 60 160, 62 180, 74 184 C 82 186, 92 186, 97 182 L 100 168 L 103 182 C 108 186, 118 186, 126 184 C 138 180, 140 160, 130 144 Z" fill="'+BR+'"/>';
+    g+='<rect x="75" y="192" width="19" height="20" rx="4" fill="'+C+'"/><rect x="106" y="192" width="19" height="20" rx="4" fill="'+C+'"/><ellipse cx="85" cy="212" rx="14" ry="6.5" fill="'+C+'"/><ellipse cx="115" cy="212" rx="14" ry="6.5" fill="'+C+'"/><path d="M 72 216 L 98 216 M 102 216 L 128 216" stroke="#B68A3A" stroke-width="2.5" stroke-linecap="round"/><rect x="75" y="198" width="19" height="4" fill="'+YD+'"/><rect x="106" y="198" width="19" height="4" fill="'+YD+'"/>';
+    g+='<path d="'+TORSO+'" fill="'+Y+'"/>';
+    g+='<ellipse cx="85" cy="134" rx="8.5" ry="10" fill="'+R+'"/><ellipse cx="115" cy="134" rx="8.5" ry="10" fill="'+R+'"/>';
+    g+=arms(Y)+limbs('a',114,5,BR)+limbs('a',125,5,BR)+limbs('a',136,5,BR)+hands();
+    var EAR='M 58 34 C 48 22, 40 6, 38 -10 C 54 -4, 70 8, 80 22 Z';
+    g+='<clipPath id="'+uid+'e"><path d="'+EAR+'"/><path d="'+mirrorPath(EAR)+'"/></clipPath>';
+    g+=both(EAR,Y)+'<rect x="30" y="-14" width="140" height="22" fill="'+K+'" clip-path="url(#'+uid+'e)"/>';
+    g+='<path fill-rule="evenodd" d="M 100 12 C 138 12, 160 36, 160 68 C 160 96, 138 112, 100 112 C 62 112, 40 96, 40 68 C 40 36, 62 12, 100 12 Z M 58 62 C 58 40, 78 32, 100 32 C 122 32, 142 40, 142 62 C 142 82, 124 98, 100 98 C 76 98, 58 82, 58 62 Z" fill="'+Y+'"/>';
+    g+=FACE;
+    g+='<path d="M 52 66 C 48 34, 76 20, 104 22 C 134 22, 152 40, 148 70 C 144 60, 138 54, 130 50 C 132 58, 128 64, 122 66 C 122 56, 116 50, 106 46 C 104 56, 94 60, 84 58 C 88 54, 88 50, 86 46 C 74 50, 60 56, 52 66 Z" fill="'+K+'"/>';
+    g+='<path fill-rule="evenodd" d="M 100 12 C 138 12, 160 36, 160 68 C 160 96, 138 112, 100 112 C 62 112, 40 96, 40 68 C 40 36, 62 12, 100 12 Z M 50 62 C 50 34, 76 24, 100 24 C 124 24, 150 34, 150 62 C 150 86, 126 102, 100 102 C 74 102, 50 86, 50 62 Z" fill="'+Y+'"/>';
+    g+='<path d="M 50 62 C 50 34, 76 24, 100 24 C 124 24, 150 34, 150 62" fill="none" stroke="'+YD+'" stroke-width="2.5"/>';
+  }
+  if(kind==='fox'){
+    var F='#A9601F',FD='#7E4515',FL='#C97F2E',CR='#FBE7B8';
+    var TAIL='M 112 170 C 130 178, 146 170, 152 156 C 158 142, 172 130, 190 122 C 198 146, 196 176, 178 194 C 158 212, 130 206, 110 186 Z';
+    g+='<clipPath id="'+uid+'f"><path d="'+TAIL+'"/></clipPath><path d="'+TAIL+'" fill="'+FL+'"/>';
+    g+='<path d="M 148 110 L 204 110 L 204 166 L 190 160 L 182 170 L 174 158 L 164 164 L 160 152 L 148 152 Z" fill="'+CR+'" clip-path="url(#'+uid+'f)"/>';
+    g+=fluffyBack(F);
+    g+=legs(S);
+    g+=both('M 72 186 L 96 186 L 96 212 C 92 218, 76 218, 72 212 Z',F);
+    g+=both('M 68 188 C 68 180, 76 182, 80 182 C 86 180, 94 180, 98 184 C 102 190, 96 196, 90 194 C 82 198, 72 196, 68 188 Z',FL);
+    g+='<ellipse cx="85" cy="212" rx="14" ry="7" fill="'+F+'"/><ellipse cx="115" cy="212" rx="14" ry="7" fill="'+F+'"/>';
+    g+='<path d="M 76 146 L 124 146 L 136 180 C 120 188, 80 188, 64 180 Z" fill="'+FD+'"/><path d="M 88 148 L 82 184 M 100 148 L 100 186 M 112 148 L 118 184" stroke="'+F+'" stroke-width="2.5" fill="none"/>';
+    g+='<path d="'+TORSO+'" fill="'+CR+'"/><rect x="70" y="136" width="60" height="12" fill="'+FD+'" clip-path="url(#'+uid+'t)"/>';
+    g+=both('M 82 100 L 90 100 L 90 150 L 74 150 C 72 128, 74 108, 82 100 Z',FL);
+    g+=arms(FL)+limbs('a',160,14,S)+hands();
+    g+=both('M 82 100 C 72 94, 60 100, 56 110 C 62 110, 62 116, 68 114 C 72 118, 78 112, 84 110 Z',CR);
+    g+=FACE;
+    g+=both('M 60 30 C 52 18, 48 6, 50 -8 C 66 -4, 80 8, 88 20 Z',F);
+    g+=both('M 62 24 C 58 16, 56 8, 58 0 C 68 4, 74 10, 80 18 Z',CR);
+    g+=fluffyFront(F);
+  }
+  if(kind==='spook'){
+    var P='#7B2FB5',PD='#58208A',PL='#9A4DD0',M='#6A1F4E',RE='#E5242C';
+    g+='<path d="M 112 170 C 134 178, 154 186, 176 214 C 150 210, 128 204, 110 192 Z" fill="'+P+'"/>'+[[128,176,136,160,142,184],[146,186,158,172,160,198]].map(function(s){return '<polygon points="'+s[0]+','+s[1]+' '+s[2]+','+s[3]+' '+s[4]+','+s[5]+'" fill="'+PL+'"/>';}).join('');
+    g+=legs(M);
+    g+='<ellipse cx="85" cy="208" rx="15" ry="9" fill="'+P+'"/><ellipse cx="115" cy="208" rx="15" ry="9" fill="'+P+'"/><path d="M 71 214 C 78 219, 92 219, 99 214 M 101 214 C 108 219, 122 219, 129 214" fill="none" stroke="'+RE+'" stroke-width="3.5" stroke-linecap="round"/>';
+    g+='<path d="M 80 100 C 70 102, 68 120, 72 164 L 128 164 C 132 120, 130 102, 120 100 Z" fill="'+P+'"/><rect x="70" y="156" width="60" height="8" fill="'+PD+'"/>';
+    g+='<path d="M 78 128 C 84 120, 94 122, 98 134 C 92 142, 82 140, 78 128 Z" fill="'+RE+'"/><path d="M 122 128 C 116 120, 106 122, 102 134 C 108 142, 118 140, 122 128 Z" fill="'+RE+'"/><ellipse cx="90" cy="131" rx="2.5" ry="5.5" fill="#1a0d24"/><ellipse cx="110" cy="131" rx="2.5" ry="5.5" fill="#1a0d24"/>';
+    g+='<path d="M 90 102 L 88 118 M 110 102 L 112 118" stroke="'+PL+'" stroke-width="2.5" stroke-linecap="round"/>';
+    g+=arms(P)+limbs('a',164,5,PD)+hands();
+    g+=[[50,38,40,-10,88,18],[150,38,160,-10,112,18],[90,14,94,1,99,12],[101,12,106,1,110,14]].map(function(s){return '<polygon points="'+s[0]+','+s[1]+' '+s[2]+','+s[3]+' '+s[4]+','+s[5]+'" fill="'+PL+'"/>';}).join('');
+    g+='<path d="M 46 70 C 38 34, 66 10, 102 10 C 138 10, 162 36, 154 72 C 158 88, 148 100, 138 104 L 62 104 C 52 100, 42 88, 46 70 Z" fill="'+P+'"/>';
+    g+=FACE;
+    g+='<path d="M 52 68 C 46 36, 74 16, 102 16 C 132 16, 154 38, 148 70 C 146 60, 140 52, 132 46 C 136 56, 134 62, 128 66 C 124 56, 116 48, 106 44 C 106 54, 98 60, 88 60 C 92 54, 92 48, 90 44 C 72 48, 60 56, 52 68 Z" fill="'+P+'"/>';
+    g+='<path d="M 72 34 C 84 26, 104 24, 118 30" fill="none" stroke="'+PD+'" stroke-width="2.5" stroke-linecap="round"/>';
+  }
+  g+=shieldSvg(sh,S);
+  g+=swordSvg(sw,S);
+  if(hasPet)g+=petSvg(pn);
+  return '<svg width="100%" viewBox="0 -12 200 242" role="img" aria-label="Your knight avatar in a creature outfit"><title>Your knight avatar</title>'+g+'</svg>';
 }
 function avatarSvgRaw(){
   if(AV.skin[avSel('skin')].k==='dragon')return skinSvg();
