@@ -442,8 +442,61 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--gold);outline-o
   .realm .negg .eggnum{font-size:1rem}
   .castle-presets{gap:4px}
   .castle-presets .small-btn{padding:4px 6px;font-size:.78rem}
+  /* the side walls are narrow at these widths: tighten them so nothing gets cut off */
+  .realm .wall-body{padding-left:8px;padding-right:8px}
+  .castle-presets{flex-wrap:wrap}
+  .realm .castle .chip.brick.allbtn{font-size:1rem}
+  .realm .win .seg.seg3{gap:3px}
+  .realm .win .seg.seg3 button{padding-left:0;padding-right:0;font-size:.82rem;letter-spacing:0;min-width:0}
 }
 .wins{white-space:nowrap}
+/* game mode picker: four shields hanging from a wooden rack */
+.realm{grid-template-areas:"modes" "castle" "nest"}
+.realm>.gmodes{grid-area:modes}
+.realm>.castle{grid-area:castle}
+.realm>.nestwrap{grid-area:nest}
+.gmodes{position:relative;width:100%;max-width:520px;margin:0 auto;text-align:center}
+.gm-title{display:inline-block;font-size:1.35rem;position:relative;z-index:3}
+.gm-rack{position:relative;margin-top:-4px}
+.gm-beam{position:absolute;left:0;right:0;top:10px;height:20px;background:#a0672f;border:4px solid var(--line);border-radius:8px;box-shadow:4px 4px 0 var(--line);z-index:1}
+.gm-beam::before{content:"";position:absolute;left:8px;right:8px;top:4px;height:3px;border-radius:2px;background:#7a4a24}
+.gm-row{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:0 4px}
+.gm{position:relative;display:flex;flex-direction:column;align-items:center;background:none;border:0;border-radius:12px;padding:30px 0 2px;color:#fff;min-width:0}
+.gm::before{content:"";position:absolute;left:50%;top:4px;width:12px;height:32px;margin-left:-6px;background:#7a4a24;border:3px solid var(--line);border-radius:4px;z-index:2}
+.gm-shield{position:relative;display:block;width:58px;height:70px;z-index:2;transform-origin:50% 0;transition:transform .08s}
+.gm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.gm-sh{fill:var(--line)}
+.gm-face{fill:var(--btn);stroke:var(--line);stroke-width:4;stroke-linejoin:round}
+.gm-g{position:absolute;left:0;right:6px;top:15px;font-family:var(--num);font-size:1.55rem;line-height:1;color:var(--btnink);white-space:nowrap;letter-spacing:.02em}
+.gm-n{display:block;margin-top:4px;font-weight:900;font-size:.85rem;line-height:1.1;text-shadow:2px 2px 0 #000}
+.gm[aria-pressed="true"] .gm-face{fill:var(--power)}
+.gm[aria-pressed="true"] .gm-shield{filter:drop-shadow(0 0 7px #ffe27a)}
+.gm[aria-pressed="true"] .gm-g{color:#fff;text-shadow:2px 2px 0 var(--line)}
+.gm[aria-pressed="true"] .gm-n{color:var(--gold)}
+.gm:active .gm-shield{transform:translateY(3px)}
+.gm:hover .gm-shield,.gm:focus-visible .gm-shield{animation:gmswing .7s ease-in-out}
+@keyframes gmswing{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}60%{transform:rotate(4deg)}85%{transform:rotate(-1.5deg)}}
+@media (prefers-reduced-motion: reduce){.gm:hover .gm-shield,.gm:focus-visible .gm-shield{animation:none}}
+.gm-g.gm-x{font-size:2.3rem;top:9px}
+/* tablets: the castle keeps its full height on screen, so the modes hang just below it */
+@media (min-width:900px) and (max-width:1199px){
+  .realm{grid-template-areas:"castle" "modes" "nest"}
+}
+/* wide screens: modes hang above the nest; the negative margin lets them rise into the empty sky beside the title instead of pushing the castle down on short screens */
+@media (min-width:1200px){
+  .realm{grid-template-areas:"castle modes" "castle nest";grid-template-rows:minmax(0,1fr) auto;row-gap:14px}
+  .realm>.gmodes{align-self:end;max-width:440px;margin-top:-150px}
+}
+/* Order of Ops picks its own numbers, so the Tables bricks step back */
+.wall-body.tdim{position:relative}
+.wall-body.tdim .wall-h,.wall-body.tdim .bricks,.wall-body.tdim .castle-presets{opacity:.35;filter:grayscale(.7)}
+.thint{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:max-content;max-width:88%;margin:0;background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:10px;box-shadow:3px 3px 0 var(--line);padding:6px 10px;font-weight:900;font-size:.9rem;line-height:1.2;text-align:center;pointer-events:none;z-index:2}
+/* Missing Factor question and end-screen marks */
+.q.qmf{white-space:nowrap}
+.qgap{display:inline-block;min-width:.8em;padding:0 .08em;border:.06em dashed currentColor;border-radius:.14em;color:var(--power);text-align:center}
+.qgap.fill{border-style:solid;border-color:var(--line);background:var(--good);color:#fff}
+@media (max-width:760px){#app.battle.typem #qarea.mfq{grid-template-columns:minmax(0,1fr) minmax(84px,auto)}}
+.trouble .mfx{font-weight:400;background:var(--gold);color:#1b1442;border-radius:6px;padding:0 4px}
 .yard{position:relative;z-index:4;margin:44px 0 46px;text-align:center}
 .yard-ring{position:relative;padding:40px 44px 50px;border:4px solid var(--line);border-radius:999px;background:radial-gradient(ellipse at 50% 40%,#d9ab6a,#c08a4c 72%);box-shadow:inset 0 0 0 9px rgba(122,74,36,.35),6px 6px 0 var(--line)}
 .yard-empty .yard-ring{padding-bottom:30px}
@@ -678,6 +731,191 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--gold);outline-o
   .dragon,.dragon.hit,.dragon.attack,.hero.attack,.hero.hurt,.bolt{animation:none}
   .pop{animation-duration:.01s;animation-fill-mode:forwards}
   .dragon.dead{animation:none;opacity:0}
+}
+/* ---------- mode: ops ---------- */
+/* ---------- mode: Order of Operations sidekick battle ---------- */
+#app.battle.ops .ops-team{position:absolute;left:4%;bottom:calc(var(--dockh) - 28px);width:min(46vh,36vw);z-index:2}
+.ops-khud{margin-bottom:6px}
+.ops-names{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--display);color:#fff;text-shadow:2px 2px 0 #000;font-size:clamp(1rem,2.4vh,1.45rem);letter-spacing:.05em;line-height:1.1}
+.ops-names span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ops-names .ops-pn{color:#fff6c8}
+.ops-hp{position:relative}
+#app.battle.ops .hpbar.ops-hp{height:24px;width:min(100%,380px)}
+#app.battle.ops .ops-khud .hpbar.ops-hp{width:100%;margin:2px 0 0}
+.ops-hp b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:400;font-size:1rem;letter-spacing:.06em;color:#fff;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000;line-height:1}
+.ops-khp i{background:linear-gradient(90deg,#12a150,#7ee36b)}
+.ops-khp i.mid{background:linear-gradient(90deg,#e08a12,#ffd23f)}
+.ops-khp i.low{background:linear-gradient(90deg,#b0122f,#ff6b6b)}
+.ops-fig{position:relative;aspect-ratio:1.3/1}
+.ops-knight{position:absolute;left:0;bottom:0;width:48%;line-height:0;z-index:1}
+.ops-knight svg{width:100%;height:auto;display:block}
+.ops-pet{position:absolute;right:0;bottom:0;width:58%;line-height:0;z-index:2}
+.ops-pet svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(3px 3px 0 rgba(27,20,66,.55))}
+.ops-pet::after{content:"";position:absolute;left:-10%;right:-10%;top:-4%;bottom:-6%;border-radius:50%;border:4px solid #bfe9ff;background:radial-gradient(circle,rgba(160,220,255,.08) 40%,rgba(160,220,255,.45) 100%);box-shadow:0 0 18px 4px rgba(160,220,255,.7);opacity:0;transform:scale(.6);transition:opacity .25s,transform .25s;pointer-events:none}
+.ops-pet.guard::after{opacity:1;transform:scale(1)}
+.ops-pet.lunge{animation:opsLunge .5s}
+.ops-pet.cheer{animation:opsCheer .6s}
+.ops-pet.block{animation:opsBlock .5s}
+.ops-knight.heal{animation:opsHeal 1s}
+.ops-fig.hurt{animation:shake .45s}
+#app.battle.ops .dragon.ops-dodge{animation:opsDodge .55s}
+.arena.ops-shake{animation:opsShake .35s}
+.ops-intent{display:block;width:fit-content;margin:6px auto 0;padding:3px 12px 2px;border:3px solid var(--line);border-radius:999px;background:rgba(27,20,66,.78);color:#fff;font-weight:900;font-size:clamp(.85rem,1.9vh,1.05rem);white-space:nowrap}
+.ops-intent b{font-family:var(--display);font-weight:400;font-size:1.15em;color:#ff9aa8;letter-spacing:.04em;margin-left:2px}
+.ops-intent.big{background:#7a1426;animation:opsPulse 1.2s ease-in-out infinite}
+.ops-bolt{background:var(--skc,#ffd23f);box-shadow:0 0 14px 4px var(--skc,#fff4a8)}
+.ops-bolt.rev{background:#bfe9ff;box-shadow:0 0 14px 4px #bfe9ff}
+.ops-pop.big{font-size:3.2rem}
+.ops-pop.miss{color:#e7e2ff}
+.ops-pop.heal{color:#7ee36b}
+.ops-pop.block{color:#bfe9ff;font-size:2.2rem}
+#app.battle.ops .ops-q{font-size:clamp(2.2rem,min(7vh,9vw),4rem);white-space:nowrap}
+.ops-steps{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 8px;margin:8px 0 2px}
+.ops-steps span{font-family:var(--display);font-size:clamp(1.15rem,2.6vh,1.5rem);letter-spacing:.04em;background:#ede6ff;color:#4b2a9e;border:3px solid var(--line);border-radius:10px;padding:2px 10px}
+.ops-steps span b{font-weight:400;color:#12a150}
+.ops-steps i{font-style:normal;font-weight:900;font-size:1.3rem;color:var(--ink)}
+.ops-nextrow{margin-top:10px;text-align:center}
+#app.battle.typem .ops-nextrow{grid-column:1 / -1}
+.ops-nextrow .big-btn{width:auto;padding:10px 30px}
+.ops-mvhead{text-align:center;font-family:var(--display);color:#fff;text-shadow:2px 2px 0 #000;font-size:clamp(1.3rem,3vh,1.8rem);letter-spacing:.05em;margin:0 0 8px}
+.ops-moves{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ops-mv{display:flex;align-items:center;gap:8px;text-align:left;background:var(--btn);color:var(--btnink);border:4px solid var(--line);border-radius:16px;box-shadow:5px 5px 0 var(--line);padding:10px 10px;min-height:84px;transition:transform .08s,box-shadow .08s}
+.ops-mv:active{transform:translate(4px,4px);box-shadow:1px 1px 0 var(--line)}
+.ops-mv:disabled{cursor:default;opacity:.55}
+.ops-mv.on{opacity:1;background:var(--accent);color:#1b1442}
+.ops-mvic{font-size:1.9rem;line-height:1;flex:0 0 auto}
+.ops-mvtx{min-width:0;display:flex;flex-direction:column;gap:2px}
+.ops-mvtx b{font-family:var(--display);font-weight:400;font-size:1.35rem;letter-spacing:.04em;line-height:1.05}
+.ops-mvtx small{font-weight:800;font-size:.82rem;line-height:1.2;opacity:.85}
+.ops-mv0{border-left:10px solid var(--skc,#ffd23f)}
+.ops-mv1{border-left:10px solid #ff7a1a}
+.ops-mv2{border-left:10px solid #12a150}
+.ops-mv3{border-left:10px solid #4da3ff}
+.ops-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:6px 0 4px}
+.ops-pk{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--btn);color:var(--btnink);border:3px solid var(--line);border-radius:14px;box-shadow:3px 3px 0 var(--line);padding:8px 4px 6px;font-weight:900;font-size:.85rem;line-height:1.1}
+.ops-pk svg{width:76px;height:auto;overflow:visible}
+.ops-pk span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ops-pk:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.ops-endpet svg{width:90px;height:auto;overflow:visible}
+.ops-trouble{justify-content:center}
+/* home: Dragon strength chooser takes over the Tables wall in Order of Ops */
+.opslv{grid-template-columns:minmax(0,1fr);width:100%;max-width:360px;margin:0 auto}
+.opslv .win{padding-bottom:12px}
+.ops-short{display:none}
+@media (max-width:760px){.ops-long{display:none}.ops-short{display:inline}}
+.opslv-note{margin:10px 0 0;font-weight:800;font-size:.8rem;line-height:1.25;color:var(--muted)}
+@media (min-width:1200px) and (max-width:1330px){
+  .realm .opslv .win .seg.seg3{grid-template-columns:1fr;gap:4px}
+  .realm .opslv .win .seg button{padding:5px 0;font-size:.9rem}
+  .opslv-note{font-size:.72rem;margin-top:8px}
+}
+@keyframes opsLunge{0%{transform:none}40%{transform:translateX(38%) scale(1.12)}100%{transform:none}}
+@keyframes opsCheer{0%,100%{transform:none}30%{transform:translateY(-14%)}60%{transform:translateY(0)}80%{transform:translateY(-6%)}}
+@keyframes opsBlock{0%{transform:none}30%{transform:scale(1.1)}100%{transform:none}}
+@keyframes opsHeal{0%{filter:none}30%{filter:drop-shadow(0 0 10px #7ee36b) drop-shadow(0 0 4px #c9ffb8) brightness(1.2)}100%{filter:none}}
+@keyframes opsDodge{0%{transform:scaleX(-1)}40%{transform:scaleX(-1) translate(-20px,-40px) rotate(-10deg)}100%{transform:scaleX(-1)}}
+@keyframes opsShake{0%,100%{transform:none}25%{transform:translate(-6px,3px)}50%{transform:translate(5px,-3px)}75%{transform:translate(-3px,2px)}}
+@keyframes opsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+#app.battle .ops-bolt.rev{transform-origin:right}
+@media (max-width:1000px){.ops-moves{grid-template-columns:repeat(2,minmax(0,1fr))}.ops-mv{min-height:70px}}
+@media (max-width:760px){
+  #app.battle.ops .ops-team{left:3%;width:min(36vh,54vw);bottom:calc(var(--dockh) - 20px)}
+  #app.battle.ops .dragon-wrap{right:3%}
+  #app.battle.ops .dragon{font-size:min(22vh,36vw)}
+  #app.battle.ops .hpbar.ops-hp{width:min(100%,42vw)}
+  #app.battle.ops .ops-khud .hpbar.ops-hp{width:100%}
+  .ops-moves{gap:8px}
+  .ops-mv{padding:8px 6px;gap:6px;min-height:64px;border-width:3px;box-shadow:3px 3px 0 var(--line)}
+  .ops-mv0,.ops-mv1,.ops-mv2,.ops-mv3{border-left-width:8px}
+  .ops-mvic{font-size:1.4rem}
+  .ops-mvtx b{font-size:1.1rem}
+  .ops-mvtx small{font-size:.72rem}
+  .ops-intent{font-size:.8rem;padding:2px 8px 1px}
+  .ops-mvhead{font-size:1.2rem}
+  .ops-names{font-size:.95rem}
+}
+@media (prefers-reduced-motion: reduce){
+  .ops-pet.lunge,.ops-pet.cheer,.ops-pet.block,.ops-knight.heal,.ops-fig.hurt,#app.battle.ops .dragon.ops-dodge,.arena.ops-shake,.ops-intent.big{animation:none}
+  .ops-pet::after{transition:none}
+}
+/* ---------- mode: versus ---------- */
+/* ---------- VERSUS ---------- */
+#app.vs{max-width:640px}
+.vs-wrap{display:flex;flex-direction:column;gap:14px}
+.vs-title{text-align:center;color:var(--gold);font-family:'MedievalSharp','Uncial Antiqua','Palatino Linotype',Georgia,serif;font-size:clamp(2.4rem,9vw,3.4rem);line-height:1.05;letter-spacing:.02em;text-shadow:3px 3px 0 var(--line);margin:6px 0 0}
+#app.vs .vs-panel{background-color:var(--card);background-image:var(--stonebg);background-size:64px 36px}
+.vs-center{text-align:center}
+.vs-h{font-size:clamp(1.7rem,6vw,2.2rem);color:var(--headline);text-align:center;margin:0 0 8px}
+.vs-sub{font-family:var(--display);font-weight:400;letter-spacing:.04em;font-size:1.25rem;margin:12px 0 6px}
+.vs-lead{font-weight:800;font-size:1.08rem;margin:8px 0;text-align:center}
+.vs-foot{text-align:center}
+.vs-duo{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:0 auto 4px;max-width:360px}
+.vs-pv{flex:0 1 130px;min-width:0;line-height:0}
+.vs-pv svg{width:100%;height:auto;display:block}
+.vs-flip{transform:scaleX(-1)}
+.vs-x{font-family:var(--display);font-size:2.4rem;color:var(--gold);text-shadow:3px 3px 0 var(--line);align-self:center}
+.vs-mystery{display:grid;place-items:center;aspect-ratio:200/236;font-family:var(--display);font-size:4.5rem;line-height:1;color:var(--muted);border:4px dashed var(--muted);border-radius:50% 50% 18px 18px;opacity:.75}
+.vs-em{display:grid;place-items:center;width:58px;height:58px;border-radius:14px;background:var(--pc);border:3px solid var(--line);font-family:'Noto Color Emoji','Segoe UI Emoji','Apple Color Emoji',sans-serif;font-size:2.15rem;line-height:1;box-shadow:inset 0 -5px 0 rgba(0,0,0,.12)}
+.vs-em.big{width:86px;height:86px;font-size:3.3rem;border-radius:18px}
+.vs-em.vs-empty{background:transparent;border-style:dashed;border-color:var(--muted);box-shadow:none}
+.vs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.vs-pic{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px 6px;background:var(--btn);color:var(--btnink);border:3px solid var(--line);border-radius:14px;box-shadow:3px 3px 0 var(--line);font:900 .85rem/1.1 var(--body);transition:transform .08s,box-shadow .08s}
+.vs-pic:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.vs-pic:disabled{opacity:.45;cursor:default;transform:none;box-shadow:3px 3px 0 var(--line)}
+.vs-slots,.vs-code{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.vs-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;font:900 1rem/1.1 var(--body)}
+.vs-num{position:absolute;top:-10px;left:-10px;z-index:1;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--power);color:#fff;border:3px solid var(--line);font:400 1rem/1 var(--num)}
+.vs-arrow{font-size:2rem;font-weight:900;color:var(--ink);padding-bottom:22px}
+.vs-undo{align-self:center;margin-left:6px}
+.vs-undo:disabled{opacity:.45;cursor:default}
+.vs-err{min-height:1.3em;margin:10px 0 0;text-align:center;font-weight:900;color:var(--bad)}
+#app.vs .big-btn:disabled{opacity:.5;cursor:default;transform:none;box-shadow:5px 5px 0 var(--line)}
+.vs-wait{font-weight:900;font-size:1.1rem;margin:12px 0 0}
+.vs-dots{display:inline-flex;gap:4px;margin-left:6px;vertical-align:middle}
+.vs-dots i{width:7px;height:7px;border-radius:50%;background:currentColor;animation:vsdot 1.2s ease-in-out infinite}
+.vs-dots i:nth-child(2){animation-delay:.2s}
+.vs-dots i:nth-child(3){animation-delay:.4s}
+@keyframes vsdot{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+/* the fight (shares the battle layout: #app.battle) */
+#app.vsb .hud .lvl small{display:block;font-family:var(--body);font-weight:900;font-size:.8rem;letter-spacing:0;text-align:center}
+#app.vsb .hud .lvl{text-align:center}
+.vs-hudr{width:58px}
+#app.vsb .vs-k{position:absolute;bottom:calc(var(--dockh) - 46px);width:min(28vh,22vw);z-index:2;line-height:0}
+#app.vsb .vs-me{left:7%}
+#app.vsb .vs-foe{right:7%}
+#app.vsb .vs-fig svg{width:100%;height:auto;display:block}
+#app.vsb .vs-tag{position:absolute;left:-14%;right:-14%;bottom:calc(100% + 4px);line-height:1.1;text-align:center}
+.vs-name{font-family:var(--display);font-size:clamp(1.05rem,2.6vh,1.55rem);color:#fff;text-shadow:2px 2px 0 #000;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#app.vsb .vs-tag .hpbar{width:100%;margin:3px 0 0;height:16px}
+#app.vsb .vs-me .hpbar i{background:linear-gradient(90deg,#12a150,#9dff8a)}
+#app.vsb .hpbar i.low{background:linear-gradient(90deg,#e0243f,#ff9a6b)}
+.vs-hpn{font:900 .85rem/1.2 var(--body);color:#fff;text-shadow:1px 1px 0 #000;margin-top:2px}
+.vs-mid{position:absolute;left:50%;bottom:calc(var(--dockh) + 9vh);transform:translateX(-50%);z-index:1;font-family:var(--display);font-size:clamp(2.2rem,7vh,4rem);color:var(--gold);text-shadow:3px 3px 0 var(--line);opacity:.9}
+#app.vsb .vs-me.atk{animation:hattack .45s}
+#app.vsb .vs-foe.atk{animation:vsatk .45s}
+#app.vsb .vs-k.hurt{animation:shake .45s}
+#app.vsb .vs-k.down{animation:vsdown .8s forwards}
+@keyframes vsatk{0%{transform:translateX(0)}40%{transform:translateX(-40px) scale(1.15)}100%{transform:translateX(0)}}
+@keyframes vsdown{to{transform:translateY(16px) rotate(-8deg);opacity:.45}}
+#app.vsb .bolt{top:58%;left:24%;width:52%}
+#app.vsb .bolt.rev{transform-origin:right;background:#ff7b8c;box-shadow:0 0 14px 4px #ffc1ca}
+#app.vsb .q.vs-qmiss{font-size:clamp(2.2rem,7vh,3.8rem)}
+.vs-qm{display:inline-block;min-width:.9em;padding:0 .12em;border-radius:12px;background:var(--gold);color:#1b1442}
+.vs-banner{position:absolute;left:0;right:0;top:24%;z-index:7;text-align:center;font-family:var(--display);font-size:clamp(3rem,13vw,7rem);letter-spacing:.06em;color:var(--gold);text-shadow:4px 4px 0 var(--line),-2px -2px 0 var(--line);pointer-events:none;animation:vsban .6s ease-out}
+@keyframes vsban{0%{opacity:0;transform:scale(.5)}60%{opacity:1;transform:scale(1.12)}100%{transform:scale(1)}}
+.vs-stats{grid-template-columns:repeat(3,1fr)}
+@media (max-width:760px){
+  #app.vsb .vs-k{width:min(24vh,31vw)}
+  #app.vsb .vs-me{left:4%}
+  #app.vsb .vs-foe{right:4%}
+  #app.vsb .vs-tag{left:-8%;right:-8%}
+  .vs-em{width:52px;height:52px;font-size:1.9rem}
+  .vs-em.big{width:74px;height:74px;font-size:2.8rem}
+  .vs-grid{gap:8px}
+}
+@media (prefers-reduced-motion: reduce){
+  #app.vsb .vs-k.atk,#app.vsb .vs-k.hurt,.vs-banner,.vs-dots i{animation:none}
+  #app.vsb .vs-k.down{animation:none;opacity:.45}
 }
 </style>
 </head>
@@ -2963,6 +3201,1245 @@ ART.skin.nfly=function(X){
     njHaori(X,'url(#'+id+')','#7B55C7',over,null,'#1F1433',true)+
     ART.hair.nflow.back()+X.FACE+ART.hair.nflow.front()+faceAcc();
 };
+/* ---------- mode: ops ---------- */
+/* ---------- mode: Order of Operations sidekick battle ----------
+   The student's sidekick fights. Each correct answer earns one sidekick move; the dragon answers with one of its 4 moves.
+   A wrong answer costs the sidekick its turn. No eggs or fact stats here.
+   Like Classic, one run is all six DRAGONS in order; only beating the sixth (Night Queen) counts as a boss win.
+   The knight's HP carries over from dragon to dragon, with a short rest (OPS_LV[..].rest) in between. */
+var opsG=null,opsT=[],opsTick=null;
+var OPS_DHP=[40,45,50,55,60,75],OPS_KMAX=110,OPS_HIT=10,OPS_BIG=20,OPS_BIGACC=0.6,OPS_HEAL=15;
+/* dragon strength: only the dragon's power changes. Every move stays below the sidekick's 10-damage hit.
+   Medium is the original balance. Hard hits harder and uses its biggest moves more often.
+   rest: knight HP restored between dragons. Hard's longer rest is what keeps a full Hard run winnable
+   (its hits can't go above 9), so harder still means a harder-hitting dragon. */
+var OPS_LV={
+  easy:{n:'Easy',dmg:[2,4,6,8],w:[35,30,25,10],rest:20,tip:'Gentle dragons: softer attacks'},
+  medium:{n:'Medium',dmg:[3,5,7,9],w:[30,30,25,15],rest:20,tip:'A fair fight'},
+  hard:{n:'Hard',dmg:[5,6,8,9],w:[20,25,30,25],rest:28,tip:'Fierce dragons: stronger attacks, and their biggest moves come more often'}
+};
+var OPS_LVS=['easy','medium','hard'];
+function opsLv(){var v=save.opsLv;return OPS_LV[v]?v:'medium';}
+function opsLvHtml(){
+  var cur=opsLv();
+  return '<div class="windows opslv"><div class="win"><h2 tabindex="0" data-tip="How hard the dragon hits in Order of Ops">Dragon strength</h2><div class="seg seg3">'+
+    OPS_LVS.map(function(k){var L=OPS_LV[k];return '<button data-opslv="'+k+'" aria-pressed="'+(cur===k)+'" data-tip="'+L.tip+'. Attacks '+L.dmg[0]+' to '+L.dmg[3]+'.">'+L.n+'</button>';}).join('')+
+    '</div><p class="opslv-note">Problems stay the same. Beat all 6 dragons for a boss win.</p></div></div>';
+}
+var OPS_DMOVES=[
+  ['Sand Flick','Claw Swipe','Tail Sting','Venom Strike'],
+  ['Splash','Fin Slap','Riptide','Tidal Wave'],
+  ['Smoke Puff','Claw Swipe','Fireball','Inferno Breath'],
+  ['Snow Flurry','Icy Bite','Hailstorm','Frost Breath'],
+  ['Gust','Wing Buffet','Thunder Clap','Lightning Bolt'],
+  ['Shadow Flick','Night Claw','Dark Pulse','Eclipse Blast']
+];
+var OPS_BABY={2:['Leaf Storm','Healing Bloom'],3:['Frost Breath','Cool Mist'],4:['Bubble Blast','Healing Rain'],5:['Starfall','Star Glow'],6:['Moon Beam','Moon Song'],7:['Petal Storm','Blossom Song'],8:['Fire Blast','Warm Glow'],9:['Lava Burst','Ember Hug'],10:['Thunder Spark','Sunny Hum'],11:['Thorn Volley','Leafy Hug'],12:['Emerald Blast','Forest Song']};
+var OPS_IC=['🎯','💥','💚','🛡️'];
+var OPS_DESC=[OPS_HIT+' damage. Never misses.',OPS_BIG+' damage, but it can miss.','Heals your knight '+OPS_HEAL+' HP.','Blocks the dragon’s next attack and bounces it back.'];
+function opsLater(fn,ms){var id=setTimeout(fn,ms);opsT.push(id);return id;}
+function opsStopTick(){if(opsTick){clearInterval(opsTick);opsTick=null;}}
+function opsClear(){opsT.forEach(clearTimeout);opsT=[];opsStopTick();}
+function opsRnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+
+/* ---------- problems ---------- */
+/* a problem is a token list [n,op,n,op,n...] with ops '+','−','×','÷' */
+var OPS_ADD='+',OPS_SUB='−',OPS_MUL='×',OPS_DIV='÷';
+function opsHi(o){return o===OPS_MUL||o===OPS_DIV;}
+/* the right way: × ÷ left to right, then + − left to right. null if anything goes negative or fractional */
+function opsEval(t){
+  var a=t.slice(),steps=[],i=1,x,y,r;
+  while(i<a.length){
+    if(opsHi(a[i])){
+      x=a[i-1];y=a[i+1];
+      if(a[i]===OPS_MUL)r=x*y;else{if(!y||x%y)return null;r=x/y;}
+      steps.push([x,a[i],y,r]);a.splice(i-1,3,r);
+    }else i+=2;
+  }
+  while(a.length>1){
+    x=a[0];y=a[2];r=(a[1]===OPS_ADD)?x+y:x-y;
+    if(r<0)return null;
+    steps.push([x,a[1],y,r]);a.splice(0,3,r);
+  }
+  return {v:a[0],steps:steps};
+}
+/* the key mistake: straight left to right */
+function opsL2R(t){
+  var v=t[0];
+  for(var i=1;i<t.length;i+=2){
+    var o=t[i],y=t[i+1];
+    if(o===OPS_ADD)v+=y;else if(o===OPS_SUB)v-=y;else if(o===OPS_MUL)v*=y;else{if(!y||v%y)return null;v/=y;}
+    if(v<0)return null;
+  }
+  return v;
+}
+/* one × or ÷ fact from 2-12, one factor often from the student's chosen tables */
+function opsFact(){
+  var t=save.tables,a=(t&&t.length&&Math.random()<0.6)?t[Math.floor(Math.random()*t.length)]:opsRnd(2,12),b=opsRnd(2,12);
+  if(a<2||a>12)a=opsRnd(2,12);
+  if(Math.random()<0.35)return [a*b,OPS_DIV,a];
+  return Math.random()<0.5?[a,OPS_MUL,b]:[b,OPS_MUL,a];
+}
+/* n + fact or n − fact, with n picked so the left-to-right mistake is also a whole number */
+function opsCore(){
+  var f=opsFact(),fv=opsEval(f).v,sub=Math.random()<0.45,n,ks=[],k;
+  if(f[1]===OPS_DIV){
+    var D=f[0],c=f[2];
+    if(sub){for(k=1;D+c*k<=100;k++)ks.push(D+c*k);}
+    else{for(k=Math.ceil((D+1)/c);c*k-D<=20;k++)ks.push(c*k-D);}
+    if(!ks.length)return null;
+    n=ks[Math.floor(Math.random()*ks.length)];
+  }else n=sub?fv+opsRnd(1,Math.min(25,Math.max(1,100-fv))):opsRnd(1,Math.min(20,Math.max(1,100-fv)));
+  return [n,sub?OPS_SUB:OPS_ADD].concat(f);
+}
+function opsTemplate(four){
+  if(!four)return opsCore();
+  if(Math.random()<0.4){var p=opsFact(),q=opsFact();return p.concat([Math.random()<0.5?OPS_ADD:OPS_SUB]).concat(q);}
+  var c=opsCore();if(!c)return null;
+  return c.concat([Math.random()<0.5?OPS_ADD:OPS_SUB,opsRnd(1,15)]);
+}
+/* every rule in one place: whole numbers, nothing negative, everything 100 or less, order matters */
+function opsValid(t){
+  var e=opsEval(t);if(!e)return null;
+  var hi=false,lo=false,i;
+  for(i=0;i<t.length;i+=2){if(t[i]>100||t[i]<0||t[i]!==Math.floor(t[i]))return null;}
+  for(i=1;i<t.length;i+=2){if(opsHi(t[i]))hi=true;else lo=true;}
+  if(!hi||!lo)return null;
+  for(i=0;i<e.steps.length;i++){if(e.steps[i][3]>100||e.steps[i][3]<0)return null;}
+  var w=opsL2R(t);
+  if(w===null||w===e.v||w>200)return null;
+  return {ans:e.v,steps:e.steps,l2r:w};
+}
+function opsChoices(p){
+  var out=[p.l2r],seen={},c=[],i,v;
+  seen[p.ans]=1;seen[p.l2r]=1;
+  if(p.steps.length>1)c.push(p.steps[0][3]);
+  [1,-1,2,-2,10,-10,3,-3].forEach(function(d){c.push(p.ans+d);});
+  c=[c[0]].concat(shuffle(c.slice(1)));
+  if(Math.random()<0.4)c=shuffle(c);
+  for(i=0;i<c.length&&out.length<3;i++){v=c[i];if(v>=0&&!seen[v]){seen[v]=1;out.push(v);}}
+  for(i=0;out.length<3&&i<200;i++){v=p.ans+opsRnd(-12,12);if(v>=0&&!seen[v]){seen[v]=1;out.push(v);}}
+  out.push(p.ans);
+  return shuffle(out);
+}
+function opsMake(four){
+  for(var n=0;n<400;n++){
+    var t=opsTemplate(four&&n<300);if(!t)continue;
+    var p=opsValid(t);if(!p)continue;
+    p.t=t;p.choices=opsChoices(p);return p;
+  }
+  var f=[3,OPS_ADD,4,OPS_MUL,2],q=opsValid(f);q.t=f;q.choices=opsChoices(q);return q;
+}
+function opsStr(t){return t.join(' ');}
+function opsSay(t){return t.map(function(x){return x===OPS_ADD?'plus':x===OPS_SUB?'minus':x===OPS_MUL?'times':x===OPS_DIV?'divided by':String(x);}).join(' ');}
+
+/* ---------- sidekicks ---------- */
+function opsOwned(){
+  var out=hatchedList().filter(function(n){return n>=2&&n<=12;}).slice().sort(function(a,b){return a-b;});
+  if(petOwned(13))out.push(13,14);
+  Object.keys(PETU).map(Number).forEach(function(n){if(petOwned(n)&&out.indexOf(n)<0)out.push(n);});
+  return out;
+}
+function opsEquipped(){var p=save.av&&save.av.pet;return (p&&petOwned(p))?p:0;}
+/* the sidekick's 4 moves: reliable hit, big hit that can miss, heal, guard */
+function opsKit(n){
+  if(n===13)return {col:'#B79CFF',m:['Goo Lash','Symbiote Slam','Mending Goo','Tendril Shield']};
+  if(n===14)return {col:'#E0352B',m:['Beak Peck','Dive Bomb','Sea Shanty','Feather Shield']};
+  if(n===15)return {col:'#4FD8FF',m:['Laser Zap','Mega Beam','Repair Ray','Force Field']};
+  if(OPS_BABY[n])return {col:n===2?'#58b387':hsl(petHue(n),75,58),m:['Tail Whip',OPS_BABY[n][0],OPS_BABY[n][1],'Wing Shield']};
+  return {col:'#ffd23f',m:['Pounce','Super Pounce','Cheer Up','Brave Guard']};
+}
+function opsPetSvg(n,cls){return '<svg class="'+(cls||'')+'" viewBox="-2 30 54 72" aria-hidden="true">'+petSvg(n)+'</svg>';}
+/* the knight without the small sidekick it usually carries: the sidekick is drawn big on its own */
+function opsKnightSvg(){
+  if(!save.av)return avatarSvg();
+  var keep=save.av.pet,s;
+  save.av.pet=0;
+  try{s=avatarSvg();}finally{save.av.pet=keep;}
+  return s;
+}
+
+/* ---------- entry ---------- */
+function opsStart(){
+  opsClear();opsG=null;
+  if(typeof clearTimers==='function')clearTimers();
+  G=null;
+  var eq=opsEquipped(),own=opsOwned();
+  if(eq){opsGo(eq);return;}
+  if(!own.length){opsNoPet();return;}
+  opsPick(own);
+}
+function opsGo(n){
+  var go=function(){window.scrollTo(0,0);opsBegin(n);};
+  if(document.getElementById('kick'))go();else kickoff(go);
+}
+function opsHome(){if(!$app.classList.contains('home'))renderHome();}
+function opsNoPet(){
+  opsHome();
+  var ov=document.createElement('div');
+  ov.className='overlay';ov.id='ov';
+  ov.innerHTML='<div class="panel" role="dialog" aria-label="You need a sidekick"><div class="bigemoji">🥚</div>'+
+    '<h2>You need a sidekick!</h2>'+
+    '<p style="font-weight:800;margin:8px 0">In Order of Operations, your sidekick fights the dragon for you.</p>'+
+    '<p class="note">Hatch an egg first: master a times table in the regular battle to earn its egg, then hatch your baby dragon. Then come back!</p>'+
+    '<div class="stack"><button class="big-btn" id="opsok">OK</button></div></div>';
+  document.body.appendChild(ov);
+  $('#opsok').focus();
+  $('#opsok').onclick=function(){if(ov.parentNode)ov.parentNode.removeChild(ov);};
+}
+function opsPick(own){
+  opsHome();
+  var ov=document.createElement('div');
+  ov.className='overlay';ov.id='ov';
+  ov.innerHTML='<div class="panel ovscroll" role="dialog" aria-label="Pick your sidekick"><h2>Pick your sidekick</h2>'+
+    '<p class="note" style="margin-bottom:10px">Your sidekick fights the dragon for you. Who’s coming?</p>'+
+    '<div class="ops-pick">'+own.map(function(n){
+      return '<button class="ops-pk" data-pet="'+n+'">'+opsPetSvg(n)+'<span>'+esc(babyName(n))+'</span></button>';
+    }).join('')+'</div>'+
+    '<div class="stack"><button class="big-btn alt" id="opsback">BACK</button></div></div>';
+  document.body.appendChild(ov);
+  var first=ov.querySelector('.ops-pk');if(first)first.focus();
+  function close(){if(ov.parentNode)ov.parentNode.removeChild(ov);}
+  ov.querySelectorAll('.ops-pk').forEach(function(b){b.onclick=function(){close();opsGo(+b.getAttribute('data-pet'));};});
+  $('#opsback').onclick=close;
+}
+
+/* ---------- battle ---------- */
+function opsBegin(n){
+  opsClear();
+  if(typeof clearTimers==='function')clearTimers();
+  G=null;
+  /* every run starts at the first dragon (old saves may still hold save.opsD from the earlier rotation; it is ignored) */
+  var lv=opsLv();
+  opsG={pet:n,kit:opsKit(n),lv:lv,dd:OPS_LV[lv].dmg,dw:OPS_LV[lv].w,d:0,dHP:OPS_DHP[0],dMax:OPS_DHP[0],kHP:OPS_KMAX,kMax:OPS_KMAX,intent:0,guard:false,
+    cur:null,phase:'q',locked:true,typed:'',correct:0,wrong:0,turns:0,streak:0,bestStreak:0,missed:[],used:[0,0,0,0],over:false,last:'',beaten:0};
+  opsStartDragon();
+}
+function opsStartDragon(){
+  var g=opsG;
+  opsClear();
+  g.dHP=g.dMax=OPS_DHP[g.d]||OPS_DHP[OPS_DHP.length-1];
+  g.guard=false;g.phase='q';g.locked=true;g.cur=null;g.last='';
+  opsRender();
+  opsNewIntent();
+  $('#msg').textContent=g.d===0?dragonName(0)+' appears! Remember: × and ÷ first, then + and −.':
+    (g.d===DRAGONS.length-1?'The final boss, '+dragonName(g.d)+', appears!':dragonName(g.d)+' appears!');
+  SFX.start();
+  opsLater(opsNext,1300);
+}
+function opsRender(){
+  var g=opsG,d=DRAGONS[g.d],GROUND=['#C47F2E','#134F92','#2B1A22','#EAF4FF','#2A4034','#1C1030'];
+  $app.className='battle ops'+(save.mode==='type'?' typem':'');
+  $app.innerHTML=
+  '<div class="arena" id="arena" style="--ground:'+GROUND[g.d]+';--skc:'+g.kit.col+'">'+sceneSvg(g.d)+
+  '<div class="hud"><button class="small-btn" id="quit" aria-label="Quit battle">Quit</button>'+
+  '<div class="lvl">Dragon '+(g.d+1)+' of '+DRAGONS.length+' · '+OPS_LV[g.lv].n+'<small><span class="ops-long">Order of Operations</span><span class="ops-short">Order of Ops</span> · <span id="opscount"></span></small></div>'+
+  '<div class="ops-hudr" aria-hidden="true"></div></div>'+
+  '<div class="dragon-wrap"><div class="dname">'+esc(dragonName(g.d))+'</div>'+
+    '<div class="hpbar ops-hp" role="progressbar" aria-label="Dragon health" aria-valuemin="0" aria-valuemax="'+g.dMax+'" aria-valuenow="'+g.dHP+'" id="opsdbar"><i id="hp" style="width:100%"></i><b id="opsdnum">'+g.dHP+'</b></div>'+
+    '<div class="ops-intent" id="opsint" aria-live="polite"></div>'+
+    '<div class="dragon" id="dragon" style="filter:'+d.filter+'">'+d.emoji+'</div></div>'+
+  '<div class="ops-team" id="opsteam">'+
+    '<div class="ops-khud"><div class="ops-names"><span>'+esc(heroName())+'</span><span class="ops-pn">'+esc(babyName(g.pet))+'</span></div>'+
+    '<div class="hpbar ops-hp ops-khp" role="progressbar" aria-label="Knight health" aria-valuemin="0" aria-valuemax="'+g.kMax+'" aria-valuenow="'+g.kHP+'" id="opskbar"><i id="opskhp" style="width:100%"></i><b id="opsknum">'+g.kHP+'</b></div></div>'+
+    '<div class="ops-fig" id="opsfig"><div class="ops-knight" id="opsknight">'+opsKnightSvg()+'</div>'+
+    '<div class="ops-pet" id="opspet">'+opsPetSvg(g.pet)+'</div></div>'+
+  '</div>'+
+  '<div class="fx" id="fx"></div>'+
+  '<div class="dock" id="dock"><div class="dock-in">'+
+    '<div id="qarea"></div><div id="opsmoves" class="ops-mvwrap" hidden></div>'+
+    '<div class="msg" id="msg" aria-live="polite"></div>'+
+  '</div></div></div>';
+  fitDock();
+  if(window.ResizeObserver){var dk=document.getElementById('dock');if(dk)new ResizeObserver(fitDock).observe(dk);}
+  $('#quit').onclick=function(){
+    opsStopTick();
+    askConfirm(g.d>0?'Leave this battle? Your run of six dragons ends here.':'Leave this battle?','LEAVE','KEEP FIGHTING',function(){opsClear();opsG=null;renderHome();},function(){if(opsG&&opsG.phase==='q'&&!opsG.locked&&!opsG.over)opsStartTick();});
+  };
+  opsBars();
+}
+function opsBars(){
+  var g=opsG;if(!g)return;
+  var dh=$('#hp'),kh=$('#opskhp'),kp=g.kHP/g.kMax;
+  if(dh)dh.style.width=(g.dHP/g.dMax*100)+'%';
+  if(kh){kh.style.width=(kp*100)+'%';kh.className=kp<=0.3?'low':(kp<=0.6?'mid':'');}
+  var dn=$('#opsdnum'),kn=$('#opsknum');
+  if(dn)dn.textContent=g.dHP;if(kn)kn.textContent=g.kHP+' / '+g.kMax;
+  var db=$('#opsdbar'),kb=$('#opskbar');
+  if(db)db.setAttribute('aria-valuenow',g.dHP);if(kb)kb.setAttribute('aria-valuenow',g.kHP);
+  var c=$('#opscount');if(c)c.textContent='Correct: '+g.correct;
+}
+function opsNewIntent(){
+  var x=Math.random()*100,i;
+  for(i=0;i<4;i++){x-=opsG.dw[i];if(x<=0)break;}
+  opsG.intent=Math.min(i,3);
+  var el=$('#opsint');
+  if(el){
+    var big=opsG.intent===3;
+    el.className='ops-intent'+(big?' big':'');
+    el.innerHTML=(big?'⚠️ ':'')+'Next: '+esc(OPS_DMOVES[opsG.d][opsG.intent])+' <b>'+opsG.dd[opsG.intent]+'</b>';
+  }
+}
+function opsNext(){
+  var g=opsG;if(!g||g.over)return;
+  var p,n=0;
+  do{p=opsMake(g.correct>=8&&Math.random()<0.25);n++;}while(opsStr(p.t)===g.last&&n<10);
+  g.cur=p;g.last=opsStr(p.t);g.phase='q';g.locked=false;g.typed='';g.guard=false;
+  /* a timer from the last turn can fire after the student has left the battle */
+  var mv=$('#opsmoves');if(!mv)return;mv.hidden=true;mv.innerHTML='';
+  var qa=$('#qarea');qa.hidden=false;
+  var html='<div class="panel question ops-qp"><div class="q ops-q" aria-label="'+opsSay(p.t)+'">'+opsStr(p.t)+'</div><div class="ops-steps" id="opssteps" hidden></div></div>'+
+    (save.timer?'<div class="timer" aria-hidden="true"><i id="opstfill"></i></div>':'');
+  if(save.mode==='pick'){
+    html+='<div class="answers">'+p.choices.map(function(c){return '<button class="ans" data-v="'+c+'">'+c+'</button>';}).join('')+'</div>';
+  }else{
+    html+='<div class="typebox" id="typebox" aria-live="polite">&nbsp;</div><div class="keys">'+
+      [1,2,3,4,5,6,7,8,9].map(function(k){return '<button class="key" data-k="'+k+'">'+k+'</button>';}).join('')+
+      '<button class="key" data-k="back" aria-label="Delete">⌫</button><button class="key" data-k="0">0</button><button class="key go" data-k="go">GO</button></div>';
+  }
+  qa.innerHTML=html;
+  if(save.mode==='pick')qa.querySelectorAll('.ans').forEach(function(b){b.onclick=function(){opsAnswer(+b.getAttribute('data-v'));};});
+  else qa.querySelectorAll('.key').forEach(function(b){b.onclick=function(){opsKey(b.getAttribute('data-k'));};});
+  if(g.correct+g.wrong>0)$('#msg').textContent='';
+  fitDock();opsStartTick();
+}
+/* Paladin/timer: twice the usual time, since every problem has two steps */
+function opsStartTick(){
+  opsStopTick();
+  if(!save.timer||!opsG)return;
+  var total=save.timer*2000,start=Date.now(),fill=$('#opstfill');
+  opsTick=setInterval(function(){
+    if(!opsG||opsG.locked||opsG.over||opsG.phase!=='q'){opsStopTick();return;}
+    var left=total-(Date.now()-start);
+    if(fill){fill.style.width=Math.max(0,left/total*100)+'%';fill.classList.toggle('low',left<total*0.3);}
+    if(left<=0){opsStopTick();opsAnswer(null);}
+  },100);
+}
+function opsKey(k){
+  var g=opsG;if(!g||g.locked||g.over||g.phase!=='q')return;
+  var tb=$('#typebox');if(!tb)return;
+  if(k==='back')g.typed=g.typed.slice(0,-1);
+  else if(k==='go'){if(g.typed!=='')opsAnswer(parseInt(g.typed,10));return;}
+  else if(g.typed.length<3)g.typed+=k;
+  tb.innerHTML=g.typed||'&nbsp;';
+}
+function opsMark(ok,val){
+  var p=opsG.cur;
+  if(save.mode==='pick'){
+    document.querySelectorAll('#qarea .ans').forEach(function(b){
+      var v=+b.getAttribute('data-v');b.disabled=true;
+      if(v===p.ans)b.classList.add('right');else if(!ok&&v===val)b.classList.add('wrong');
+    });
+  }else{
+    var tb=$('#typebox');
+    tb.classList.add(ok?'right':'wrong');
+    tb.textContent=ok?String(val):((val===null?'Time’s up':val)+' → '+p.ans);
+  }
+}
+function opsPop(text,side,cls){
+  var fx=$('#fx');if(!fx)return;
+  var el=document.createElement('div');
+  el.className='pop ops-pop '+(cls||'');
+  el.textContent=text;
+  el.style.left=side==='d'?'60%':'10%';el.style.top=side==='d'?'26%':'40%';
+  fx.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1150);
+}
+var OPS_ANIMS=['hit','attack','ops-dodge','lunge','cheer','block','hurt','heal','ops-shake'];
+function opsAnim(el,cls){if(!el)return;OPS_ANIMS.forEach(function(c){el.classList.remove(c);});void el.offsetWidth;el.classList.add(cls);}
+function opsBolt(rev){
+  var fx=$('#fx');if(!fx)return;
+  var b=document.createElement('div');b.className='bolt ops-bolt'+(rev?' rev':'');fx.appendChild(b);
+  setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},600);
+}
+function opsAnswer(val){
+  var g=opsG;if(!g||g.locked||g.over||g.phase!=='q')return;
+  g.locked=true;opsStopTick();
+  var p=g.cur,ok=(val===p.ans);
+  opsMark(ok,val);
+  if(ok){
+    g.correct++;g.streak++;if(g.streak>g.bestStreak)g.bestStreak=g.streak;
+    SFX.good();opsBars();
+    $('#msg').textContent='Correct! '+opsStr(p.t)+' = '+p.ans;
+    opsLater(opsShowMoves,650);
+  }else{
+    g.wrong++;g.streak=0;
+    g.missed.push({s:opsStr(p.t),ans:p.ans});
+    SFX.bad();
+    var st=$('#opssteps');
+    if(st){
+      st.innerHTML=p.steps.map(function(s,i){return (i?'<i aria-hidden="true">→</i>':'')+'<span>'+s[0]+' '+s[1]+' '+s[2]+' = <b>'+s[3]+'</b></span>';}).join('');
+      st.hidden=false;
+    }
+    $('#msg').textContent=(val===null?'Time’s up! ':'')+(val===p.l2r?'Careful: × and ÷ come before + and −. ':'')+babyName(g.pet)+' lost its turn!';
+    g.phase='wait';fitDock();
+    opsLater(function(){opsDragonTurn(opsAfterWrong);},900);
+  }
+}
+function opsAfterWrong(){
+  var g=opsG;if(!g||g.over)return;
+  var qa=$('#qarea'),wrap=document.createElement('div');
+  wrap.className='ops-nextrow';
+  wrap.innerHTML='<button class="big-btn" id="opsnext">NEXT PROBLEM ▶</button>';
+  qa.appendChild(wrap);
+  fitDock();
+  var b=$('#opsnext');b.focus();
+  b.onclick=function(){if(!opsG||opsG.over)return;opsNext();};
+}
+function opsShowMoves(){
+  var g=opsG;if(!g||g.over)return;
+  g.phase='move';
+  $('#qarea').hidden=true;
+  var mv=$('#opsmoves');
+  mv.innerHTML='<div class="ops-mvhead">Correct! Pick a move for '+esc(babyName(g.pet))+'!</div><div class="ops-moves">'+
+    g.kit.m.map(function(nm,i){
+      return '<button class="ops-mv ops-mv'+i+'" data-m="'+i+'"><span class="ops-mvic" aria-hidden="true">'+OPS_IC[i]+'</span><span class="ops-mvtx"><b>'+esc(nm)+'</b><small>'+OPS_DESC[i]+'</small></span></button>';
+    }).join('')+'</div>';
+  mv.hidden=false;
+  mv.querySelectorAll('.ops-mv').forEach(function(b){b.onclick=function(){opsMove(+b.getAttribute('data-m'));};});
+  $('#msg').textContent='';
+  fitDock();
+  var f=mv.querySelector('.ops-mv');if(f)f.focus();
+}
+function opsMove(i){
+  var g=opsG;if(!g||g.over||g.phase!=='move')return;
+  g.phase='anim';g.used[i]++;g.turns++;
+  var mv=$('#opsmoves');mv.querySelectorAll('.ops-mv').forEach(function(b){b.disabled=true;if(+b.getAttribute('data-m')===i)b.classList.add('on');});
+  var nm=g.kit.m[i],pet=$('#opspet'),dragon=$('#dragon'),msg=$('#msg'),pn=babyName(g.pet);
+  if(i===0||i===1){
+    opsAnim(pet,'lunge');
+    var hit=(i===0)||Math.random()<OPS_BIGACC,dmg=i===0?OPS_HIT:OPS_BIG;
+    opsLater(function(){
+      if(hit){
+        opsBolt(false);opsAnim(dragon,'hit');
+        g.dHP=Math.max(0,g.dHP-dmg);
+        opsPop('-'+dmg+(i===1?' 💥':''),'d',i===1?'big':'');
+        msg.textContent=pn+' used '+nm+'! '+(i===1?'A huge hit!':'Direct hit!');
+        (i===1?SFX.super:SFX.good)();
+        if(i===1){var ar=$('#arena');opsAnim(ar,'ops-shake');}
+      }else{
+        opsAnim(dragon,'ops-dodge');
+        opsPop('MISS!','d','miss');
+        msg.textContent=pn+' used '+nm+'... but the dragon dodged!';
+        beep(260,.12,'triangle');beep(180,.2,'triangle',.1);
+      }
+      opsBars();
+      opsAfterMove();
+    },260);
+  }else if(i===2){
+    var before=g.kHP;
+    g.kHP=Math.min(g.kMax,g.kHP+OPS_HEAL);
+    opsAnim($('#opsknight'),'heal');opsAnim(pet,'cheer');
+    opsPop('+'+(g.kHP-before)+' ❤','k','heal');
+    msg.textContent=pn+' used '+nm+'! '+(g.kHP>before?heroName()+' feels better.':heroName()+' is already at full health!');
+    SFX.wind();opsBars();
+    opsAfterMove();
+  }else{
+    g.guard=true;
+    pet.classList.add('guard');
+    msg.textContent=pn+' used '+nm+'! Ready to block.';
+    beep(660,.08,'triangle');beep(990,.16,'triangle',.07);
+    opsAfterMove();
+  }
+}
+function opsAfterMove(){
+  var g=opsG;
+  if(g.dHP<=0){opsWin();return;}
+  opsLater(function(){opsDragonTurn(function(){opsLater(opsNext,700);});},1100);
+}
+function opsDragonTurn(then){
+  var g=opsG;if(!g||g.over)return;
+  var i=g.intent,dmg=g.dd[i],nm=OPS_DMOVES[g.d][i],dragon=$('#dragon'),msg=$('#msg'),fig=$('#opsfig'),pet=$('#opspet'),dn=dragonName(g.d);
+  opsAnim(dragon,'attack');
+  opsLater(function(){
+    if(!opsG||opsG.over)return;
+    if(g.guard){
+      g.guard=false;
+      pet.classList.remove('guard');opsAnim(pet,'block');
+      opsPop('BLOCKED!','k','block');
+      opsLater(function(){
+        if(!opsG||opsG.over)return;
+        opsBolt(true);opsAnim(dragon,'hit');
+        g.dHP=Math.max(0,g.dHP-dmg);opsPop('-'+dmg,'d','');opsBars();SFX.good();
+        if(g.dHP<=0){opsWin();return;}
+        opsNewIntent();then();
+      },380);
+      msg.textContent=dn+' used '+nm+', but '+babyName(g.pet)+' blocked it and bounced it back!';
+      beep(880,.08,'square');beep(1320,.12,'square',.06);
+      return;
+    }
+    g.kHP=Math.max(0,g.kHP-dmg);
+    opsAnim(fig,'hurt');
+    opsPop('-'+dmg,'k','bad');
+    var m=$('#msg');
+    if(m)m.textContent=(m.textContent&&g.phase==='wait'?m.textContent+' ':'')+dn+' used '+nm+'!';
+    beep(140,.25,'sawtooth');
+    opsBars();
+    if(g.kHP<=0){opsLose();return;}
+    opsNewIntent();then();
+  },320);
+}
+/* one dragon down. Only the last one ends the run as a win; the others lead to the next dragon */
+function opsWin(){
+  var g=opsG;if(!g||g.over||g.phase==='between')return;
+  g.beaten=g.d+1;
+  var last=g.d>=DRAGONS.length-1;
+  if(last)g.over=true;
+  g.phase=last?'over':'between';g.locked=true;opsStopTick();
+  var it=$('#opsint');if(it)it.style.visibility='hidden';
+  var dragon=$('#dragon');
+  opsLater(function(){if(dragon)dragon.className='dragon dead';SFX.win();},420);
+  opsLater(function(){if(last)opsEnd(true);else opsBetween();},1600);
+}
+function opsBetween(){
+  var g=opsG;if(!g||g.over)return;
+  var d=DRAGONS[g.d],nx=g.d+1,before=g.kHP;
+  g.kHP=Math.min(g.kMax,g.kHP+OPS_LV[g.lv].rest);
+  var ov=document.createElement('div');
+  ov.className='overlay';ov.id='ov';
+  ov.innerHTML='<div class="panel" role="dialog" aria-label="Dragon defeated"><div class="bigemoji" style="filter:'+d.filter+'">'+d.emoji+'</div>'+
+    '<h2>'+esc(dragonName(g.d))+' defeated!</h2>'+
+    '<p style="font-weight:800;margin:6px 0">Dragon '+(g.d+1)+' of '+DRAGONS.length+' done. '+esc(heroName())+' rests: '+(g.kHP>before?'+'+(g.kHP-before)+' HP':'already at full health')+' ('+g.kHP+' / '+g.kMax+').</p>'+
+    '<p class="note">Next up: <b>'+esc(dragonName(nx))+'</b>. '+DRAGONS[nx].intro+'</p>'+
+    '<div class="stack"><button class="big-btn" id="nextD">NEXT DRAGON!</button></div></div>';
+  document.body.appendChild(ov);
+  var b=$('#nextD');b.focus();
+  b.onclick=function(){
+    if(ov.parentNode)ov.parentNode.removeChild(ov);
+    if(!opsG||opsG!==g)return;
+    g.d=nx;g.streak=0;
+    opsStartDragon();
+  };
+}
+function opsLose(){
+  var g=opsG;if(!g||g.over)return;
+  g.over=true;g.phase='over';opsStopTick();
+  opsLater(function(){defeatFx(function(){opsEnd(false);});},900);
+}
+function opsEnd(won){
+  var g=opsG;if(!g)return;
+  opsClear();
+  var total=g.correct+g.wrong,acc=total?Math.round(g.correct/total*100):0,newItems=[],dn=dragonName(g.d),pn=babyName(g.pet);
+  if(won){
+    if(typeof grantBossWin==='function')newItems=grantBossWin()||[];
+    else{save.bossWins=(save.bossWins||0)+1;persist();newItems=itemsAt(save.bossWins);}
+  }
+  var extra='';
+  if(won)extra+='<p style="font-weight:900;margin:8px 0">Boss wins: '+(save.bossWins||0)+'</p>';
+  if(newItems.length)extra+='<p style="font-weight:900;margin:8px 0;color:var(--power)">New knight gear unlocked: '+newItems.map(function(t){return esc(t);}).join(', ')+'</p>';
+  var newPets=won?petsAt(save.bossWins||0):[];
+  extra+=newPets.map(function(n){return '<div style="margin:8px 0"><p style="font-weight:900;font-size:1.15rem;margin:6px 0">A '+esc(petDefaultName(n))+' joined you!</p><svg viewBox="0 34 50 66" style="width:100px;height:auto;overflow:visible" role="img" aria-label="'+esc(petDefaultName(n))+'">'+petSvg(n)+'</svg><label class="nlabel" for="petname'+n+'">Name your '+esc(petDefaultName(n))+'</label>'+petNameInput(n,'petname'+n)+'</div>';}).join('');
+  var seen={},miss=g.missed.filter(function(m){if(seen[m.s])return false;seen[m.s]=1;return true;}).slice(0,6);
+  var missHtml=miss.length?'<p style="font-weight:900;margin:8px 0 4px">Problems to practice:</p><div class="trouble ops-trouble">'+
+    miss.map(function(m){return '<span>'+m.s+' = '+m.ans+'</span>';}).join('')+'</div>':
+    '<p style="font-weight:800">Not a single wrong answer. Legendary!</p>';
+  if(won)SFX.win();
+  var ov=document.createElement('div');
+  ov.className='overlay';ov.id='ov';
+  ov.innerHTML='<div class="panel ovscroll" role="dialog" aria-label="Battle over">'+
+    (won?'<div class="bigemoji">🏆</div>':'<div class="ops-endpet">'+opsPetSvg(g.pet)+'</div>')+
+    '<h2>'+(won?'All six dragons defeated!':(g.beaten?'You beat '+g.beaten+' of '+DRAGONS.length+' dragons!':'So close!'))+'</h2>'+
+    '<p style="font-weight:800;margin:6px 0">'+(won?esc(pn)+' and '+esc(heroName())+' beat every dragon, all the way to '+esc(dn)+'. You are Dragon Champions!':
+      esc(pn)+' fought bravely'+(g.dHP<=g.dMax*0.3?', and '+esc(dn)+' only just won':' against '+esc(dn))+'. Every answer makes you stronger. Try again!')+'</p>'+
+    (won?'':'<p class="note">Tip: do × and ÷ first, then + and − from left to right.</p>')+
+    extra+
+    '<div class="stats"><div class="stat"><b>'+g.correct+'</b><span>correct</span></div><div class="stat"><b>'+acc+'%</b><span>accuracy</span></div><div class="stat"><b>'+g.bestStreak+'</b><span>best streak</span></div><div class="stat"><b>'+(won?g.kHP:g.beaten+'/'+DRAGONS.length)+'</b><span>'+(won?'HP left':'dragons beaten')+'</span></div></div>'+
+    missHtml+
+    '<div class="stack"><button class="big-btn" id="again">PLAY AGAIN</button><button class="big-btn alt" id="home">HOME</button></div></div>';
+  document.body.appendChild(ov);
+  $('#again').focus();
+  ov.querySelector('.panel').scrollTop=0;
+  newPets.forEach(function(n){var pi=ov.querySelector('#petname'+n);wirePetName(pi,n,null,function(){pi.blur();});});
+  var pet=g.pet;
+  $('#again').onclick=function(){document.body.removeChild(ov);opsG=null;opsBegin(petOwned(pet)?pet:(opsOwned()[0]||pet));};
+  $('#home').onclick=function(){document.body.removeChild(ov);opsG=null;renderHome();};
+}
+document.addEventListener('keydown',function(e){
+  var g=opsG;
+  if(!g||g.over||document.getElementById('ov')||!$app.classList.contains('ops'))return;
+  var k=e.key,b;
+  if(g.phase==='move'){
+    if(k>='1'&&k<='4'){b=document.querySelectorAll('#opsmoves .ops-mv')[+k-1];if(b&&!b.disabled){e.preventDefault();b.click();}}
+    return;
+  }
+  if(g.phase==='wait'){
+    if(k==='Enter'||k===' '){b=$('#opsnext');if(b){e.preventDefault();b.click();}}
+    return;
+  }
+  if(g.phase!=='q'||g.locked)return;
+  if(save.mode==='type'){
+    if(k>='0'&&k<='9'){e.preventDefault();opsKey(k);}
+    else if(k==='Backspace'){e.preventDefault();opsKey('back');}
+    else if(k==='Enter'){e.preventDefault();opsKey('go');}
+  }else if(k>='1'&&k<='4'){
+    b=document.querySelectorAll('#qarea .ans')[+k-1];if(b&&!b.disabled){e.preventDefault();b.click();}
+  }
+});
+/* ---------- mode: versus ---------- */
+/* ---------- VERSUS: two students on two devices, live through Firebase ----------
+   Room data lives at versus/<code> (code = two picture letters, a..l). Nothing about the student is sent
+   except their hero name and avatar gear numbers (plus boss-win count so unlocked gear draws the same).
+   The network sits behind vsNet so the rest of this file never touches Firebase directly. */
+var VS_FB={
+  apiKey:"AIzaSyA186ewqmPCtScIZ1FDZucb-BwT7LLnZaI",
+  authDomain:"silvasite-4be9b.firebaseapp.com",
+  databaseURL:"https://silvasite-4be9b-default-rtdb.firebaseio.com",
+  projectId:"silvasite-4be9b",
+  storageBucket:"silvasite-4be9b.firebasestorage.app",
+  messagingSenderId:"950305667080",
+  appId:"1:950305667080:web:d0764b6407344ec31ef9bd"
+};
+var VS_SDK='https://www.gstatic.com/firebasejs/10.12.0/';
+var VS_APP='wotVersus';
+var VS_STALE=15*60*1000;
+var VS_HP=10;
+var VS_LETTERS='abcdefghijkl';
+/* the join pictures: [emoji, name, tile colour]. Their order is the code alphabet, so never reorder. */
+var VS_PICS=[
+  ['🥚','Egg','#FFD9A8'],
+  ['🐉','Dragon','#9EE6B0'],
+  ['🗡️','Sword','#C9D4E6'],
+  ['🛡️','Shield','#9FC3FF'],
+  ['👑','Crown','#FFE277'],
+  ['🏰','Castle','#D8C4FF'],
+  ['⭐','Star','#4B3FA8'],
+  ['🔥','Fire','#FFB0A3'],
+  ['💎','Gem','#A3EEF0'],
+  ['🦄','Unicorn','#FFC2E4'],
+  ['🌙','Moon','#28325A'],
+  ['🗝️','Key','#E6CFA6']
+];
+var VS_AVK=['skin','armor','tabard','cloak','head','hair','haircol','shield','sword','eyes','ears','beard','lash','neck','brace','pet'];
+var VS_GROUND=['#C47F2E','#134F92','#2B1A22','#EAF4FF','#2A4034','#1C1030'];
+
+/* ---------- transport: the only code that talks to Firebase ---------- */
+var vsNet=(function(){
+  var db=null,off=0,wait=null;
+  function addScript(src,cb){
+    var s=document.createElement('script'),done=false;
+    s.src=src;s.async=true;
+    s.onload=function(){if(!done){done=true;cb(true);}};
+    s.onerror=function(){if(!done){done=true;cb(false);}};
+    document.head.appendChild(s);
+  }
+  function finish(err){if(!wait)return;var w=wait;wait=null;w.forEach(function(cb){cb(err);});}
+  function ref(code,sub){return db.ref('versus/'+code+(sub?'/'+sub:''));}
+  function init(){
+    try{
+      var fb=window.firebase,app=null;
+      fb.apps.forEach(function(a){if(a.name===VS_APP)app=a;});
+      if(!app)app=fb.initializeApp(VS_FB,VS_APP);
+      db=app.database();
+      db.ref('.info/serverTimeOffset').on('value',function(s){off=+s.val()||0;});
+      finish(null);
+    }catch(e){finish('offline');}
+  }
+  return {
+    /* loads the SDK the first time Versus needs it; cb(null) when ready, cb('offline') if it can't */
+    ready:function(cb){
+      if(db){cb(null);return;}
+      if(wait){wait.push(cb);return;}
+      wait=[cb];
+      var tries=0,to=setTimeout(function(){finish('offline');},15000);
+      function step(){
+        var fb=window.firebase;
+        if(tries++>3){clearTimeout(to);finish('offline');return;}
+        if(!fb||!fb.initializeApp){addScript(VS_SDK+'firebase-app-compat.js',function(ok){if(ok)step();else{clearTimeout(to);finish('offline');}});return;}
+        if(!fb.database){addScript(VS_SDK+'firebase-database-compat.js',function(ok){if(ok)step();else{clearTimeout(to);finish('offline');}});return;}
+        clearTimeout(to);init();
+      }
+      step();
+    },
+    clock:function(){return Date.now()+off;},
+    stamp:function(){return firebase.database.ServerValue.TIMESTAMP;},
+    /* fn(current room or null) returns the new room, or undefined to leave it alone; cb(err, committed, room) */
+    tx:function(code,fn,cb){
+      ref(code).transaction(fn,function(err,ok,snap){cb(err||null,!!ok,snap?snap.val():null);},false);
+    },
+    send:function(code,upd){ref(code).update(upd);},
+    watch:function(code,cb){
+      var r=ref(code),h=r.on('value',function(s){cb(s.val());},function(){cb(null);});
+      return function(){r.off('value',h);};
+    },
+    /* what the server does if this device drops: sub=null removes the room, otherwise sets ref(sub)=val */
+    onDrop:function(code,sub,val){var o=(sub?ref(code,sub):ref(code)).onDisconnect();if(val===null)o.remove();else o.set(val);},
+    cancelDrop:function(code){ref(code).onDisconnect().cancel();},
+    remove:function(code){ref(code).remove();}
+  };
+})();
+
+/* ---------- state ---------- */
+var VS=null,vsT=[],vsTick=null,vsPend=null,vsPick=[];
+var vsPref={q:'x',s:'own'};
+function vsNoop(){}
+function vsLater(fn,ms){var id=setTimeout(fn,ms);vsT.push(id);return id;}
+function vsStopTimer(){if(vsTick){clearInterval(vsTick);vsTick=null;}}
+function vsClear(){vsT.forEach(clearTimeout);vsT=[];vsStopTimer();}
+function vsInt(v,lo,hi){return (typeof v==='number'&&v%1===0&&v>=lo&&v<=hi)?v:null;}
+function vsCloseOv(){var o;while((o=document.getElementById('ov')))o.parentNode.removeChild(o);}
+function vsStill(){return window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}
+function vsStyleName(){return save.mode==='pick'?'Squire':(save.timer===8?'Paladin':'Knight');}
+function vsKindName(q){return q==='m'?'Missing factor':'Times tables';}
+function vsModeName(s){return s==='race'?'Race':'Own pace';}
+function vsPicTile(i,extra){var p=VS_PICS[i];return '<span class="vs-em'+(extra||'')+'" style="--pc:'+p[2]+'" aria-hidden="true">'+p[0]+'</span>';}
+function vsCodePics(code){return [VS_LETTERS.indexOf(code.charAt(0)),VS_LETTERS.indexOf(code.charAt(1))];}
+function vsTables(){
+  var t=(Array.isArray(save.tables)?save.tables:[]).filter(function(n){return vsInt(n,1,12)!==null;});
+  return t.length?t:[2];
+}
+
+/* what this student shares: name + gear numbers (only gear they've unlocked) + boss wins */
+function vsMe(){
+  var av={};
+  VS_AVK.forEach(function(k){av[k]=(k==='pet')?0:(AV[k]?avSel(k):0);});
+  var pn=save.av&&save.av.pet;
+  if(typeof pn==='number'&&pn>0&&pn<=199&&pn%1===0&&petOwned(pn))av.pet=pn;
+  var n=String(heroName()).replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,16)||'Knight';
+  return {n:n,av:av,w:Math.min(99999,Math.max(0,Math.floor(+save.bossWins||0))),hp:VS_HP,on:true,rm:0};
+}
+function vsName(p){return p&&typeof p.n==='string'&&p.n?p.n.slice(0,16):'Your friend';}
+/* draws the other student's knight by briefly borrowing their gear numbers */
+function vsAvatar(p){
+  var keep={av:save.av,w:save.bossWins,h:save.hatched},av={},out='';
+  VS_AVK.forEach(function(k){var v=p&&p.av?vsInt(p.av[k],0,199):null;av[k]=v===null?0:v;});
+  var hatch=[],i;
+  if(av.pet>=2&&av.pet<=12)hatch=[av.pet];
+  else if(av.pet===13||av.pet===14){for(i=2;i<=12;i++)hatch.push(i);}
+  try{save.av=av;save.bossWins=vsInt(p&&p.w,0,99999)||0;save.hatched=hatch;out=avatarSvg();}
+  catch(e){out='';}
+  finally{save.av=keep.av;save.bossWins=keep.w;save.hatched=keep.h;}
+  return out;
+}
+
+/* ---------- questions ---------- */
+/* m: 0 = a × b, 1 = a × ? (answer b), 2 = ? × b (answer a) */
+function vsMakeQ(tables,kind,last){
+  var t,f,n=0;
+  do{t=tables[Math.floor(Math.random()*tables.length)];f=1+Math.floor(Math.random()*12);n++;}
+  while(last&&fkey(t,f)===last&&n<12);
+  if(kind==='m')return Math.random()<.5?{a:t,b:f,m:1}:{a:f,b:t,m:2};
+  return Math.random()<.5?{a:t,b:f,m:0}:{a:f,b:t,m:0};
+}
+function vsAns(q){return q.m===1?q.b:(q.m===2?q.a:q.a*q.b);}
+function vsFact(q){return q.a+' × '+q.b+' = '+(q.a*q.b);}
+function vsChoices(q){
+  if(q.m===0)return makeChoices(q.a,q.b);
+  var ans=vsAns(q),known=q.m===1?q.a:q.b,set={},out=[];
+  set[ans]=1;
+  shuffle([ans+1,ans-1,ans+2,ans-2,ans+3,ans-3,known,ans*2]).forEach(function(v){if(v>=1&&v<=12&&!set[v]&&out.length<3){set[v]=1;out.push(v);}});
+  for(var v=1;out.length<3&&v<=12;v++){if(!set[v]){set[v]=1;out.push(v);}}
+  out.push(ans);
+  return shuffle(out);
+}
+function vsQHtml(q){
+  var p=q.a*q.b,m='<span class="vs-qm">?</span>';
+  if(q.m===1)return {t:q.a+' × '+m+' = '+p,l:q.a+' times what equals '+p};
+  if(q.m===2)return {t:m+' × '+q.b+' = '+p,l:'what times '+q.b+' equals '+p};
+  return {t:q.a+' × '+q.b,l:q.a+' times '+q.b};
+}
+/* fact practice is recorded like the normal game (counts only; eggs are earned in dragon battles) */
+function vsStat(q,ok){
+  if(!save.stats||typeof save.stats!=='object')save.stats={};
+  var k=fkey(q.a,q.b),s=save.stats[k]||(save.stats[k]={c:0,m:0});
+  if(ok)s.c=(s.c||0)+1;else{s.m=(s.m||0)+1;s.s=0;}
+  persist();
+}
+
+/* ---------- room changes (pure: each returns a function for vsNet.tx) ---------- */
+function vsNewRoom(p){var s=vsNet.stamp();return {c:s,t:s,q:vsPref.q==='m'?'m':'x',s:vsPref.s==='race'?'race':'own',mx:VS_HP,st:'wait',rd:0,wn:0,p1:p};}
+function vsTxCreate(room,now){
+  return function(cur){
+    if(cur&&typeof cur.t==='number'&&cur.t>=now-VS_STALE)return;
+    return JSON.parse(JSON.stringify(room));
+  };
+}
+function vsTxJoin(p,now){
+  return function(cur){
+    if(!cur)return null;
+    if(cur.p2||cur.st!=='wait'||!(cur.t>=now-VS_STALE))return;
+    cur.p2=JSON.parse(JSON.stringify(p));cur.t=vsNet.stamp();
+    return cur;
+  };
+}
+function vsTxStart(){
+  return function(cur){
+    if(!cur||cur.st!=='wait'||!cur.p2)return;
+    cur.st='play';cur.rd=1;cur.wn=0;cur.t=vsNet.stamp();
+    return cur;
+  };
+}
+/* one hit on the other knight; k>0 means a Race question, which only the first right answer may claim */
+function vsTxHit(me,rd,k){
+  return function(cur){
+    if(!cur||cur.st!=='play'||cur.rd!==rd)return;
+    var f=cur['p'+(3-me)];
+    if(!f||typeof f.hp!=='number')return;
+    if(k){if(!cur.r||cur.r.k!==k||cur.r.w)return;cur.r.w=me;}
+    f.hp=Math.max(0,f.hp-1);
+    if(f.hp===0){cur.st='end';cur.wn=me;}
+    cur.t=vsNet.stamp();
+    return cur;
+  };
+}
+function vsTxMiss(me,rd,k){
+  return function(cur){
+    if(!cur||cur.st!=='play'||cur.rd!==rd||!cur.r||cur.r.k!==k||cur.r.w)return;
+    cur.r['x'+me]=true;cur.t=vsNet.stamp();
+    return cur;
+  };
+}
+function vsTxQ(rd,k,q){
+  return function(cur){
+    if(!cur||cur.st!=='play'||cur.rd!==rd)return;
+    if((cur.r?cur.r.k:0)!==k-1)return;
+    cur.r={k:k,a:q.a,b:q.b,m:q.m,w:0,x1:false,x2:false};cur.t=vsNet.stamp();
+    return cur;
+  };
+}
+function vsTxReset(rd){
+  return function(cur){
+    if(!cur||cur.st!=='end'||cur.rd!==rd||!cur.p1||!cur.p2||cur.p1.rm!==rd||cur.p2.rm!==rd)return;
+    cur.rd=rd+1;cur.st='play';cur.wn=0;cur.p1.hp=cur.mx;cur.p2.hp=cur.mx;delete cur.r;cur.t=vsNet.stamp();
+    return cur;
+  };
+}
+
+/* ---------- screens before the fight ---------- */
+function vsScreen(inner){
+  $app.className='vs';
+  $app.innerHTML='<div class="vs-wrap"><h1 class="vs-title">Versus</h1>'+inner+'</div>';
+  window.scrollTo(0,0);
+}
+function vsOpen(){
+  vsLeave();
+  if(typeof clearTimers==='function')clearTimers();
+  G=null;
+  vsScreen('<div class="panel vs-panel">'+
+    '<div class="vs-duo" aria-hidden="true"><div class="vs-pv">'+avatarSvg()+'</div><div class="vs-x">VS</div><div class="vs-pv vs-mystery">?</div></div>'+
+    '<p class="vs-lead">Battle a friend on another device! One of you creates a game, the other joins it.</p>'+
+    '<p class="note">Every right answer hits the other knight. The first knight to run out of health loses.</p>'+
+    '<div class="stack"><button class="big-btn" id="vscreate">CREATE A GAME</button><button class="big-btn alt" id="vsjoin">JOIN A GAME</button></div>'+
+    '<p class="note">You answer as a <b>'+vsStyleName()+'</b>'+(save.timer?' with a '+save.timer+' second timer':'')+'. Change it on the home screen.</p>'+
+  '</div><div class="vs-foot"><button class="small-btn" id="vshome">Back to Hero HQ</button></div>');
+  $('#vscreate').onclick=vsSetup;
+  $('#vsjoin').onclick=function(){vsPick=[];vsJoinScreen('');};
+  $('#vshome').onclick=function(){vsLeave();renderHome();};
+  $('#vscreate').focus();
+}
+function vsSetup(){
+  function seg(attr,val,opts){return '<div class="seg">'+opts.map(function(o){return '<button data-'+attr+'="'+o[0]+'" aria-pressed="'+(val===o[0])+'">'+o[1]+'<small>'+o[2]+'</small></button>';}).join('')+'</div>';}
+  vsScreen('<div class="panel vs-panel"><h2 class="vs-h">Create a game</h2>'+
+    '<h3 class="vs-sub">Questions</h3>'+seg('vq',vsPref.q,[['x','Times tables','7 × 8 = ?'],['m','Missing factor','7 × ? = 56']])+
+    '<h3 class="vs-sub">Style</h3>'+seg('vm',vsPref.s,[['own','Own pace','Answer at your own speed'],['race','Race','Same question, fastest wins']])+
+    '<p class="note" id="vsnote"></p>'+
+    '<div class="stack"><button class="big-btn" id="vsgo">CREATE!</button><button class="big-btn alt" id="vsback">BACK</button></div>'+
+  '</div>');
+  function note(){
+    $('#vsnote').textContent=vsPref.s==='race'?'Race: you both get the same question from your tables ('+vsTables().join(', ')+'). The first right answer hits!':'Own pace: each of you answers questions from your own tables.';
+  }
+  note();
+  $app.querySelectorAll('[data-vq],[data-vm]').forEach(function(b){b.onclick=function(){
+    if(b.hasAttribute('data-vq'))vsPref.q=b.getAttribute('data-vq');else vsPref.s=b.getAttribute('data-vm');
+    $app.querySelectorAll(b.hasAttribute('data-vq')?'[data-vq]':'[data-vm]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+    note();
+  };});
+  $('#vsgo').onclick=vsCreate;
+  $('#vsback').onclick=vsOpen;
+  $('#vsgo').focus();
+}
+function vsBusy(text,onCancel){
+  vsScreen('<div class="panel vs-panel vs-center"><p class="vs-lead" role="status">'+esc(text)+'<span class="vs-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>'+
+    '<div class="stack"><button class="big-btn alt" id="vscancel">CANCEL</button></div></div>');
+  $('#vscancel').onclick=onCancel;
+}
+function vsMsg(title,text,retry){
+  vsScreen('<div class="panel vs-panel vs-center"><h2 class="vs-h">'+esc(title)+'</h2><p class="vs-lead">'+esc(text)+'</p>'+
+    '<div class="stack">'+(retry?'<button class="big-btn" id="vsretry">TRY AGAIN</button>':'')+'<button class="big-btn alt" id="vshome">HOME</button></div></div>');
+  if(retry)$('#vsretry').onclick=retry;
+  $('#vshome').onclick=function(){renderHome();};
+  ($('#vsretry')||$('#vshome')).focus();
+}
+var VS_OFFLINE='Versus needs the internet. Check the Wi-Fi and try again.';
+
+/* host: find a free (or stale) two-picture code and claim it */
+function vsCreate(){
+  var pend=vsPend={off:false};
+  vsBusy('Making your game',function(){pend.off=true;vsOpen();});
+  var to=setTimeout(function(){if(pend.off)return;pend.off=true;vsMsg('Can’t connect',VS_OFFLINE,vsCreate);},20000);
+  vsNet.ready(function(err){
+    if(pend.off)return;
+    if(err){clearTimeout(to);pend.off=true;vsMsg('Can’t connect',VS_OFFLINE,vsCreate);return;}
+    var codes=[],i,j,n=0,errs=0,me=vsMe();
+    for(i=0;i<12;i++)for(j=0;j<12;j++)codes.push(VS_LETTERS.charAt(i)+VS_LETTERS.charAt(j));
+    shuffle(codes);
+    (function next(){
+      if(pend.off)return;
+      if(n>=codes.length){clearTimeout(to);pend.off=true;vsMsg('All games are busy','Every picture pair is being used right now. Try again in a minute!',vsCreate);return;}
+      var code=codes[n++];
+      vsNet.tx(code,vsTxCreate(vsNewRoom(me),vsNet.clock()),function(e,ok){
+        if(pend.off){if(ok&&!e)vsNet.remove(code);return;}
+        if(e&&++errs>=3){clearTimeout(to);pend.off=true;vsMsg('Can’t connect','The game server said no. Ask your teacher to check the Versus settings.',vsCreate);return;}
+        if(e||!ok){next();return;}
+        clearTimeout(to);pend.off=true;
+        vsHost(code);
+      });
+    })();
+  });
+}
+function vsBegin(code,me){
+  VS={code:code,me:me,foe:3-me,phase:me===1?'wait':'joined',rd:0,room:null,k:0,q:null,locked:true,ready:false};
+  VS.off=vsNet.watch(code,vsOnRoom);
+  if(me===1)vsNet.onDrop(code,null,null);else vsNet.onDrop(code,'p2/on',false);
+  VS.hb=setInterval(function(){if(VS&&VS.code===code)vsNet.send(code,{t:vsNet.stamp()});},60000);
+}
+function vsHost(code){
+  vsBegin(code,1);
+  var p=vsCodePics(code),a=VS_PICS[p[0]],b=VS_PICS[p[1]];
+  vsScreen('<div class="panel vs-panel vs-center"><h2 class="vs-h">Your game pictures</h2>'+
+    '<div class="vs-code" role="img" aria-label="'+a[1]+', then '+b[1]+'">'+
+      '<div class="vs-slot full"><b class="vs-num">1</b>'+vsPicTile(p[0],' big')+'<span>'+a[1]+'</span></div>'+
+      '<div class="vs-arrow" aria-hidden="true">➔</div>'+
+      '<div class="vs-slot full"><b class="vs-num">2</b>'+vsPicTile(p[1],' big')+'<span>'+b[1]+'</span></div>'+
+    '</div>'+
+    '<p class="vs-lead">Tell your friend to tap <b>Join a game</b>, then tap <b>'+a[1]+'</b> and then <b>'+b[1]+'</b>.</p>'+
+    '<p class="note">'+vsKindName(vsPref.q)+' · '+vsModeName(vsPref.s)+'</p>'+
+    '<p class="vs-wait" role="status">Waiting for a friend<span class="vs-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>'+
+    '<div class="stack"><button class="big-btn alt" id="vscancel">CANCEL</button></div></div>');
+  $('#vscancel').onclick=function(){vsLeave();vsOpen();};
+  $('#vscancel').focus();
+  vsLater(function(){if(VS&&VS.phase==='wait'){vsLeave();vsMsg('No one joined','The game closed after 10 minutes. You can make a new one anytime!',vsSetup);}},600000);
+}
+
+/* guest: tap the two pictures */
+function vsJoinScreen(err){
+  function slot(i){
+    var v=vsPick[i];
+    return '<div class="vs-slot'+(v!=null?' full':'')+'"><b class="vs-num">'+(i+1)+'</b>'+(v!=null?vsPicTile(v,' big')+'<span>'+VS_PICS[v][1]+'</span>':'<span class="vs-em big vs-empty" aria-hidden="true"></span><span>&nbsp;</span>')+'</div>';
+  }
+  var said=vsPick.map(function(v){return VS_PICS[v][1];}).join(', then ');
+  vsScreen('<div class="panel vs-panel"><h2 class="vs-h">Join a game</h2>'+
+    '<p class="vs-lead">Tap your friend’s two pictures, in the same order.</p>'+
+    '<div class="vs-slots" aria-live="polite" aria-label="'+(said?'Chosen: '+said:'Nothing chosen yet')+'">'+slot(0)+'<div class="vs-arrow" aria-hidden="true">➔</div>'+slot(1)+
+      '<button class="small-btn vs-undo" id="vsundo"'+(vsPick.length?'':' disabled')+'>Undo</button></div>'+
+    '<div class="vs-grid">'+VS_PICS.map(function(p,i){return '<button class="vs-pic" data-pic="'+i+'"'+(vsPick.length>=2?' disabled':'')+' aria-label="'+p[1]+'">'+vsPicTile(i)+'<span>'+p[1]+'</span></button>';}).join('')+'</div>'+
+    '<p class="vs-err" id="vserr" role="alert">'+esc(err||'')+'</p>'+
+    '<div class="stack"><button class="big-btn" id="vsjoingo"'+(vsPick.length===2?'':' disabled')+'>JOIN!</button><button class="big-btn alt" id="vsback">BACK</button></div>'+
+  '</div>');
+  $app.querySelectorAll('[data-pic]').forEach(function(b){b.onclick=function(){
+    if(vsPick.length>=2)return;
+    vsPick.push(+b.getAttribute('data-pic'));SFX.good();vsJoinScreen('');
+    var f=vsPick.length===2?$('#vsjoingo'):$app.querySelector('[data-pic="'+b.getAttribute('data-pic')+'"]');if(f)f.focus();
+  };});
+  $('#vsundo').onclick=function(){vsPick.pop();vsJoinScreen('');var u=$('#vsundo');if(u&&!u.disabled)u.focus();else{var g=$app.querySelector('[data-pic]');if(g)g.focus();}};
+  $('#vsjoingo').onclick=vsTryJoin;
+  $('#vsback').onclick=vsOpen;
+}
+function vsTryJoin(){
+  if(vsPick.length!==2)return;
+  var code=VS_LETTERS.charAt(vsPick[0])+VS_LETTERS.charAt(vsPick[1]);
+  var pend=vsPend={off:false};
+  vsBusy('Looking for that game',function(){pend.off=true;vsJoinScreen('');});
+  var to=setTimeout(function(){if(pend.off)return;pend.off=true;vsMsg('Can’t connect',VS_OFFLINE,function(){vsJoinScreen('');});},20000);
+  vsNet.ready(function(err){
+    if(pend.off)return;
+    if(err){clearTimeout(to);pend.off=true;vsMsg('Can’t connect',VS_OFFLINE,function(){vsJoinScreen('');});return;}
+    vsNet.tx(code,vsTxJoin(vsMe(),vsNet.clock()),function(e,ok,room){
+      if(pend.off){if(ok&&room&&!e)vsNet.send(code,{'p2/on':false});return;}
+      clearTimeout(to);pend.off=true;
+      if(!e&&ok&&room&&room.p2){vsJoined(code,room);return;}
+      var full=!!(room&&(room.p2||room.st!=='wait')&&room.t>=vsNet.clock()-VS_STALE);
+      vsJoinScreen(e?'Something went wrong. Please try again.':(full?'That game is full. Ask your friend to make a new one.':'No game with those pictures. Check the order with your friend and try again.'));
+    });
+  });
+}
+function vsJoined(code,room){
+  vsBegin(code,2);
+  vsScreen('<div class="panel vs-panel vs-center"><h2 class="vs-h">You joined!</h2>'+
+    '<div class="vs-duo" aria-hidden="true"><div class="vs-pv">'+avatarSvg()+'</div><div class="vs-x">VS</div><div class="vs-pv vs-flip">'+vsAvatar(room.p1)+'</div></div>'+
+    '<p class="vs-lead">Get ready to battle <b>'+esc(vsName(room.p1))+'</b>!</p>'+
+    '<p class="note">'+vsKindName(room.q)+' · '+vsModeName(room.s)+'</p>'+
+    '<p class="vs-wait" role="status">Starting<span class="vs-dots" aria-hidden="true"><i></i><i></i><i></i></span></p></div>');
+}
+
+/* ---------- leaving ---------- */
+function vsLeave(){
+  if(vsPend)vsPend.off=true;
+  vsClear();
+  if(!VS)return;
+  var v=VS;VS=null;
+  if(v.hb)clearInterval(v.hb);
+  if(v.off)v.off();
+  vsNet.cancelDrop(v.code);
+  vsNet.remove(v.code);
+  vsCloseOv();
+}
+function vsGone(kind,name){
+  vsLeave();
+  vsCloseOv();
+  var ov=document.createElement('div');
+  ov.className='overlay';ov.id='ov';
+  var t=kind==='lost'?'Connection lost':(esc(name)+' left the game');
+  var p=kind==='lost'?'Your device lost touch with the game. Check the Wi-Fi, then start a new one.':'That’s okay! You can start a new game anytime.';
+  ov.innerHTML='<div class="panel" role="dialog" aria-label="Game over"><div class="bigemoji">👋</div><h2>'+t+'</h2><p style="font-weight:800;margin:6px 0">'+p+'</p>'+
+    '<div class="stack"><button class="big-btn" id="vsgonehome">HOME</button></div></div>';
+  document.body.appendChild(ov);
+  $('#vsgonehome').focus();
+  $('#vsgonehome').onclick=function(){vsCloseOv();renderHome();};
+}
+
+/* ---------- the live room ---------- */
+function vsOnRoom(r){
+  if(!VS)return;
+  var prev=VS.room;VS.room=r;
+  var me=r&&r['p'+VS.me],foe=r&&r['p'+VS.foe];
+  if(!r){vsGone(VS.phase==='wait'?'lost':'left',vsName(prev&&prev['p'+VS.foe]));return;}
+  if(!me||me.on===false){vsGone('lost');return;}
+  if(VS.phase!=='wait'&&(!foe||foe.on===false)){vsGone('left',vsName(foe||(prev&&prev['p'+VS.foe])));return;}
+  if(VS.phase==='wait'&&foe&&r.st==='wait'){vsNet.tx(VS.code,vsTxStart(),vsNoop);return;}
+  if(r.st==='play'&&r.rd!==VS.rd){vsRound(r);return;}
+  if(VS.phase!=='fight'&&VS.phase!=='end')return;
+  var same=prev&&prev.rd===r.rd,pm=same&&prev['p'+VS.me],pf=same&&prev['p'+VS.foe];
+  vsHP(r);
+  if(pf&&foe.hp<pf.hp)vsHitFx(false);
+  if(pm&&me.hp<pm.hp)vsHitFx(true);
+  if(r.s==='race'&&VS.phase==='fight'){vsRace(r);if(VS.me===1)vsHostNext(r);}
+  if(r.st==='end'&&VS.phase==='fight'){VS.phase='end';vsEnd(r);}
+  else if(VS.phase==='end')vsEndUpd(r);
+}
+function vsRound(r){
+  vsClear();vsCloseOv();
+  VS.rd=r.rd;VS.phase='fight';VS.k=0;VS.q=null;VS.ready=false;VS.locked=true;VS.resolved=false;
+  VS.correct=0;VS.wrong=0;VS.nextFor='';VS.last='';VS.lastR='';VS.rm=false;
+  vsRenderFight(r);
+  var still=vsStill();
+  vsBanner('READY?');
+  vsLater(function(){vsBanner('FIGHT!');SFX.good();},still?300:900);
+  vsLater(function(){
+    var b=$('#vsban');if(b)b.parentNode.removeChild(b);
+    if(!VS)return;
+    VS.ready=true;
+    var cur=VS.room;
+    if(!cur||cur.st!=='play'||cur.rd!==VS.rd)return;
+    if(cur.s==='race'){
+      if(VS.me===1&&!cur.r){var q=vsMakeQ(vsTables(),cur.q,'');VS.lastR=fkey(q.a,q.b);vsNet.tx(VS.code,vsTxQ(VS.rd,1,q),vsNoop);}
+      else vsRace(cur);
+      if(!cur.r){var m=$('#msg');if(m)m.textContent='Get ready for the first question…';}
+    }else vsNextOwn();
+  },still?700:1800);
+}
+function vsBanner(t){
+  var a=$('#arena');if(!a)return;
+  var b=$('#vsban');if(b)b.parentNode.removeChild(b);
+  b=document.createElement('div');b.id='vsban';b.className='vs-banner';b.setAttribute('aria-live','polite');b.textContent=t;
+  a.appendChild(b);
+}
+function vsRenderFight(r){
+  var me=r['p'+VS.me],foe=r['p'+VS.foe],l=(VS_LETTERS.indexOf(VS.code.charAt(0))+r.rd-1)%6;
+  if(l<0)l=0;
+  $app.className='battle vsb'+(save.mode==='type'?' typem':'');
+  $app.innerHTML=
+  '<div class="arena" id="arena" style="--ground:'+VS_GROUND[l]+'">'+sceneSvg(l)+
+    '<div class="hud"><button class="small-btn" id="vsquit" aria-label="Quit battle">Quit</button>'+
+    '<div class="lvl">Versus<small>'+(r.rd>1?'Round '+r.rd+' · ':'')+vsModeName(r.s)+' · '+vsKindName(r.q)+'</small></div><div class="vs-hudr"></div></div>'+
+    '<div class="vs-k vs-me" id="vsme"><div class="vs-tag"><div class="vs-name">'+esc(vsName(me))+'</div>'+
+      '<div class="hpbar" role="progressbar" aria-label="Your health" aria-valuemin="0" aria-valuemax="'+r.mx+'"><i id="vshpme"></i></div><div class="vs-hpn" id="vsnme"></div></div>'+
+      '<div class="vs-fig">'+avatarSvg()+'</div></div>'+
+    '<div class="vs-mid" aria-hidden="true">VS</div>'+
+    '<div class="vs-k vs-foe" id="vsfoe"><div class="vs-tag"><div class="vs-name">'+esc(vsName(foe))+'</div>'+
+      '<div class="hpbar" role="progressbar" aria-label="'+esc(vsName(foe))+' health" aria-valuemin="0" aria-valuemax="'+r.mx+'"><i id="vshpfoe"></i></div><div class="vs-hpn" id="vsnfoe"></div></div>'+
+      '<div class="vs-fig vs-flip">'+vsAvatar(foe)+'</div></div>'+
+    '<div class="fx" id="fx"></div>'+
+    '<div class="dock" id="dock"><div class="dock-in"><div id="qarea"></div><div class="msg" id="msg" aria-live="polite"></div></div></div>'+
+  '</div>';
+  vsHP(r);
+  fitDock();
+  if(window.ResizeObserver){var dk=document.getElementById('dock');if(dk)new ResizeObserver(fitDock).observe(dk);}
+  $('#vsquit').onclick=function(){
+    vsStopTimer();
+    askConfirm('Leave this battle?','LEAVE','KEEP FIGHTING',function(){vsLeave();renderHome();},function(){if(VS&&VS.phase==='fight'&&VS.q&&!VS.locked)vsStartTimer();});
+  };
+}
+function vsHP(r){
+  [['me',VS.me],['foe',VS.foe]].forEach(function(x){
+    var p=r['p'+x[1]],hp=vsInt(p&&p.hp,0,99),mx=vsInt(r.mx,1,99)||VS_HP;
+    if(hp===null)hp=0;
+    var bar=$('#vshp'+x[0]),n=$('#vsn'+x[0]);
+    if(bar){bar.style.width=(Math.min(hp,mx)/mx*100)+'%';bar.parentNode.setAttribute('aria-valuenow',hp);bar.classList.toggle('low',hp<=3);}
+    if(n)n.textContent=hp+' / '+mx;
+  });
+}
+function vsAnim(el,cls){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);}
+function vsHitFx(onMe){
+  var fx=$('#fx');if(!fx)return;
+  vsAnim($(onMe?'#vsfoe':'#vsme'),'atk');
+  setTimeout(function(){vsAnim($(onMe?'#vsme':'#vsfoe'),'hurt');},onMe?150:120);
+  var b=document.createElement('div');b.className='bolt'+(onMe?' rev':'');fx.appendChild(b);
+  setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},600);
+  var p=document.createElement('div');p.className='pop'+(onMe?' bad':'');p.textContent='-1';
+  p.style.left=onMe?'12%':'74%';p.style.top='30%';fx.appendChild(p);
+  setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},1100);
+  if(onMe)beep(150,.18,'square');
+}
+
+/* ---------- asking and answering ---------- */
+function vsNextOwn(){
+  if(!VS||VS.phase!=='fight'||!VS.room||VS.room.st!=='play')return;
+  var q=vsMakeQ(vsTables(),VS.room.q,VS.last);
+  VS.last=fkey(q.a,q.b);
+  vsShowQ(q);
+}
+function vsShowQ(q){
+  VS.q=q;VS.ans=vsAns(q);VS.locked=false;VS.typed='';
+  var qa=$('#qarea');if(!qa)return;
+  var m=$('#msg');if(m)m.textContent='';
+  var t=vsQHtml(q);
+  var html='<div class="panel question"><div class="q'+(q.m?' vs-qmiss':'')+'" aria-label="'+t.l+'">'+t.t+'</div></div>'+(save.timer?'<div class="timer" aria-hidden="true"><i id="vstfill"></i></div>':'');
+  if(save.mode==='pick'){
+    html+='<div class="answers">'+vsChoices(q).map(function(c){return '<button class="ans" data-v="'+c+'">'+c+'</button>';}).join('')+'</div>';
+  }else{
+    html+='<div class="typebox" id="vstype" aria-live="polite">&nbsp;</div><div class="keys">'+
+      [1,2,3,4,5,6,7,8,9].map(function(n){return '<button class="key" data-k="'+n+'">'+n+'</button>';}).join('')+
+      '<button class="key" data-k="back" aria-label="Delete">⌫</button><button class="key" data-k="0">0</button><button class="key go" data-k="go">GO</button></div>';
+  }
+  qa.innerHTML=html;fitDock();vsStartTimer();
+  qa.querySelectorAll('.ans').forEach(function(b){b.onclick=function(){vsAnswer(+b.getAttribute('data-v'));};});
+  qa.querySelectorAll('.key').forEach(function(b){b.onclick=function(){vsKey(b.getAttribute('data-k'));};});
+}
+function vsStartTimer(){
+  vsStopTimer();
+  if(!save.timer)return;
+  var total=save.timer*1000,start=Date.now(),fill=$('#vstfill');
+  vsTick=setInterval(function(){
+    if(!VS||VS.locked||VS.phase!=='fight'){vsStopTimer();return;}
+    var left=total-(Date.now()-start);
+    if(fill){fill.style.width=Math.max(0,left/total*100)+'%';fill.classList.toggle('low',left<total*0.3);}
+    if(left<=0){vsStopTimer();vsAnswer(null);}
+  },100);
+}
+function vsKey(k){
+  if(!VS||VS.locked||VS.phase!=='fight')return;
+  var tb=$('#vstype');if(!tb)return;
+  if(k==='back')VS.typed=VS.typed.slice(0,-1);
+  else if(k==='go'){if(VS.typed!=='')vsAnswer(parseInt(VS.typed,10));return;}
+  else if(VS.typed.length<3)VS.typed+=k;
+  tb.innerHTML=VS.typed||'&nbsp;';
+}
+function vsMark(ok,val,reveal){
+  if(save.mode==='pick'){
+    document.querySelectorAll('#qarea .ans').forEach(function(b){
+      var v=+b.getAttribute('data-v');b.disabled=true;
+      if(v===VS.ans)b.classList.add('right');
+      else if(!ok&&v===val)b.classList.add('wrong');
+    });
+  }else{
+    var tb=$('#vstype');if(!tb)return;
+    document.querySelectorAll('#qarea .key').forEach(function(b){b.disabled=true;});
+    if(reveal)return;
+    tb.classList.add(ok?'right':'wrong');
+    tb.textContent=ok?String(val):((val===null?'Time’s up':val)+' → '+VS.ans);
+  }
+}
+function vsAnswer(val){
+  if(!VS||VS.phase!=='fight'||!VS.q||VS.locked)return;
+  VS.locked=true;vsStopTimer();
+  var q=VS.q,ok=(val===VS.ans),race=VS.room&&VS.room.s==='race',msg=$('#msg'),k=VS.k;
+  vsStat(q,ok);
+  vsMark(ok,val);
+  if(ok){
+    VS.correct++;SFX.good();
+    if(msg)msg.textContent=race?'Right!':'Direct hit!';
+    vsNet.tx(VS.code,vsTxHit(VS.me,VS.rd,race?k:0),function(e,done){
+      if(race&&done&&!e&&VS&&VS.k===k){var m=$('#msg');if(m)m.textContent='You were first! Direct hit!';}
+    });
+    if(!race)vsLater(vsNextOwn,850);
+  }else{
+    VS.wrong++;SFX.bad();
+    if(msg)msg.textContent=(val===null?'Time’s up! ':'Not quite! ')+vsFact(q)+(race?'. Wait for the next one.':'');
+    if(race)vsNet.tx(VS.code,vsTxMiss(VS.me,VS.rd,k),vsNoop);
+    else vsLater(vsNextOwn,2200);
+  }
+}
+/* Race: show each new shared question, and settle it when someone wins it */
+function vsRace(r){
+  if(!VS.ready||!r.r)return;
+  var x=r.r,a=vsInt(x.a,1,12),b=vsInt(x.b,1,12),m=vsInt(x.m,0,2),k=vsInt(x.k,1,9999);
+  if(a===null||b===null||m===null||k===null)return;
+  if(k!==VS.k){VS.k=k;VS.resolved=false;vsShowQ({a:a,b:b,m:m});}
+  if(VS.resolved)return;
+  var msg=$('#msg');
+  if(x.w){
+    VS.resolved=true;
+    if(x.w!==VS.me){
+      if(!VS.locked){VS.locked=true;vsStopTimer();vsMark(false,undefined,true);}
+      if(msg)msg.textContent='⚡ '+vsName(r['p'+VS.foe])+' was faster! '+vsFact(VS.q);
+    }else if(msg)msg.textContent='You were first! Direct hit!';
+  }else if(x.x1&&x.x2){
+    VS.resolved=true;
+    if(msg)msg.textContent='Tricky one! '+vsFact(VS.q);
+  }
+}
+function vsHostNext(r){
+  var x=r.r;if(!x||r.st!=='play')return;
+  var tag=r.rd+':'+x.k;
+  if(VS.nextFor===tag||!(x.w||(x.x1&&x.x2)))return;
+  VS.nextFor=tag;
+  vsLater(function(){
+    var c=VS&&VS.room;
+    if(!c||c.st!=='play'||c.rd!==r.rd)return;
+    var q=vsMakeQ(vsTables(),c.q,VS.lastR);VS.lastR=fkey(q.a,q.b);
+    vsNet.tx(VS.code,vsTxQ(r.rd,x.k+1,q),vsNoop);
+  },1800);
+}
+document.addEventListener('keydown',function(e){
+  if(!VS||VS.phase!=='fight'||VS.locked||!VS.q||document.getElementById('ov')||!$app.classList.contains('vsb'))return;
+  if(save.mode==='type'){
+    if(e.key>='0'&&e.key<='9')vsKey(e.key);
+    else if(e.key==='Backspace'){e.preventDefault();vsKey('back');}
+    else if(e.key==='Enter'){e.preventDefault();vsKey('go');}
+  }else if(e.key>='1'&&e.key<='4'){
+    var b=document.querySelectorAll('#qarea .ans')[+e.key-1];if(b&&!b.disabled)b.click();
+  }
+});
+
+/* ---------- the end of a match ---------- */
+function vsEnd(r){
+  vsClear();VS.locked=true;
+  var won=r.wn===VS.me,foe=r['p'+VS.foe],rd=r.rd;
+  vsLater(function(){
+    if(!VS||VS.phase!=='end'||VS.rd!==rd)return;
+    var fig=$(won?'#vsfoe':'#vsme');if(fig)fig.classList.add('down');
+    if(won)SFX.win();else SFX.lose();
+    var tot=VS.correct+VS.wrong,acc=tot?Math.round(VS.correct/tot*100):0,fh=vsInt(foe&&foe.hp,0,99)||0;
+    var ov=document.createElement('div');
+    ov.className='overlay';ov.id='ov';
+    ov.innerHTML='<div class="panel ovscroll vs-endp" role="dialog" aria-label="Match over"><div class="bigemoji">'+(won?'🏆':'🛡️')+'</div>'+
+      '<h2>'+(won?'You win!':esc(vsName(foe))+' wins!')+'</h2>'+
+      '<p style="font-weight:800;margin:6px 0">'+(won?'You beat '+esc(vsName(foe))+'. What a battle!':'Great fight! Every knight loses sometimes.')+'</p>'+
+      '<div class="stats vs-stats"><div class="stat"><b>'+(r.mx-fh)+'</b><span>hits landed</span></div><div class="stat"><b>'+VS.correct+'</b><span>correct</span></div><div class="stat"><b>'+acc+'%</b><span>accuracy</span></div></div>'+
+      '<p class="note" id="vsrmnote" aria-live="polite"></p>'+
+      '<div class="stack"><button class="big-btn" id="vsrm">REMATCH</button><button class="big-btn alt" id="vshome2">HOME</button></div></div>';
+    vsCloseOv();
+    document.body.appendChild(ov);
+    $('#vsrm').focus();
+    $('#vsrm').onclick=function(){
+      if(!VS||VS.rm)return;
+      VS.rm=true;
+      var u={};u['p'+VS.me+'/rm']=VS.rd;
+      vsNet.send(VS.code,u);
+      vsEndUpd(VS.room);
+    };
+    $('#vshome2').onclick=function(){vsLeave();renderHome();};
+    vsEndUpd(VS.room);
+  },vsStill()?300:1300);
+}
+function vsEndUpd(r){
+  if(!VS||!r)return;
+  var me=r['p'+VS.me],foe=r['p'+VS.foe],note=$('#vsrmnote'),btn=$('#vsrm'),fn=esc(vsName(foe));
+  var mine=VS.rm||(me&&me.rm===r.rd),theirs=foe&&foe.rm===r.rd;
+  if(btn&&mine){btn.disabled=true;btn.textContent='WAITING…';}
+  if(note)note.innerHTML=mine?(theirs?'Starting the rematch…':'Waiting for '+fn+' to say yes…'):(theirs?'<b>'+fn+' wants a rematch!</b>':'');
+  if(VS.me===1&&mine&&theirs&&r.st==='end')vsNet.tx(VS.code,vsTxReset(r.rd),vsNoop);
+}
 var CTABS=[['outfit','Outfit',['skin','armor','tabard','cloak']],['head','Head',['head','hair','haircol']],['acc','Accessories',['eyes','lash','ears','neck','brace','beard']],['weapons','Weapons',['shield','sword']],['sidekick','Sidekick & Card',['pet','card']]];
 var CTAB='outfit',EXP={};
 /* tabs in the Skin row; SKCAT stays null until the panel picks the category of the worn skin */
@@ -3264,6 +4741,63 @@ function tableFacts(){
   save.tables.forEach(function(a){for(var b=1;b<=12;b++){out.push([a,b]);}});
   return out;
 }
+/* ---------- game modes ----------
+   save.gm: 'classic' (default, also when missing from old saves), 'missing', 'ops', 'versus'.
+   Classic and Missing Factor run the dragon battle below; FIGHT hands 'ops' to opsStart() and 'versus' to vsOpen(). */
+var GMODES=[
+  {k:'classic',n:'Classic',g:'×',tip:'Answer times tables facts: 7 × 8 = ?'},
+  {k:'missing',n:'Missing Factor',g:'?',tip:'Find the missing number: 7 × ? = 56'},
+  {k:'ops',n:'Order of Ops',g:'( )',tip:'Solve puzzles like 2 + 3 × 4 in the right order'},
+  {k:'versus',n:'Versus',g:'VS',tip:'Battle a friend on another device, live'}
+];
+function gameMode(){var m=save.gm;return (m==='missing'||m==='ops'||m==='versus')?m:'classic';}
+function modeName(k){for(var i=0;i<GMODES.length;i++){if(GMODES[i].k===k)return GMODES[i].n;}return GMODES[0].n;}
+/* a mode whose screen is not in this build yet */
+function modeSoon(k){
+  var ov=document.createElement('div');
+  ov.className='overlay';ov.id='ov';
+  ov.innerHTML='<div class="panel" role="dialog" aria-label="Coming soon"><div class="bigemoji">🏰</div><h2>'+esc(modeName(k))+' is coming soon!</h2>'+
+    '<p style="font-weight:800;margin:6px 0">The castle builders are still working on it. Try Classic or Missing Factor for now.</p>'+
+    '<div class="stack"><button class="big-btn" id="soonok">OK!</button></div></div>';
+  document.body.appendChild(ov);
+  var b=ov.querySelector('#soonok');b.focus();
+  b.onclick=function(){if(ov.parentNode)ov.parentNode.removeChild(ov);var g=$('#go');if(g)g.focus();};
+}
+/* Squire choices for a hidden factor x (the shown factor is k): neighbors, the shown factor, and other factor pairs of the product */
+function factorChoices(x,k){
+  var p=x*k,set={},out=[],i;
+  set[x]=1;
+  function add(c){if(c>=1&&c<=12&&!set[c]&&out.length<3){set[c]=1;out.push(c);}}
+  var near=shuffle([x-1,x+1]),mix=[k];
+  for(i=1;i<=12;i++){if(p%i===0&&p/i<=12&&i!==x&&i!==k)mix.push(i);}
+  shuffle(mix);
+  [near[0],mix[0],near[1]].concat(mix.slice(1),shuffle([x-2,x+2])).forEach(add);
+  var guard=0;
+  while(out.length<3&&guard++<60)add(1+Math.floor(Math.random()*12));
+  out.push(x);
+  return shuffle(out);
+}
+/* one boss win: adds it, saves, and returns the names of everything it unlocked (gear and sidekicks).
+   The returned array also has .pets: the sidekick numbers that just joined (for naming them). */
+function grantBossWin(){
+  save.bossWins=(save.bossWins||0)+1;persist();
+  var out=itemsAt(save.bossWins);
+  out.pets=petsAt(save.bossWins);
+  return out;
+}
+/* shrink a missing-factor question until it fits its card */
+function fitQ(){
+  var el=document.querySelector('#qarea .q.qmf');if(!el)return;
+  el.style.fontSize='';
+  var box=el.parentNode,cs=getComputedStyle(box),avail=box.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-4;
+  /* the card can measure as zero wide while the battle intro still covers it; leave the size alone then */
+  if(avail<60)return;
+  /* measure the text itself: the question line is a full-width block, so its own width never shrinks */
+  function textW(){var r=document.createRange();r.selectNodeContents(el);return r.getBoundingClientRect().width;}
+  var i=0;
+  while(textW()>avail&&i++<12){el.style.fontSize=(parseFloat(getComputedStyle(el).fontSize)*0.92)+'px';}
+}
+window.addEventListener('resize',fitQ);
 function newGame(focus){
   clearTimers();
   if(!save.tables||!save.tables.length)save.tables=[2];
@@ -3274,6 +4808,7 @@ function newGame(focus){
   }
   if(!pool.length)pool=tableFacts();
   G={
+    gm:gameMode()==='missing'?'missing':'classic',
     pool:pool,quota:Math.min(QUOTA,uniqCount(pool)),windUsed:false,seen:{},seenN:0,id:Date.now(),newEggs:[],newBabies:[],focus:!!focus,level:0,hearts:3,maxHearts:3,streak:0,
     dragonMax:0,dragonHP:0,asked:0,correct:0,wrong:0,bestStreak:0,
     missed:{},retry:[],last:null,cur:null,locked:false,typed:'',startAt:0,over:false
@@ -3328,7 +4863,11 @@ function nextQuestion(){
   var f=pickFact();
   var a=f[0],b=f[1];
   if(Math.random()<.5){var t=a;a=b;b=t;}
-  G.cur={a:a,b:b,ans:a*b,choices:save.mode==='pick'?makeChoices(a,b):null};
+  if(G.gm==='missing'){
+    /* hide one factor: q.ans is the hidden factor, q.prod the product, q.hide which side ('a' or 'b') */
+    var hide=Math.random()<.5?'a':'b',x=hide==='a'?a:b;
+    G.cur={a:a,b:b,ans:x,hide:hide,prod:a*b,choices:save.mode==='pick'?factorChoices(x,hide==='a'?b:a):null};
+  }else G.cur={a:a,b:b,ans:a*b,choices:save.mode==='pick'?makeChoices(a,b):null};
   G.last=fkey(a,b);
   if(!G.seen[G.last]){G.seen[G.last]=1;G.seenN++;}
   G.locked=false;G.typed='';G.startAt=Date.now();
@@ -3381,7 +4920,7 @@ function answer(val){
     dragon.classList.remove('attack');void dragon.offsetWidth;dragon.classList.add('attack');
     later(function(){heroEl.classList.remove('hurt');void heroEl.offsetWidth;heroEl.classList.add('hurt');},200);
     pop(val===null?'TIME!':'OUCH!',true);
-    msg.textContent='Remember: '+q.a+' × '+q.b+' = '+q.ans;
+    msg.textContent=q.hide?('Missing number: '+q.ans+' ('+q.a+' × '+q.b+' = '+q.prod+')'):('Remember: '+q.a+' × '+q.b+' = '+q.ans);
     SFX.bad();
     updateHearts();updatePips();
     if(G.hearts<=0){
@@ -3396,7 +4935,13 @@ function answer(val){
   }
   persist();
 }
-function a_b(q){return {a:q.a,b:q.b,ans:q.ans};}
+function a_b(q){var r={a:q.a,b:q.b,ans:q.ans};if(q.hide){r.hide=q.hide;r.prod=q.prod;}return r;}
+/* a missed fact for the end screen; a missing-factor miss shows the full fact with the hidden number marked */
+function missedHtml(m){
+  if(!m.hide)return m.a+' × '+m.b+' = '+m.ans;
+  var x='<b class="mfx">'+m.ans+'</b>';
+  return (m.hide==='a'?x:m.a)+' × '+(m.hide==='b'?x:m.b)+' = '+m.prod;
+}
 function markAnswer(ok,val){
   var q=G.cur;
   if(save.mode==='pick'){
@@ -3411,6 +4956,7 @@ function markAnswer(ok,val){
     tb.classList.add(ok?'right':'wrong');
     tb.textContent=ok?String(val):((val===null?'Time’s up':val)+' → '+q.ans);
   }
+  if(q.hide){var gp=$('#qgap');if(gp){gp.textContent=q.ans;gp.classList.add('fill');fitQ();}}
 }
 function pop(text,bad){
   var fx=$('#fx');if(!fx)return;
@@ -3445,8 +4991,8 @@ function dragonDefeated(){
 function endGame(won){
   G.over=true;clearTimers();
   var total=G.correct+G.wrong,acc=total?Math.round(G.correct/total*100):0;
-  var newItems=[];
-  if(won){save.bossWins=(save.bossWins||0)+1;persist();newItems=itemsAt(save.bossWins);}
+  var newItems=[],newPets=[];
+  if(won){newItems=grantBossWin();newPets=newItems.pets;}
   var miss=Object.keys(G.missed).map(function(k){return G.missed[k];});
   var ov=document.createElement('div');
   ov.className='overlay';ov.id='ov';
@@ -3454,10 +5000,9 @@ function endGame(won){
   eggHtml+=G.newBabies.length?'<p style="font-weight:900;margin:8px 0">🐲 New baby dragon'+(G.newBabies.length>1?'s':'')+': '+G.newBabies.map(function(n){return esc(babyName(n));}).join(', ')+'</p>':'';
   if(won)eggHtml+='<p style="font-weight:900;margin:8px 0">Boss wins: '+save.bossWins+'</p>';
   if(newItems.length)eggHtml+='<p style="font-weight:900;margin:8px 0;color:var(--power)">New knight gear unlocked: '+newItems.map(function(t){return esc(t);}).join(', ')+'</p>';
-  var newPets=won?petsAt(save.bossWins):[];
   eggHtml+=newPets.map(function(n){return '<div style="margin:8px 0"><p style="font-weight:900;font-size:1.15rem;margin:6px 0">A '+esc(petDefaultName(n))+' joined you!</p><svg viewBox="0 34 50 66" style="width:100px;height:auto;overflow:visible" role="img" aria-label="'+esc(petDefaultName(n))+'">'+petSvg(n)+'</svg><label class="nlabel" for="petname'+n+'">Name your '+esc(petDefaultName(n))+'</label>'+petNameInput(n,'petname'+n)+'</div>';}).join('');
   var missHtml=miss.length?'<p style="font-weight:900;margin:8px 0 4px">Facts to power up:</p><div class="trouble" style="justify-content:center">'+
-    miss.map(function(m){return '<span>'+m.a+' × '+m.b+' = '+m.ans+'</span>';}).join('')+'</div>':
+    miss.map(function(m){return '<span>'+missedHtml(m)+'</span>';}).join('')+'</div>':
     '<p style="font-weight:800">Not a single missed fact. Legendary!</p>';
   if(won)SFX.win();else if(!G.defeatShown)SFX.lose();
   ov.innerHTML='<div class="panel ovscroll" role="dialog" aria-label="Game over"><div class="bigemoji">'+(won?'🏆':'🐉')+'</div>'+
@@ -3689,7 +5234,12 @@ function updatePips(){
 function renderQuestion(){
   var q=G.cur,qa=$('#qarea');if(!qa)return;
   $('#msg').textContent='';
-  var html='<div class="panel question"><div class="q" aria-label="'+q.a+' times '+q.b+'">'+q.a+' × '+q.b+'</div></div>'+(save.timer?'<div class="timer" aria-hidden="true"><i id="tfill"></i></div>':'');
+  var qhtml='<div class="q" aria-label="'+q.a+' times '+q.b+'">'+q.a+' × '+q.b+'</div>';
+  if(q.hide){
+    var gap='<span class="qgap" id="qgap">?</span>';
+    qhtml='<div class="q qmf" aria-label="'+(q.hide==='a'?'what times '+q.b:q.a+' times what')+' equals '+q.prod+'">'+(q.hide==='a'?gap:q.a)+' × '+(q.hide==='b'?gap:q.b)+' = '+q.prod+'</div>';
+  }
+  var html='<div class="panel question">'+qhtml+'</div>'+(save.timer?'<div class="timer" aria-hidden="true"><i id="tfill"></i></div>':'');
   if(save.mode==='pick'){
     html+='<div class="answers">'+q.choices.map(function(c){
       return '<button class="ans" data-v="'+c+'">'+c+'</button>';}).join('')+'</div>';
@@ -3698,7 +5248,7 @@ function renderQuestion(){
       [1,2,3,4,5,6,7,8,9].map(function(n){return '<button class="key" data-k="'+n+'">'+n+'</button>';}).join('')+
       '<button class="key" data-k="back" aria-label="Delete">⌫</button><button class="key" data-k="0">0</button><button class="key go" data-k="go">GO</button></div>';
   }
-  qa.innerHTML=html;updateFacts();fitDock();startTimer();
+  qa.innerHTML=html;qa.classList.toggle('mfq',!!q.hide);updateFacts();fitQ();fitDock();startTimer();
   if(save.mode==='pick'){
     qa.querySelectorAll('.ans').forEach(function(b){
       b.onclick=function(){answer(+b.getAttribute('data-v'));};
@@ -3714,7 +5264,7 @@ function keyPress(k){
   var tb=$('#typebox');if(!tb)return;
   if(k==='back'){G.typed=G.typed.slice(0,-1);}
   else if(k==='go'){if(G.typed!=='')answer(parseInt(G.typed,10));return;}
-  else if(G.typed.length<3){G.typed+=k;}
+  else if(G.typed.length<(G.cur&&G.cur.hide?2:3)){G.typed+=k;}
   tb.innerHTML=G.typed||'&nbsp;';
 }
 document.addEventListener('keydown',function(e){
@@ -3890,14 +5440,25 @@ function equalizeWalls(){
 }
 window.addEventListener('resize',equalizeWalls);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(equalizeWalls);
+function gmodesHtml(){
+  var cur=gameMode();
+  var shield='<svg class="gm-svg" viewBox="0 0 62 74" aria-hidden="true"><path class="gm-sh" transform="translate(4 4)" d="M4 4 H54 V30 C54 48 43 60 29 68 C15 60 4 48 4 30 Z"/><path class="gm-face" d="M4 4 H54 V30 C54 48 43 60 29 68 C15 60 4 48 4 30 Z"/></svg>';
+  return '<section class="gmodes" aria-label="Game mode"><h2 class="nest-title gm-title" tabindex="0" data-tip="Pick how you want to play, then press FIGHT">Game Mode</h2>'+
+    '<div class="gm-rack"><i class="gm-beam" aria-hidden="true"></i><div class="gm-row">'+
+    GMODES.map(function(m){
+      return '<button class="gm" data-gm="'+m.k+'" aria-pressed="'+(cur===m.k)+'" data-tip="'+m.tip+'"><span class="gm-shield">'+shield+'<span class="gm-g'+(m.k==='classic'?' gm-x':'')+'" aria-hidden="true">'+m.g+'</span></span><span class="gm-n">'+m.n+'</span></button>';
+    }).join('')+
+    '</div></div></section>';
+}
 function renderHome(){
   $app.className='home';
-  var trouble=troubleFacts();
+  var trouble=troubleFacts(),opsOn=gameMode()==='ops';
   var h='<h1 class="hero-title title-row" aria-label="Wings of Time"><span class="tw tw1">WINGS</span><span class="tx" aria-hidden="true"><span class="tx-sign">'+titleSwords()+'</span><span class="tx-of">of</span></span><span class="tw">TIME</span></h1>'+
-  '<div class="home-below"><div class="realm"><div class="castle">'+
+  '<div class="home-below"><div class="realm">'+gmodesHtml()+'<div class="castle">'+
     '<div class="wing lw">'+
       '<div class="tower">'+castleFlag()+merlons(2)+'<div class="tower-body"><i class="slit"></i><i class="slit"></i></div></div>'+
-      '<div class="wallpart">'+merlons(7)+'<div class="wall-body">'+
+      '<div class="wallpart">'+merlons(7)+'<div class="wall-body'+(opsOn?' opswall':'')+'">'+
+        (opsOn?opsLvHtml():
         '<h2 class="wall-h" tabindex="0" data-tip="Choose which times tables to practice">Tables</h2>'+
         '<div class="bricks"><div class="brow">'+
         [2,3,4,5,6,7].map(function(n){return '<button class="chip brick" data-t="'+n+'" aria-pressed="'+(save.tables.indexOf(n)>=0)+'">'+n+'</button>';}).join('')+
@@ -3907,7 +5468,7 @@ function renderHome(){
         '</div></div>'+
         '<div class="presets castle-presets">'+
         PRESETS.slice(0,3).map(function(p,i){return '<button class="small-btn" data-preset="'+i+'" data-tip="Tables '+p.t.join(', ')+'">'+['Easy','Medium','Hard'][i]+'</button>';}).join('')+
-        '</div>'+
+        '</div>')+
       '</div></div>'+
     '</div>'+
     '<div class="keep">'+merlons(5)+
@@ -3963,7 +5524,19 @@ function renderHome(){
     else if(d==='knight'){save.mode='type';if(save.timer===8)save.timer=0;}
     else{save.mode='type';save.timer=8;}
     persist();renderHome();};});
-  $('#go').onclick=function(){kickoff(function(){window.scrollTo(0,0);newGame(false);});};
+  $app.querySelectorAll('[data-opslv]').forEach(function(b){b.onclick=function(){
+    var k=b.getAttribute('data-opslv');save.opsLv=k;persist();renderHome();
+    var nb=$app.querySelector('[data-opslv="'+k+'"]');if(nb)nb.focus();};});
+  $app.querySelectorAll('[data-gm]').forEach(function(b){b.onclick=function(){
+    var k=b.getAttribute('data-gm');
+    save.gm=k;persist();renderHome();
+    var nb=$app.querySelector('[data-gm="'+k+'"]');if(nb)nb.focus();};});
+  $('#go').onclick=function(){
+    var gm=gameMode();
+    if(gm==='ops'){if(typeof opsStart==='function'){window.scrollTo(0,0);opsStart();}else modeSoon(gm);return;}
+    if(gm==='versus'){if(typeof vsOpen==='function'){window.scrollTo(0,0);vsOpen();}else modeSoon(gm);return;}
+    kickoff(function(){window.scrollTo(0,0);newGame(false);});
+  };
   $app.querySelectorAll('[data-timer]').forEach(function(b){b.onclick=function(){save.timer=+b.getAttribute('data-timer');persist();renderHome();};});
   var f=$('#focus');if(f)f.onclick=function(){kickoff(function(){window.scrollTo(0,0);newGame(true);});};
   $('#snd').onclick=function(){save.sound=!save.sound;persist();if(save.sound)SFX.good();renderHome();};
