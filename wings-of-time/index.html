@@ -1042,8 +1042,10 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--gold);outline-o
 @keyframes vsimidout{to{opacity:0;transform:translate(-50%,-50%) scale(1.3)}}
 .vsi-sw,.vsi-fire,.vsi-spk{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
 .vsi-sw svg{display:block;width:100%;height:100%;overflow:visible}
-.vsi-swa{animation:vsiflyA calc(var(--k)*500ms) cubic-bezier(.5,0,.9,.55) calc(var(--k)*450ms) both,vsirecA calc(var(--k)*380ms) ease-out calc(var(--k)*950ms)}
-.vsi-swb{animation:vsiflyB calc(var(--k)*500ms) cubic-bezier(.5,0,.9,.55) calc(var(--k)*450ms) both,vsirecB calc(var(--k)*380ms) ease-out calc(var(--k)*950ms)}
+/* the swords clash, then fade away once the flames are up so the V.S. moment stays uncluttered */
+.vsi-swa{animation:vsiflyA calc(var(--k)*500ms) cubic-bezier(.5,0,.9,.55) calc(var(--k)*450ms) both,vsirecA calc(var(--k)*380ms) ease-out calc(var(--k)*950ms),vsiswgone calc(var(--k)*320ms) ease-in calc(var(--k)*1300ms) forwards}
+.vsi-swb{animation:vsiflyB calc(var(--k)*500ms) cubic-bezier(.5,0,.9,.55) calc(var(--k)*450ms) both,vsirecB calc(var(--k)*380ms) ease-out calc(var(--k)*950ms),vsiswgone calc(var(--k)*320ms) ease-in calc(var(--k)*1300ms) forwards}
+@keyframes vsiswgone{from{opacity:1}to{opacity:0}}
 @keyframes vsiflyA{0%{opacity:0;transform:translate(-62vw,-62vh) rotate(-150deg) scale(1.2)}18%{opacity:1}100%{opacity:1;transform:none}}
 @keyframes vsiflyB{0%{opacity:0;transform:translate(62vw,62vh) rotate(150deg) scale(1.2)}18%{opacity:1}100%{opacity:1;transform:none}}
 @keyframes vsirecA{0%{transform:none}30%{transform:translate(-4%,-4%) rotate(-7deg)}100%{transform:none}}
@@ -1066,7 +1068,7 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--gold);outline-o
 @media (max-aspect-ratio:1/1){.vsi-p{width:min(44vw,28vh)}}
 @media (prefers-reduced-motion: reduce){
   #ov.vsi,#ov.vsi *{animation:none!important}
-  .vsi-flash,.vsi-spk,.vsi-em{display:none}
+  .vsi-flash,.vsi-spk,.vsi-em,.vsi-sw{display:none}
 }
 @media (max-width:760px){
   #app.vsb .vs-k{width:min(24vh,31vw)}
