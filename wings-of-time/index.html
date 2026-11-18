@@ -1766,6 +1766,13 @@ AV.shield.push({n:'Football shield',k:'football',u:171,full:true},{n:'Basketball
 AV.sword.push({n:'Baseball bat',c:'#D9A066',gd:'#1F1D24',art:'bat',u:196,full:true});
 /* free for everyone; s places it next to Ponytail in the list */
 AV.hair.push({n:'Puff ponytail',k:'puff',s:4.5});
+/* ninja coats: navy high-collar uniforms, each with its own hair (art: ninja coats). The high collar covers necklaces. */
+AV.skin.push({n:'Silver spike coat',k:'ncsilver',u:201,s:9.5,ownhair:true,noNeck:true,full:true},{n:'Gold button coat',k:'ncgold',u:206,s:9.6,ownhair:true,noNeck:true,full:true},{n:'Red hood coat',k:'nchood',u:211,s:9.7,ownhair:true,noNeck:true,full:true},{n:'Cropped coat and skirt',k:'nccrop',u:216,s:9.8,ownhair:true,noNeck:true,full:true});
+AV.card.push({n:'Tokyo city',k:'tokyo',u:201,s:201});
+/* the ninja outfits' signature hair, for any outfit; each unlocks with its outfit and keeps its own colors (HAIROWN) */
+AV.hair.push({n:'Lavender fade',k:'nflow',u:166,s:9.4},{n:'Silver spikes',k:'ncsilver',u:201,s:9.5},{n:'Wild black spikes',k:'ncflip',u:206,s:9.6},{n:'Pink undercut',k:'ncpink',u:211,s:9.7},{n:'Side-swept bob',k:'ncbob',u:216,s:9.8});
+/* hair styles with their own built-in colors: the hair color row doesn't apply to them */
+var HAIROWN=['undercut','wavetip','chop','nflow','ncsilver','ncflip','ncpink','ncbob'];
 AVLAB.lash='';AVLAB.neck='';AVLAB.brace='';
 /* older skins that cover the eyes, neck or wrists; the shark and kraken keep lashes, moved to their smaller, lower eyes */
 AV.skin.forEach(function(o){
@@ -3890,6 +3897,169 @@ ART.skin.nfly=function(X){
     njHaori(X,'url(#'+id+')','#7B55C7',over,null,'#1F1433',true)+
     ART.hair.nflow.back()+X.FACE+ART.hair.nflow.front()+faceAcc();
 };
+/* ---------- art: ninja coats ---------- */
+/* ---- navy high-collar coats buttoned to the neck, with matching pants or a skirt. Each wears its own signature hair. ---- */
+var NC='#26335E',NCD='#18213F',NCL='#3A4B82',NCE=' stroke="#4E61A0" stroke-width="1.3" stroke-linejoin="round"';
+var NCOAT='M 82 99 C 71 100, 67 116, 69 140 L 67 169 Q 100 174 133 169 L 131 140 C 133 116, 129 100, 118 99 Z';
+var NCROP='M 82 99 C 71 100, 67 112, 69 127 Q 100 130 131 127 C 133 112, 129 100, 118 99 Z';
+var GOLD='#F2B33A';
+function ncPants(X){
+  return '<g'+NCE+'>'+X.legs(NC)+'</g><path d="M 86 168 L 86 196 M 114 168 L 114 196" stroke="'+NCD+'" stroke-width="1.4" opacity=".8"/>';
+}
+/* boots from y=top down, with a cuff at the top */
+function ncBoots(X,c,cuff,top){
+  return X.limbs('l',top,40,c)+X.limbs('l',top,4,cuff)+'<g stroke="#55526A" stroke-width="1.2">'+X.feet(c)+'</g>'+
+    '<path d="M 76 212 Q 85 208 94 212 M 106 212 Q 115 208 124 212" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="1.6" stroke-linecap="round"/>';
+}
+/* the coat: sleeves with cuffs, the body, a center closure and a row of buttons */
+function ncCoat(X,btn,crop){
+  var d=crop?NCROP:NCOAT,g='',ys=crop?[109,117,124]:[111,123,135,147,159];
+  g+='<g'+NCE+'>'+X.arms(NC)+'</g>'+X.limbs('a',153,8,NCD)+'<circle cx="64" cy="157" r="1.6" fill="'+btn+'"/><circle cx="136" cy="157" r="1.6" fill="'+btn+'"/>';
+  g+='<path d="'+d+'" fill="'+NC+'"'+NCE+'/>';
+  g+='<path d="M 100 104 L 100 '+(crop?128:171)+'" stroke="'+NCD+'" stroke-width="1.8"/>';
+  g+='<path d="M 72 108 C 70 122, 70 134, 71 '+(crop?124:150)+' M 128 108 C 130 122, 130 134, 129 '+(crop?124:150)+'" fill="none" stroke="'+NCL+'" stroke-width="2" stroke-linecap="round" opacity=".7"/>';
+  g+='<path d="M 107 117 L 121 117" stroke="'+NCD+'" stroke-width="1.6" stroke-linecap="round"/>';
+  if(!crop)g+='<path d="M 70 147 L 96 147 M 104 147 L 130 147" stroke="'+NCD+'" stroke-width="1.2" opacity=".7"/>';
+  ys.forEach(function(y){g+='<circle cx="100" cy="'+y+'" r="2.8" fill="'+btn+'" stroke="'+NCD+'" stroke-width=".8"/><circle cx="99.2" cy="'+(y-0.9)+'" r=".9" fill="#fff" opacity=".6"/>';});
+  return g+X.hands();
+}
+/* the standing collar wraps the neck just under the chin, with the hook gap at the front */
+function ncCollar(){
+  return '<path d="M 78 95 Q 100 104 122 95 L 122 106 Q 100 114 78 106 Z" fill="'+NC+'"'+NCE+'/><path d="M 80 98 Q 100 106.5 120 98" fill="none" stroke="'+NCL+'" stroke-width="1.4"/><path d="M 100 101.5 L 100 110" stroke="'+NCD+'" stroke-width="1.6"/>';
+}
+/* ---- hand-drawn spiky hair. Each style is a few whole pieces (back, front), every spike tip and dip placed by hand.
+   ncTrace joins the points with curves: each point's k bends the edge arriving at it
+   (+ curves the edge in toward the hair, for sharp spikes; - bulges it out). ---- */
+function ncTrace(p){
+  var d='M '+p[0][0]+' '+p[0][1],i;
+  for(i=1;i<p.length;i++){var a=p[i-1],b=p[i],k=b[2]||0,dx=b[0]-a[0],dy=b[1]-a[1];d+=' Q '+((a[0]+b[0])/2-dy*k).toFixed(1)+' '+((a[1]+b[1])/2+dx*k).toFixed(1)+' '+b[0]+' '+b[1];}
+  return d+' Z';
+}
+/* one piece of hair: fill, outline, then lock lines on top, clipped to the piece so none stray off the hair */
+function ncPiece(p,F,E,lines,sh,w){
+  var d=ncTrace(p),id='x'+(PCN++);
+  return '<path d="'+d+'" fill="'+F+'" stroke="'+E+'" stroke-width="'+(w||1.8)+'" stroke-linejoin="round"/>'+
+    (lines?'<clipPath id="'+id+'"><path d="'+d+'"/></clipPath><path d="'+lines+'" fill="none" stroke="'+sh+'" stroke-width="1.5" stroke-linecap="round" clip-path="url(#'+id+')"/>':'');
+}
+
+/* the front piece shared by the silver and black styles: spikes over the crown, long bangs, and side locks flipping out */
+var NC_FRONT=[[50,72],[30,46,-0.14],[54,42,0.12],[44,14,-0.12],[68,28,0.12],[78,6,-0.08],[92,24,0.1],[112,6,0.08],[118,24,-0.1],[146,12,0.12],[146,40,-0.12],[170,46,0.14],[150,72,0.12],
+  [140,76,0.1],[132,54,0.12],[122,62,0.1],[112,48,0.1],[102,68,0.1],[94,48,0.1],[80,60,0.1],[70,52,0.1],[60,76,0.1]];
+var NC_FRONTL='M 60 64 Q 48 52 38 48 M 64 48 Q 54 30 48 18 M 80 40 Q 80 20 80 8 M 100 40 Q 106 20 110 8 M 120 40 Q 132 24 142 16 M 140 52 Q 154 48 164 46 M 100 50 Q 100 58 102 64';
+/* under a hat (pirate hat, bandana, caps, helmet, beanie) the tall spikes are hidden; only bangs and short side tufts show below the brim */
+function ncHatted(){var h=hairHat();return h==='phat'||h==='bandana';}
+var NC_HAT=[[52,44],[148,44,0],[162,64,0.1],[146,58,0.1],[140,76,0.1],[132,54,0.12],[122,62,0.1],[112,48,0.1],[102,68,0.1],[94,48,0.1],[80,60,0.1],[70,52,0.1],[60,76,0.1],[54,58,0.1],[38,64,0.1]];
+var NC_HATL='M 100 50 Q 100 58 102 64 M 66 54 Q 64 62 62 70 M 134 54 Q 136 62 138 70';
+/* 1. bright white hair: a tall back row of wisps pushed straight up, under the same front piece as the black hair */
+ART.hair.ncsilver={
+  back:function(){
+    if(ncHatted())return '';
+    return ncPiece([[54,74],[38,26,0.12],[52,40,0.1],[46,6,0.1],[64,22,0.1],[72,-4,0.1],[86,14,0.1],[98,-6,0.08],[110,14,0.08],[126,-4,0.1],[138,22,0.1],[154,6,0.1],[148,40,0.1],[162,26,0.1],[146,74,0.12],[100,90,-0.1]],
+      '#EEF1F7','#9AA3B8','M 52 50 Q 46 38 40 30 M 62 40 Q 54 22 48 12 M 82 30 Q 76 12 73 2 M 100 26 Q 100 8 98 0 M 118 30 Q 124 12 125 2 M 138 40 Q 146 22 152 12 M 148 50 Q 154 38 160 30','#C6CCDA');
+  },
+  front:function(){
+    return ncHatted()?hairUnder(ncPiece(NC_HAT,'#FFFFFF','#9AA3B8',NC_HATL,'#C9CFDD')):ncPiece(NC_FRONT,'#FFFFFF','#9AA3B8',NC_FRONTL,'#C9CFDD');
+  }
+};
+/* 2. black hair: long locks all over the head that sweep away from it and flip up at the ends */
+ART.hair.ncflip={
+  back:function(){
+    if(ncHatted())return '';
+    return ncPiece([[62,94],[22,92,-0.18],[50,80,0.14],[14,60,-0.16],[48,56,0.14],[20,28,-0.14],[54,36,0.14],[38,6,-0.12],[66,24,0.14],[66,-4,-0.1],[86,14,0.14],[100,-6,-0.06],[114,14,0.06],[134,-4,0.1],[134,24,-0.14],[162,6,0.12],[146,36,-0.14],[180,28,0.14],[152,56,-0.14],[186,60,0.16],[150,80,-0.14],[178,92,0.18],[138,94,-0.14],[100,100,-0.1]],
+      '#1C1A22','#6a6578','M 56 87 Q 44 89 32 90 M 49 68 Q 37 65 25 62 M 51 46 Q 40 40 29 33 M 60 30 Q 52 22 45 13 M 76 19 Q 72 11 69 3 M 100 14 Q 100 7 100 0 M 124 19 Q 128 11 131 3 M 140 30 Q 148 22 155 13 M 149 46 Q 160 40 171 33 M 151 68 Q 163 65 175 62 M 144 87 Q 156 89 168 90','#3A3746');
+  },
+  front:function(){
+    return ncHatted()?hairUnder(ncPiece(NC_HAT,'#1C1A22','#6a6578',NC_HATL,'#3A3746')):ncPiece(NC_FRONT,'#1C1A22','#6a6578',NC_FRONTL,'#3A3746');
+  }
+};
+/* 3. two-tone undercut: dark shaved sides, and a light pink top of short, even, triangular spikes fanning out
+   from the crown, ending in sharp choppy bangs */
+ART.hair.ncpink={
+  back:function(){return '';},
+  front:function(){
+    /* the shaved band starts right under the pink edge (level with the ends of the bangs) and stops at the ears */
+    var DK='#2E2328',side='M 50 54 C 49 62, 50 70, 55 78 L 61 77 C 59 70, 59 62, 61 54 Z',dots='';
+    [[53,60],[56,66],[54,72],[57,59]].forEach(function(p){dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r=".9"/><circle cx="'+(200-p[0])+'" cy="'+p[1]+'" r=".9"/>';});
+    var shaved='<g fill="'+DK+'" stroke="#55465A" stroke-width="1" stroke-linejoin="round"><path d="'+side+'"/><path d="'+mirrorPath(side)+'"/></g><g fill="#4F4047">'+dots+'</g>';
+    if(ncHatted())return hairUnder(shaved+ncPiece([[58,44],[142,44,0],[144,58,0.06],[138,60,0.06],[131,47,0.06],[125,58,0.06],[118,46,0.06],[111,56,0.06],[105,46,0.06],[99,59,0.06],[93,46,0.06],[87,56,0.06],[81,46,0.06],[74,58,0.06],[68,47,0.06],[62,57,0.06],[56,58,0.06]],'#F7B5CC','#D97FA4',null));
+    return '<g fill="'+DK+'" stroke="#55465A" stroke-width="1" stroke-linejoin="round"><path d="'+side+'"/><path d="'+mirrorPath(side)+'"/></g><g fill="#4F4047">'+dots+'</g>'+
+      /* the pink top is wider than the head, so it overhangs the shaved sides */
+      ncPiece([[56,58],[40,50,0.1],[52,44,0.08],[42,32,0.1],[56,32,0.08],[52,16,0.1],[66,24,0.08],[64,6,0.1],[77,16,0.08],[80,-1,0.1],[90,12,0.08],[99,-4,0.1],[108,11,0.08],[119,-1,0.1],[124,14,0.08],[137,5,0.1],[138,22,0.08],[150,16,0.1],[146,32,0.08],[160,32,0.1],[148,44,0.08],[162,50,0.1],[144,58,0.06],
+          [138,60,0.06],[131,47,0.06],[125,58,0.06],[118,46,0.06],[111,56,0.06],[105,46,0.06],[99,59,0.06],[93,46,0.06],[87,56,0.06],[81,46,0.06],[74,58,0.06],[68,47,0.06],[62,57,0.06]],
+        '#F7B5CC','#D97FA4','M 60 50 Q 50 48 44 48 M 64 42 Q 54 36 46 34 M 72 34 Q 62 24 56 18 M 82 28 Q 76 16 68 8 M 92 26 Q 88 14 82 2 M 104 24 Q 102 12 100 -1 M 116 26 Q 118 14 120 2 M 126 30 Q 132 20 136 8 M 134 36 Q 142 28 148 20 M 138 42 Q 148 38 156 34 M 140 50 Q 150 48 158 48','#E58AAE');
+  }
+};
+
+/* 4. light brown bob with side-swept bangs and two long strands framing the face */
+ART.hair.ncbob={
+  back:function(){return '<path d="M 41 62 C 39 28, 68 9, 100 9 C 132 9, 161 28, 159 62 C 161 82, 156 96, 140 102 C 128 106, 72 106, 60 102 C 44 96, 39 82, 41 62 Z" fill="#B07D52"/>';},
+  front:function(){
+    var B='#B07D52',D='#8A5C38',L='#D4A57A';
+    /* the part sits on the right; the fringe sweeps across the forehead and down to the left */
+    /* face-framing strands go first, starting up under the fringe and the part, so they grow out of the hair */
+    var st='M 63 44 C 61 62, 63 80, 70 96 C 72 98, 74 97, 73 94 C 68 80, 68 62, 72 46 Z M 127 33 C 134 54, 134 80, 129 96 C 127 98, 125 97, 126 94 C 129 80, 128 56, 120 36 Z';
+    return '<path d="'+st+'" fill="'+B+'"/><path d="M 67 58 C 66 72, 68 84, 71 93 M 129 54 C 131 70, 130 84, 128 93" fill="none" stroke="'+D+'" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>'+
+      '<path d="M 41 62 C 39 28, 68 9, 100 9 C 132 9, 161 28, 159 62 C 161 80, 156 93, 144 100 C 138 103, 133 100, 132 95 C 139 84, 141 70, 138 54 C 134 44, 126 34, 116 27 C 108 40, 92 50, 74 55 C 68 56, 64 56, 62 56 C 59 70, 61 84, 68 95 C 67 100, 62 103, 56 100 C 44 93, 39 80, 41 62 Z" fill="'+B+'"/>'+
+      '<path d="M 62 26 Q 80 15 98 16 M 106 16 Q 124 16 140 28 M 50 52 C 47 64, 47 78, 52 90 M 150 52 C 153 64, 153 78, 148 90 M 112 30 C 102 40, 86 47, 70 51" fill="none" stroke="'+D+'" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>'+
+      '<path d="M 70 24 Q 82 17 94 17" fill="none" stroke="'+L+'" stroke-width="3" stroke-linecap="round"/>';
+  }
+};
+
+/* the four outfits */
+ART.skin.ncsilver=function(X){
+  return ncPants(X)+ncBoots(X,'#17161C','#2C2B35',184)+ncCoat(X,'#5A6890')+
+    ART.hair.ncsilver.back()+X.FACE+ncCollar()+ART.hair.ncsilver.front()+faceAcc();
+};
+ART.skin.ncgold=function(X){
+  return ncPants(X)+ncBoots(X,'#6B4126','#8A5A35',186)+ncCoat(X,GOLD)+
+    ART.hair.ncflip.back()+X.FACE+ncCollar()+ART.hair.ncflip.front()+faceAcc();
+};
+/* red hoodie hood worn down: its rim folds round the neck in a thick U with the drawstrings hanging from the front.
+   It takes the place of the coat collar. */
+ART.skin.nchood=function(X){
+  var R='#D7263D',RD='#9E1424',RL='#F0596B';
+  return ncPants(X)+csSneak(R,'#fff','#fff',R,7)+ncCoat(X,GOLD)+
+    '<path d="M 64 86 C 62 102, 77 117, 100 119 C 123 117, 138 102, 136 86 C 128 95, 115 99, 100 99 C 85 99, 72 95, 64 86 Z" fill="'+R+'" stroke="'+RD+'" stroke-width="1.6" stroke-linejoin="round"/>'+
+    '<path d="M 69 96 C 76 107, 87 113, 100 114 M 131 96 C 124 107, 113 113, 100 114" fill="none" stroke="'+RL+'" stroke-width="2" stroke-linecap="round"/>'+
+    '<path d="M 94 113 C 93 120, 92 128, 93 136 M 106 113 C 107 120, 108 128, 107 136" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><rect x="91.5" y="135" width="3" height="5" rx="1" fill="#C9CED6"/><rect x="105.5" y="135" width="3" height="5" rx="1" fill="#C9CED6"/>'+
+    ART.hair.ncpink.back()+X.FACE+ART.hair.ncpink.front()+faceAcc();
+};
+/* cropped coat over a dark grey shirt (no tummy showing), pleated skirt with a gold waist button, short brown boots */
+ART.skin.nccrop=function(X){
+  return X.legs(X.S)+ncBoots(X,'#7A4A2A','#9A6A3F',198)+
+    '<path d="'+TORSO+'" fill="#3A3A44"/>'+
+    csPleat(78,122,140,62,138,178,3,10,NC,NCD)+'<rect x="76" y="136" width="48" height="7" rx="2" fill="'+NC+'"'+NCE+'/><circle cx="100" cy="139.5" r="3" fill="'+GOLD+'" stroke="'+NCD+'" stroke-width=".8"/>'+
+    ncCoat(X,GOLD,true)+
+    ART.hair.ncbob.back()+X.FACE+ncCollar()+ART.hair.ncbob.front()+faceAcc();
+};
+
+/* dusk over the city: a red lattice tower, glowing windows, neon signs and a crosswalk to stand on */
+ART.card.tokyo=function(X){var K=X.K,ln=X.ln,e=cdcEdge(K,2),id=X.id,o,i,x;
+  o=cdcSky(id+'s',[[0,'#241a5c'],[.5,'#6b3fa0'],[.85,'#ff7fa0'],[1,'#ffb38a']])+cdcStars(16,11,50,'#e8dcff')+'<circle cx="34" cy="26" r="10" fill="#fff3d6"/><circle cx="34" cy="26" r="16" fill="#fff3d6" opacity=".2"/>';
+  /* far skyline */
+  o+='<path d="M -20 150 V 104 H 0 V 92 H 14 V 110 H 26 V 84 H 44 V 100 H 58 V 76 H 72 V 96 H 84 V 88 H 100 V 72 H 116 V 98 H 128 V 86 H 142 V 104 H 160 V 94 H 176 V 108 H 220 V 150 Z" fill="#4a3a8a"/>';
+  for(i=0;i<40;i++){var sx=(i*37)%200,sy=80+((i*23)%60);o+='<rect x="'+sx+'" y="'+sy+'" width="2.6" height="3" fill="#ffd77a" opacity=".55"/>';}
+  /* the lattice tower on the right: red and white bands, two decks */
+  var tw='M 166 150 L 176 52 L 178 20 L 180 52 L 190 150 Z';
+  o+='<path d="'+tw+'" fill="#e8483a"'+cdcEdge(K,1.6)+'/>';
+  o+='<clipPath id="'+id+'tw"><path d="'+tw+'"/></clipPath><g clip-path="url(#'+id+'tw)"><rect x="160" y="64" width="40" height="10" fill="#fff"/><rect x="160" y="104" width="40" height="10" fill="#fff"/><path d="M 166 150 L 182 120 L 172 96 L 182 74 L 176 54 M 190 150 L 174 120 L 184 96 L 174 74 L 180 54" fill="none" stroke="#a82a20" stroke-width="1.2"/></g>';
+  o+='<rect x="171" y="58" width="14" height="6" rx="1.5" fill="#fff"'+cdcEdge(K,1.3)+'/><rect x="168" y="90" width="20" height="7" rx="1.5" fill="#fff"'+cdcEdge(K,1.3)+'/><rect x="171" y="92" width="14" height="2.4" fill="#7ad9ff"/>';
+  o+='<g class="tglow"><circle cx="178" cy="20" r="5" fill="#ff5a6e" opacity=".5"/></g><circle cx="178" cy="19" r="1.8" fill="#ff5a6e"/>';
+  /* near buildings with neon signs */
+  o+='<rect x="-20" y="56" width="58" height="120" fill="#2b2350"'+e+'/><rect x="132" y="98" width="38" height="78" fill="#2f2858"'+e+'/>';
+  for(i=0;i<5;i++)for(x=0;x<3;x++)o+='<rect x="'+(-10+x*14)+'" y="'+(64+i*16)+'" width="7" height="8" fill="'+((i+x)%3?'#ffd77a':'#3d3570')+'"/>';
+  for(i=0;i<3;i++)for(x=0;x<2;x++)o+='<rect x="'+(138+x*16)+'" y="'+(106+i*16)+'" width="8" height="8" fill="'+((i+x)%2?'#7ad9ff':'#3d3570')+'"/>';
+  o+='<g class="tglow"><rect x="36" y="70" width="14" height="54" rx="3" fill="#ff5fb3" opacity=".35"/></g><rect x="38" y="72" width="10" height="50" rx="2" fill="#ff8fd0"'+cdcEdge(K,1.4)+'/>'+[80,92,104,116].map(function(y){return '<rect x="40.5" y="'+(y-3)+'" width="5" height="5" rx="1" fill="#fff" opacity=".85"/>';}).join('');
+  o+='<g class="tglow"><rect x="124" y="104" width="12" height="40" rx="3" fill="#35d6e8" opacity=".35"/></g><rect x="126" y="106" width="8" height="36" rx="2" fill="#7af0ff"'+cdcEdge(K,1.4)+'/>'+[114,124,134].map(function(y){return '<circle cx="130" cy="'+y+'" r="2.2" fill="#fff" opacity=".85"/>';}).join('');
+  o+='<rect x="-6" y="40" width="34" height="14" rx="3" fill="#ffd23f"'+cdcEdge(K,1.4)+'/><path d="M 0 47 H 22" stroke="#e24b4a" stroke-width="3" stroke-linecap="round"/>';
+  /* paper lanterns on a wire */
+  o+=ln('M -10 6 Q 60 30 130 8','#1b1442',1.2);
+  [[14,16],[44,24],[76,24],[106,16]].forEach(function(p){o+='<line x1="'+p[0]+'" y1="'+(p[1]-4)+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="'+K+'" stroke-width="1"/><ellipse cx="'+p[0]+'" cy="'+(p[1]+7)+'" rx="5.5" ry="7" fill="#e24b4a"'+cdcEdge(K,1.2)+'/><path d="M '+(p[0]-5)+' '+(p[1]+7)+' H '+(p[0]+5)+'" stroke="#ffd23f" stroke-width="1"/>';});
+  /* street and crosswalk */
+  o+='<rect x="-20" y="172" width="240" height="80" fill="#3a3552"'+e+'/>'+ln('M -20 176 H 220','#5a5478',2);
+  for(x=-14;x<214;x+=20)o+='<path d="M '+x+' 188 L '+(x+11)+' 188 L '+(x+13+(x-100)*0.12)+' 240 L '+(x-2+(x-100)*0.12)+' 240 Z" fill="#f3f1f8"/>';
+  return o;
+};
 /* ---------- art: sports ---------- */
 /* ---- football, basketball and baseball: uniforms, fans, shields, glove, bat, and player cards.
    Every outfit comes in four team colors. The colors share one drawing (same k); the item's tm picks the team. ---- */
@@ -5633,7 +5803,7 @@ function vsEndUpd(r){
 var CTABS=[['outfit','Outfit',['skin','armor','tabard','cloak']],['head','Head',['head','hair','haircol']],['acc','Accessories',['eyes','lash','ears','neck','brace','beard']],['weapons','Weapons',['shield','sword']],['sidekick','Sidekick & Card',['pet','card']]];
 var CTAB='outfit',EXP={};
 /* tabs in the Skin row; SKCAT stays null until the panel picks the category of the worn skin */
-var SKCATS=[['Heroes',['gamer','hero','knight','dragon']],['Cute',['cdress','ggamer','cskirt','cstreet','cberry','csun','jbunny','kitty','bunny','puppy','frog']],['Animals',['capy','tiger','gecko','penguin','wolf','turtle','axolotl','drake','zap','fox','spook','shark','kraken']],['Ninja',['nteal','npink','nsun','nfly']],['Space',['astro','ufo']],['Pirates',['pskipper','pcaptain','pegleg','naval']],['Soccer',['soccer','stripe','hoops','keeper']],['Football',['fbhome','fbaway','fbfan']],['Basketball',['bbhome','bbaway','bbfan']],['Baseball',['bsfield','bsbat','bsfan']]];
+var SKCATS=[['Heroes',['gamer','hero','knight','dragon']],['Cute',['cdress','ggamer','cskirt','cstreet','cberry','csun','jbunny','kitty','bunny','puppy','frog']],['Animals',['capy','tiger','gecko','penguin','wolf','turtle','axolotl','drake','zap','fox','spook','shark','kraken']],['Ninja',['nteal','npink','nsun','nfly','ncsilver','ncgold','nchood','nccrop']],['Space',['astro','ufo']],['Pirates',['pskipper','pcaptain','pegleg','naval']],['Soccer',['soccer','stripe','hoops','keeper']],['Football',['fbhome','fbaway','fbfan']],['Basketball',['bbhome','bbaway','bbfan']],['Baseball',['bsfield','bsbat','bsfan']]];
 var SKCAT=null;
 function skinCat(k){for(var i=0;i<SKCATS.length;i++){if(SKCATS[i][1].indexOf(k)>=0)return SKCATS[i][0];}return SKCATS[0][0];}
 var VCOL={Crimson:'#FF5A6E',Jade:'#3DDC97',Topaz:'#FFC83D',Sapphire:'#4DA3FF'};
@@ -5653,7 +5823,7 @@ function renderAvatarPanel(){
   var newSkin=!!(ART.skin[skinK]||skinO.full);
   var pirate=(PIRATES.indexOf(skinK)>=0),faceOff=(skinK==='dragon'||skinK==='knight'||skinK==='hero'||skinK==='gamer'||CREATURES.indexOf(skinK)>=0||(newSkin&&!skinO.hair&&!skinO.ownhair));
   var headK=AV.head[avSel('head')].k,hairOk=((skinK==='none'||pirate)?(headK==='none'||headK==='crown'||headK==='phat'||headK==='bandana'):(skinK==='hero'||kit||!!skinO.hair));
-  var ownCols=(hairOk&&['undercut','wavetip','chop'].indexOf(hairKind())>=0);
+  var ownCols=(hairOk&&HAIROWN.indexOf(hairKind())>=0);
   function rowDim(k){
     if(skinOn&&(k==='armor'||(k==='tabard'&&!kit)||(k==='head'&&!pirate)))return true;
     if(k==='cloak'&&(skinK==='knight'||skinK==='hero'||pirate||newSkin||CREATURES.indexOf(skinK)>=0))return true;
