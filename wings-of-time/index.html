@@ -1748,6 +1748,24 @@ AV.sword.push({n:'Flame sword',c:'#FF7A1A',gd:'#7A2A12',art:'flame',u:91,full:tr
 AV.hair.push({n:'Pigtails',k:'pig',s:8.1},{n:'Bob',k:'bob',s:8.2},{n:'Space buns',k:'buns',u:3,s:8.3},{n:'Waves',k:'waves',u:15,s:8.4},{n:'Side braid',k:'braid',u:24,s:8.5},{n:'Slicked undercut',k:'undercut',u:151,s:9.1},{n:'Long wavy tips',k:'wavetip',u:156,s:9.2},{n:'Choppy bowl',k:'chop',u:161,s:9.3},{n:'Box braids',k:'boxbraid',u:6,s:8.6});
 AV.haircol.push({n:'Lavender',c:'#C4A7F0'},{n:'Mint',c:'#9FE3C9'},{n:'Baby pink',c:'#FFC0D9'},{n:'Purple',c:'#8E5BD6'});
 AV.ears.push({n:'Drop earrings',k:'drop',u:151,full:true});
+/* sports update. Each outfit comes in four team colors that share one drawing (k); tm picks the team (SPT in art: sports)
+   and vg groups the colors under one button with color swatches. The red home uniforms are free to try. */
+AV.skin.push(
+  {n:'Red football home uniform',k:'fbhome',tm:'red',vg:'Home uniform',s:10.1,full:true},{n:'Blue football home uniform',k:'fbhome',tm:'blue',vg:'Home uniform',u:171,s:10.11,full:true},{n:'Green football home uniform',k:'fbhome',tm:'green',vg:'Home uniform',u:171,s:10.12,full:true},{n:'Purple football home uniform',k:'fbhome',tm:'purple',vg:'Home uniform',u:171,s:10.13,full:true},
+  {n:'Red football away uniform',k:'fbaway',tm:'red',vg:'Away uniform',u:176,s:10.2,full:true},{n:'Blue football away uniform',k:'fbaway',tm:'blue',vg:'Away uniform',u:176,s:10.21,full:true},{n:'Green football away uniform',k:'fbaway',tm:'green',vg:'Away uniform',u:176,s:10.22,full:true},{n:'Purple football away uniform',k:'fbaway',tm:'purple',vg:'Away uniform',u:176,s:10.23,full:true},
+  {n:'Red football fan',k:'fbfan',tm:'red',vg:'Football fan',u:176,s:10.3,hair:true,full:true},{n:'Blue football fan',k:'fbfan',tm:'blue',vg:'Football fan',u:176,s:10.31,hair:true,full:true},{n:'Green football fan',k:'fbfan',tm:'green',vg:'Football fan',u:176,s:10.32,hair:true,full:true},{n:'Purple football fan',k:'fbfan',tm:'purple',vg:'Football fan',u:176,s:10.33,hair:true,full:true},
+  {n:'Red basketball home uniform',k:'bbhome',tm:'red',vg:'Home uniform',s:11.1,hair:true,full:true},{n:'Blue basketball home uniform',k:'bbhome',tm:'blue',vg:'Home uniform',u:181,s:11.11,hair:true,full:true},{n:'Green basketball home uniform',k:'bbhome',tm:'green',vg:'Home uniform',u:181,s:11.12,hair:true,full:true},{n:'Purple basketball home uniform',k:'bbhome',tm:'purple',vg:'Home uniform',u:181,s:11.13,hair:true,full:true},
+  {n:'Red basketball away uniform',k:'bbaway',tm:'red',vg:'Away uniform',u:186,s:11.2,hair:true,full:true},{n:'Blue basketball away uniform',k:'bbaway',tm:'blue',vg:'Away uniform',u:186,s:11.21,hair:true,full:true},{n:'Green basketball away uniform',k:'bbaway',tm:'green',vg:'Away uniform',u:186,s:11.22,hair:true,full:true},{n:'Purple basketball away uniform',k:'bbaway',tm:'purple',vg:'Away uniform',u:186,s:11.23,hair:true,full:true},
+  {n:'Red basketball fan',k:'bbfan',tm:'red',vg:'Basketball fan',u:186,s:11.3,hair:true,full:true},{n:'Blue basketball fan',k:'bbfan',tm:'blue',vg:'Basketball fan',u:186,s:11.31,hair:true,full:true},{n:'Green basketball fan',k:'bbfan',tm:'green',vg:'Basketball fan',u:186,s:11.32,hair:true,full:true},{n:'Purple basketball fan',k:'bbfan',tm:'purple',vg:'Basketball fan',u:186,s:11.33,hair:true,full:true},
+  {n:'Red baseball uniform',k:'bsfield',tm:'red',vg:'Baseball uniform',s:12.1,hair:true,full:true},{n:'Blue baseball uniform',k:'bsfield',tm:'blue',vg:'Baseball uniform',u:191,s:12.11,hair:true,full:true},{n:'Green baseball uniform',k:'bsfield',tm:'green',vg:'Baseball uniform',u:191,s:12.12,hair:true,full:true},{n:'Purple baseball uniform',k:'bsfield',tm:'purple',vg:'Baseball uniform',u:191,s:12.13,hair:true,full:true},
+  {n:'Red batting uniform',k:'bsbat',tm:'red',vg:'Batting uniform',u:196,s:12.2,hair:true,full:true},{n:'Blue batting uniform',k:'bsbat',tm:'blue',vg:'Batting uniform',u:196,s:12.21,hair:true,full:true},{n:'Green batting uniform',k:'bsbat',tm:'green',vg:'Batting uniform',u:196,s:12.22,hair:true,full:true},{n:'Purple batting uniform',k:'bsbat',tm:'purple',vg:'Batting uniform',u:196,s:12.23,hair:true,full:true},
+  {n:'Red baseball fan',k:'bsfan',tm:'red',vg:'Baseball fan',u:196,s:12.3,hair:true,full:true},{n:'Blue baseball fan',k:'bsfan',tm:'blue',vg:'Baseball fan',u:196,s:12.31,hair:true,full:true},{n:'Green baseball fan',k:'bsfan',tm:'green',vg:'Baseball fan',u:196,s:12.32,hair:true,full:true},{n:'Purple baseball fan',k:'bsfan',tm:'purple',vg:'Baseball fan',u:196,s:12.33,hair:true,full:true}
+);
+AV.card.push({n:'Football stadium',k:'football',u:171,s:171},{n:'Basketball court',k:'basketball',u:181,s:181},{n:'Ballpark',k:'baseball',u:191,s:191});
+AV.shield.push({n:'Football shield',k:'football',u:171,full:true},{n:'Basketball shield',k:'basketball',u:181,full:true},{n:'Baseball shield',k:'baseball',u:191,full:true},{n:'Baseball glove',k:'glove',u:191,full:true});
+AV.sword.push({n:'Baseball bat',c:'#D9A066',gd:'#1F1D24',art:'bat',u:196,full:true});
+/* free for everyone; s places it next to Ponytail in the list */
+AV.hair.push({n:'Puff ponytail',k:'puff',s:4.5});
 AVLAB.lash='';AVLAB.neck='';AVLAB.brace='';
 /* older skins that cover the eyes, neck or wrists; the shark and kraken keep lashes, moved to their smaller, lower eyes */
 AV.skin.forEach(function(o){
@@ -1794,7 +1812,8 @@ function hairKind(){return AV.hair[avSel('hair')].k;}
 function hairCol(){return AV.haircol[avSel('haircol')].c;}
 function hairHi(c){var r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);var lum=(0.299*r+0.587*g+0.114*b)/255;return lum<0.5?{c:'#ffffff',o:'0.22'}:{c:'#000000',o:'0.18'};}
 /* the hat actually on show, if any: hats only appear on the plain avatar and pirate skins */
-function hairHat(){var hd=AV.head[avSel('head')].k,sk=AV.skin[avSel('skin')].k;return ((hd==='phat'||hd==='bandana'||hd==='crown')&&(sk==='none'||PIRATES.indexOf(sk)>=0))?hd:'';}
+/* outfits with their own hat (sk.hat) count too, so hair styles tuck under it the same way */
+function hairHat(){var hd=AV.head[avSel('head')].k,so=AV.skin[avSel('skin')],sk=so.k;if(so.hat)return so.hat;return((hd==='phat'||hd==='bandana'||hd==='crown')&&(sk==='none'||PIRATES.indexOf(sk)>=0))?hd:'';}
 /* under a pirate hat or bandana the hair is trimmed to fit, so nothing pokes out above the brim or around the cloth */
 function hairUnder(s,snug){var h=hairHat();if(h!=='phat'&&h!=='bandana')return s;var id='hu'+(PCN++);return '<clipPath id="'+id+'"><path d="'+(h==='phat'?'M -20 250 L -20 50 L 34 50 Q 100 28 166 50 L 220 50 L 220 250 Z':(snug?'M -20 250 L -20 66 L 43 66 C 42 32, 68 15, 100 15 C 132 15, 158 32, 157 66 L 220 66 L 220 250 Z':'M -20 250 L -20 66 L 30 66 C 32 30, 64 12, 100 12 C 136 12, 168 30, 170 66 L 220 66 L 220 250 Z'))+'"/></clipPath><g clip-path="url(#'+id+')">'+s+'</g>';}
 function fluffyBack(c){return '<path d="M 100 5 C 122 4, 144 10, 158 24 C 170 28, 176 40, 172 50 C 182 56, 184 74, 174 82 C 180 92, 174 106, 160 106 C 160 114, 152 122, 140 118 C 134 114, 130 108, 128 102 L 100 98 L 72 102 C 70 108, 66 114, 60 118 C 48 122, 40 114, 40 106 C 26 106, 20 92, 26 82 C 16 74, 18 56, 28 50 C 24 40, 30 28, 42 24 C 56 10, 78 4, 100 5 Z" fill="'+c+'"'+hairRim(c)+'/>';}
@@ -3604,8 +3623,9 @@ function axBow(x,y,sc,rot){
 function axBangs(c){return '<path d="M 47 64 C 43 30, 68 13, 100 13 C 132 13, 157 30, 153 64 C 150 58, 146 52, 141 47 Q 135 56 124 50 Q 112 57 100 50 Q 88 57 76 50 Q 65 56 59 47 C 54 52, 50 58, 47 64 Z" fill="'+c+'"/>';}
 var AXPIG='M 56 32 C 40 24, 20 32, 15 52 C 12 64, 13 73, 18 80 C 13 90, 18 104, 33 116 C 31 105, 36 98, 42 92 C 47 85, 45 78, 49 70 C 55 62, 59 52, 59 42 Z';
 ART.hair.pig={
-  back:function(c){return axBoth('<path d="'+AXPIG+'" fill="'+c+'"/>'+axHi(c,['M 42 37 C 30 40, 24 52, 25 66','M 28 86 C 27 94, 30 100, 33 105','M 44 50 C 38 58, 34 68, 34 78']));},
-  front:function(c){return axBangs(c)+axHi(c,['M 66 28 Q 82 19 98 21','M 104 21 Q 120 20 134 28','M 74 41 Q 80 36 88 40','M 112 40 Q 120 36 126 41'])+axBow(53,37,1,-18)+axBow(147,37,1,18);}
+  /* under a hat the pigtails drop so they start below the brim, and the bows move down to the ties */
+  back:function(c){var s='<path d="'+AXPIG+'" fill="'+c+'"/>'+axHi(c,['M 42 37 C 30 40, 24 52, 25 66','M 28 86 C 27 94, 30 100, 33 105','M 44 50 C 38 58, 34 68, 34 78']);return axBoth(hairHat()==='phat'?'<g transform="translate(6 24)">'+s+'</g>':s);},
+  front:function(c){var hat=(hairHat()==='phat');return axBangs(c)+axHi(c,['M 66 28 Q 82 19 98 21','M 104 21 Q 120 20 134 28','M 74 41 Q 80 36 88 40','M 112 40 Q 120 36 126 41'])+(hat?axBow(56,61,0.9,-18)+axBow(144,61,0.9,18):axBow(53,37,1,-18)+axBow(147,37,1,18));}
 };
 ART.hair.bob={
   back:function(c){return '<path d="M 42 62 C 40 28, 68 10, 100 10 C 132 10, 160 28, 158 62 C 160 80, 154 94, 138 100 C 128 103, 72 103, 62 100 C 46 94, 40 80, 42 62 Z" fill="'+c+'"/>';},
@@ -3683,6 +3703,26 @@ ART.hair.boxbraid={
       '<path d="M 100 11 L 100 30" stroke="#e2e4e5" stroke-width="1.8" stroke-linecap="round"/>');
   }
 };
+/* ---------- art: puff ---------- */
+/* ---- Puff ponytail: natural hair brushed back smooth and gathered with a scrunchie into a round, curly puff behind the head ---- */
+ART.hair.puff={
+  back:function(c){
+    /* wider than the head, so it peeks out on both sides behind the crown */
+    var dots='<ellipse cx="100" cy="16" rx="50" ry="16"/>',i,a,n=13,curl=[];
+    for(i=0;i<=n;i++){a=Math.PI*0.94+i*Math.PI*1.12/n;dots+='<circle cx="'+(100+50*Math.cos(a)).toFixed(1)+'" cy="'+(15+14*Math.sin(a)).toFixed(1)+'" r="'+(i%2?10:11.5)+'"/>';}
+    /* little coils all over the puff */
+    [[50,14],[56,3],[68,-3],[82,-6],[96,-7],[110,-6],[124,-3],[136,2],[146,10],[152,19],[46,24],[62,10],[132,12]].forEach(function(p){var x=p[0],y=p[1];curl.push('M '+(x-3.5)+' '+(y+1.5)+' C '+(x-4)+' '+(y-3)+', '+(x+2)+' '+(y-4)+', '+(x+3.5)+' '+(y-0.5)+' C '+(x+4)+' '+(y+2.5)+', '+(x+0.5)+' '+(y+3)+', '+(x-0.5)+' '+(y+0.5));});
+    return hairUnder(hairBlob(c,dots)+axHi(c,curl,1.8));
+  },
+  front:function(c){
+    var s='<path d="M 47 66 C 42 30, 68 12, 100 12 C 132 12, 158 30, 153 66 C 150 58, 145 50, 136 45 C 126 40, 112 38, 100 38 C 88 38, 74 40, 64 45 C 55 50, 50 58, 47 66 Z" fill="'+c+'"'+hairRim(c)+'/>';
+    /* a soft shadow where the smooth hair meets the puff */
+    s+='<path d="M 50 40 C 56 22, 76 12, 100 12 C 124 12, 144 22, 150 40" fill="none" stroke="'+darkOf(c)+'" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round"/>';
+    /* brushed-back lines, all heading up to the puff */
+    s+=axHi(c,['M 56 56 C 60 40, 74 25, 94 16','M 70 43 C 76 32, 86 22, 97 16','M 86 39 C 90 30, 95 22, 99 16','M 144 56 C 140 40, 126 25, 106 16','M 130 43 C 124 32, 114 22, 103 16','M 114 39 C 110 30, 105 22, 101 16']);
+    return hairUnder(s)+(hairHat()?'':hairTie(100,13,0,c));
+  }
+};
 /* ---------- art: ninja ---------- */
 /* ninja skins: open-front haori, wide sleeves, tabi shoes; each wears its own signature hair */
 var NJK='#1E1D25',NJE=' stroke="#55526A" stroke-width="1.3" stroke-linejoin="round"';
@@ -3736,7 +3776,9 @@ ART.hair.undercut={
   back:function(){
     var d='M 100 8 C 118 4, 134 8, 144 20 L 156 16 L 153 32 C 158 38, 164 40, 170 40 C 168 48, 164 54, 158 56 C 162 62, 168 66, 174 66 C 170 74, 164 78, 158 78 C 160 86, 164 92, 168 96 C 160 98, 154 96, 150 92 C 148 98, 144 104, 138 106 C 136 100, 132 94, 126 90 L 100 90 Z';
     var tips='M 42 52 C 38 52, 34 54, 31 57 M 42 74 C 38 74, 34 76, 31 79';
-    return '<path d="'+d+'" fill="#5A1228"/><path d="'+mirrorPath(d)+'" fill="#5A1228"/><path d="'+tips+' '+mirrorPath(tips)+'" fill="none" stroke="#8E2C4B" stroke-width="2.4" stroke-linecap="round"/>';
+    var s='<path d="'+d+'" fill="#5A1228"/><path d="'+mirrorPath(d)+'" fill="#5A1228"/><path d="'+tips+' '+mirrorPath(tips)+'" fill="none" stroke="#8E2C4B" stroke-width="2.4" stroke-linecap="round"/>';
+    /* under a hat the flicks start below the brim */
+    return hairHat()==='phat'?'<g transform="translate(0 16)">'+s+'</g>':s;
   },
   front:function(){
     var side='M 57 40 C 47 56, 46 78, 53 95 L 59 84 L 63 91 C 62 78, 60 60, 72 42 Z';
@@ -3777,7 +3819,8 @@ ART.hair.chop={
     return njPoly('46,52 49,30 64,25 73,44','#FFC40E')+njPoly('64,25 66,12 86,16 89,42 73,44','#FFDB3A')+njPoly('86,16 92,6 112,10 111,42 89,42','#FFD21F')+njPoly('112,10 117,14 135,14 128,44 111,42','#FFDB3A')+njPoly('135,14 139,27 152,30 154,52 128,44','#FFC40E')+
       njPoly('70,18 83,20 85,30 73,34','#FFEB85')+njPoly('95,11 107,13 106,22 95,24','#FFEB85')+
       /* middle layer ends about where the ears would be; the fringe below it is the shortest */
-      njChop(41,54,40,78,4,-2,'#FFD21F')+njChop(52,66,42,72,-4,1,'#FFC40E')+njChop(146,159,40,78,-4,2,'#FFD21F')+njChop(134,148,42,72,4,-1,'#FFC40E')+
+      (hairHat()==='phat'?'<g transform="translate(4 12)">':'<g>')+njChop(41,54,40,78,4,-2,'#FFD21F')+njChop(52,66,42,72,-4,1,'#FFC40E')+'</g>'+
+      (hairHat()==='phat'?'<g transform="translate(-4 12)">':'<g>')+njChop(146,159,40,78,-4,2,'#FFD21F')+njChop(134,148,42,72,4,-1,'#FFC40E')+'</g>'+
       njChop(66,80,38,59,3,0,'#FFDB3A')+njChop(79,93,38,57,-3,0,'#FFCC12')+njChop(92,107,38,60,3,0,'#FFDB3A')+njChop(106,121,38,57,-2,0,'#FFCC12')+njChop(120,134,38,60,3,0,'#FFDB3A');
   }
 };
@@ -3846,6 +3889,395 @@ ART.skin.nfly=function(X){
     X.limbs('t',130,18,'#4A2391')+'<path d="M 74 139 L 126 139" stroke="#C9A6F7" stroke-width="1.6"/>'+
     njHaori(X,'url(#'+id+')','#7B55C7',over,null,'#1F1433',true)+
     ART.hair.nflow.back()+X.FACE+ART.hair.nflow.front()+faceAcc();
+};
+/* ---------- art: sports ---------- */
+/* ---- football, basketball and baseball: uniforms, fans, shields, glove, bat, and player cards.
+   Every outfit comes in four team colors. The colors share one drawing (same k); the item's tm picks the team. ---- */
+var SPT={
+  red:{l:'Red',m:'#D7263D',d:'#8E1424',t:'#FFC83D',n:'7'},
+  blue:{l:'Blue',m:'#2563D9',d:'#173E8C',t:'#C7D2E0',n:'12'},
+  green:{l:'Green',m:'#16955A',d:'#0C5E37',t:'#FFC83D',n:'8'},
+  purple:{l:'Purple',m:'#6B3FD1',d:'#43248A',t:'#FFA53D',n:'9'}
+};
+function spTm(){return SPT[AV.skin[avSel('skin')].tm]||SPT.red;}
+/* caps, the batting helmet and the beanie tuck hair under like the pirate hat: ponytails come out low at the back, tall styles flatten */
+AV.skin.forEach(function(o){if(o.k==='fbfan'||o.k==='bsfield'||o.k==='bsbat'||o.k==='bsfan')o.hat='phat';});
+/* block jersey numbers drawn as thick segments, so they look the same on every device without a font */
+var SPSEG={'0':'abcdef','2':'abged','3':'abgcd','4':'fgbc','5':'afgcd','6':'afgedc','7':'abc','8':'abcdefg','9':'abcdfg'};
+function spNum(str,cx,cy,h,fill,edge){
+  var w=h*0.52,gap=h*0.34,sw=h*0.24,tot=0,i,d='',x,y=cy-h/2,M=cy,B=cy+h/2;
+  str=String(str);
+  for(i=0;i<str.length;i++)tot+=(str.charAt(i)==='1'?0:w)+(i?gap:0);
+  x=cx-tot/2;
+  for(i=0;i<str.length;i++){
+    var c=str.charAt(i),s=SPSEG[c]||'',L,R;
+    if(i)x+=gap;
+    L=x;R=(c==='1')?x:x+w;
+    if(c==='1')d+='M '+L+' '+(y+h*0.12)+' L '+L+' '+B+' M '+(L-h*0.12)+' '+(y+h*0.12)+' L '+L+' '+y+' ';
+    if(s.indexOf('a')>=0)d+='M '+L+' '+y+' L '+R+' '+y+' ';
+    if(s.indexOf('b')>=0)d+='M '+R+' '+y+' L '+R+' '+M+' ';
+    if(s.indexOf('c')>=0)d+='M '+R+' '+M+' L '+R+' '+B+' ';
+    if(s.indexOf('d')>=0)d+='M '+L+' '+B+' L '+R+' '+B+' ';
+    if(s.indexOf('e')>=0)d+='M '+L+' '+M+' L '+L+' '+B+' ';
+    if(s.indexOf('f')>=0)d+='M '+L+' '+y+' L '+L+' '+M+' ';
+    if(s.indexOf('g')>=0)d+='M '+L+' '+M+' L '+R+' '+M+' ';
+    x=R;
+  }
+  return (edge?'<path d="'+d+'" fill="none" stroke="'+edge+'" stroke-width="'+(sw+2.6).toFixed(1)+'" stroke-linecap="square" stroke-linejoin="miter"/>':'')+
+    '<path d="'+d+'" fill="none" stroke="'+fill+'" stroke-width="'+sw.toFixed(1)+'" stroke-linecap="square" stroke-linejoin="miter"/>';
+}
+/* a rect clipped to the arms ('a'), legs ('l') or torso ('t'), only on one side of the body */
+function spBand(X,w,x0,x1,y,h,c){return '<rect x="'+x0+'" y="'+y+'" width="'+(x1-x0)+'" height="'+h+'" fill="'+c+'" clip-path="url(#'+X.uid+w+')"/>';}
+/* hair, face and face gear under a hat: hair is trimmed off above y so nothing pokes through the crown */
+function spHead(X,y){
+  var id=X.uid+'hc',cl='<clipPath id="'+id+'"><path d="M -20 250 L -20 '+y+' L 220 '+y+' L 220 250 Z"/></clipPath>';
+  return cl+'<g clip-path="url(#'+id+')">'+hairBack()+'</g>'+X.FACE+'<g clip-path="url(#'+id+')">'+hairFront()+'</g>'+faceAcc();
+}
+function spShield(){return AV.shield[avSel('shield')].k==='none';}
+/* cleats: black shoe, white side stripe, studs */
+function spCleats(c,stripe){
+  var g='';
+  [85,115].forEach(function(x){g+='<path d="M '+(x-12)+' 213 C '+(x-13)+' 205, '+(x-8)+' 203, '+(x-3)+' 204 L '+(x+6)+' 204 C '+(x+12)+' 205, '+(x+14)+' 209, '+(x+14)+' 213 C '+(x+14)+' 217, '+(x-12)+' 217, '+(x-12)+' 213 Z" fill="'+c+'"/>'+
+    '<path d="M '+(x-8)+' 210 Q '+x+' 205 '+(x+10)+' 208" fill="none" stroke="'+stripe+'" stroke-width="2" stroke-linecap="round"/>'+
+    '<rect x="'+(x-9)+'" y="216" width="2.6" height="3.4" fill="#9aa0a6"/><rect x="'+(x-1)+'" y="216" width="2.6" height="3.4" fill="#9aa0a6"/><rect x="'+(x+7)+'" y="216" width="2.6" height="3.4" fill="#9aa0a6"/>';});
+  return g;
+}
+/* high-top basketball shoes; a thin dark edge shows where one shoe ends and the other begins.
+   The toe bulges right, so the right shoe sits a little further out to line up with its leg. */
+function spHighTop(c,collar,sole,lace){
+  var g='',E=' stroke="#1b1442" stroke-width="1.2" stroke-linejoin="round"';
+  [85,119].forEach(function(x){
+    g+='<path d="M '+(x-11)+' 190 L '+(x+8)+' 190 C '+(x+10)+' 198, '+(x+16)+' 202, '+(x+16)+' 210 L '+(x-15)+' 210 C '+(x-15)+' 202, '+(x-13)+' 196, '+(x-11)+' 190 Z" fill="'+c+'"'+E+'/>'+
+      '<rect x="'+(x-12)+'" y="189" width="21" height="4.5" rx="2" fill="'+collar+'"'+E+'/>'+
+      '<path d="M '+(x-10)+' 204 C '+(x-2)+' 206, '+(x+6)+' 200, '+(x+13)+' 203" fill="none" stroke="'+collar+'" stroke-width="2.6" stroke-linecap="round"/>'+
+      '<path d="M '+(x-4)+' 195 L '+(x+3)+' 195 M '+(x-3)+' 199 L '+(x+5)+' 199" stroke="'+lace+'" stroke-width="2" stroke-linecap="round"/>'+
+      '<rect x="'+(x-17)+'" y="208" width="34" height="8" rx="4" fill="'+sole+'"'+E+'/>';
+  });
+  return g;
+}
+/* a big foam finger worn on the left hand, only when that hand isn't holding a shield */
+function spFoam(T){
+  if(!spShield())return '';
+  /* the pointing finger sits at the thumb side, with the other three fingers curled into knuckles beside it, so it reads as an index finger */
+  var E=' stroke="'+T.d+'" stroke-width="1.4" stroke-linejoin="round"';
+  return '<g transform="rotate(-10 67 172)"><path d="M 73 152 L 73 106 C 73 98, 85 98, 85 106 L 85 152 Z" fill="'+T.m+'"/>'+
+    '<path d="M 50 158 C 50 150, 53 146, 58 146 L 85 146 C 88 148, 89 152, 89 158 L 89 176 C 89 184, 82 189, 72 189 L 63 189 C 55 189, 50 183, 50 176 Z" fill="'+T.m+'"/>'+
+    '<path d="M 73 146 L 73 108" fill="none"'+E+'/>'+
+    /* dark edge down the right side, so the finger stands out against a same-color shirt */
+    '<path d="M 85 106 L 85 146 C 88 148, 89 152, 89 158 L 89 176 C 89 184, 82 189, 72 189" fill="none" stroke="'+T.d+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<circle cx="55" cy="152" r="5.2" fill="'+T.m+'"'+E+'/><circle cx="62" cy="150.5" r="5.2" fill="'+T.m+'"'+E+'/><circle cx="69" cy="151" r="5" fill="'+T.m+'"'+E+'/>'+
+    '<path d="M 89 159 C 82 156, 70 156, 63 160 C 59 163, 61 168, 66 167.5 C 74 166, 82 166.5, 89 168 Z" fill="'+T.m+'"'+E+'/>'+
+    '<path d="M 58 174 L 66 174 M 58 180 L 66 180 M 61 171 L 60 183 M 65 171 L 64 183" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>'+
+    '<path d="M 76 172 L 76 184 M 73 175 L 76 172" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="square"/>'+
+    '<path d="M 76 109 C 76 105, 78 104, 79 104" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/></g>';
+}
+/* striped face paint under each eye */
+function spPaint(a,b){
+  return '<path d="M 72 85 L 92 85 M 108 85 L 128 85" stroke="'+a+'" stroke-width="3.4" stroke-linecap="round"/><path d="M 74 90.5 L 90 90.5 M 110 90.5 L 126 90.5" stroke="'+b+'" stroke-width="3.4" stroke-linecap="round"/>';
+}
+
+/* ---- football ---- */
+var SP_FBJ='M 86 97 C 72 97, 57 100, 52 113 C 49 122, 54 131, 62 132 L 71 131 C 71 140, 72 147, 73 153 L 127 153 C 128 147, 129 140, 129 131 L 138 132 C 146 131, 151 122, 148 113 C 143 100, 128 97, 114 97 Z';
+var SP_HELM='M 56 101 C 46 91, 42 76, 42 61 C 42 28, 68 5, 100 5 C 132 5, 158 28, 158 61 C 158 76, 154 91, 144 101 L 134 101 C 136 90, 136 72, 134 59 C 120 51, 80 51, 66 59 C 64 72, 64 90, 66 101 Z';
+function spHelmet(X,H,stripe,mask,maskEdge){
+  var id=X.uid+'hm',g='<clipPath id="'+id+'"><path d="'+SP_HELM+'"/></clipPath>';
+  g+='<path d="'+SP_HELM+'" fill="'+H+'"/>';
+  g+='<g clip-path="url(#'+id+')"><rect x="93" y="0" width="14" height="56" fill="'+stripe+'"/><rect x="89.5" y="0" width="2" height="56" fill="'+stripe+'"/><rect x="108.5" y="0" width="2" height="56" fill="'+stripe+'"/>'+
+    '<path d="M 42 80 C 46 96, 54 101, 60 101 L 42 101 Z" fill="#000" opacity=".12"/><path d="M 158 80 C 154 96, 146 101, 140 101 L 158 101 Z" fill="#000" opacity=".12"/></g>';
+  g+='<path d="M 66 59 C 80 51, 120 51, 134 59" fill="none" stroke="#2a2730" stroke-width="3.2" stroke-linecap="round"/>';
+  g+='<circle cx="52" cy="76" r="5" fill="#2a2730"/><circle cx="52" cy="76" r="2.4" fill="'+H+'"/><circle cx="148" cy="76" r="5" fill="#2a2730"/><circle cx="148" cy="76" r="2.4" fill="'+H+'"/>';
+  g+='<path d="M 58 34 C 66 20, 80 12, 94 11" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".55"/><circle cx="62" cy="44" r="2.4" fill="#fff" opacity=".55"/>';
+  /* face mask bars */
+  var bars='M 60 85 L 140 85 M 63 96 L 137 96 M 100 85 L 100 101 M 64 66 L 64 99 M 136 66 L 136 99 M 64 70 L 58 72 M 136 70 L 142 72';
+  g+='<path d="'+bars+'" fill="none" stroke="'+maskEdge+'" stroke-width="6" stroke-linecap="round"/><path d="'+bars+'" fill="none" stroke="'+mask+'" stroke-width="3.4" stroke-linecap="round"/>';
+  g+='<path d="M 66 99 Q 100 110 134 99" fill="none" stroke="#fff" stroke-width="2.4"/><rect x="92" y="101" width="16" height="7" rx="3.5" fill="#fff"/>';
+  return g;
+}
+function spFootball(X,away){
+  var T=spTm(),S=X.S,g='';
+  var J=away?'#F7F7F7':T.m,num=away?T.m:'#fff',numE=away?T.t:T.d,P=away?T.t:'#F2F2F2',PS=away?T.d:T.m,trim=away?T.m:'#fff';
+  g+=X.legs(S)+X.limbs('l',139,53,P)+spBand(X,'l',72,77.5,146,46,PS)+spBand(X,'l',122.5,128,146,46,PS);
+  g+='<rect x="50" y="178" width="100" height="5" fill="#000" opacity=".07" clip-path="url(#'+X.uid+'l)"/>'+X.limbs('l',192,20,T.m)+X.limbs('l',196,2.5,'#fff')+X.limbs('l',200,2.5,'#fff');
+  g+=spCleats('#1d1c22','#fff');
+  g+='<path d="M 72 145 L 128 145 C 130 157, 129 168, 127 176 L 104 178 L 100 170 L 96 178 L 73 176 C 71 168, 70 157, 72 145 Z" fill="'+P+'"/>'+
+    '<path d="M 73 150 C 72 160, 72 168, 73.5 176 L 77.5 176.5 C 76 168, 76 160, 77 150 Z M 127 150 C 128 160, 128 168, 126.5 176 L 122.5 176.5 C 124 168, 124 160, 123 150 Z" fill="'+PS+'"/>';
+  g+='<rect x="72" y="149" width="56" height="6" rx="2" fill="#2a2730"/><rect x="96" y="148.5" width="8" height="7" rx="1.5" fill="'+T.t+'"/>';
+  g+=X.arms(S);
+  g+='<clipPath id="'+X.uid+'fj"><path d="'+SP_FBJ+'"/></clipPath><path d="'+SP_FBJ+'" fill="'+J+'"/>';
+  g+='<g clip-path="url(#'+X.uid+'fj)"><rect x="40" y="119" width="31" height="3.5" fill="'+trim+'"/><rect x="40" y="125" width="31" height="3.5" fill="'+trim+'"/><rect x="129" y="119" width="31" height="3.5" fill="'+trim+'"/><rect x="129" y="125" width="31" height="3.5" fill="'+trim+'"/>'+
+    '<path d="M 58 112 C 62 104, 72 100, 84 100 M 142 112 C 138 104, 128 100, 116 100" fill="none" stroke="#000" stroke-width="2.5" opacity=".12"/>'+
+    '<rect x="40" y="148" width="120" height="6" fill="#000" opacity=".08"/></g>';
+  g+='<path d="M 88 97 L 100 110 L 112 97 Z" fill="'+S+'"/><path d="M 86 97 L 100 112 L 114 97" fill="none" stroke="'+(away?T.m:T.t)+'" stroke-width="3.2" stroke-linejoin="round"/>';
+  g+=spNum(T.n,100,131,18,num,numE);
+  g+=spNum(T.n,61,118,7,num,null)+spNum(T.n,139,118,7,num,null);
+  g+=X.hands();
+  g+=X.FACE;
+  g+=away?spHelmet(X,T.t,T.m,T.d,'#1d1c22'):spHelmet(X,T.m,'#fff','#C3C9D1','#59606B');
+  return g;
+};
+ART.skin.fbhome=function(X){return spFootball(X,false);};
+ART.skin.fbaway=function(X){return spFootball(X,true);};
+/* fan: team jersey over a long-sleeve shirt, scarf, knit beanie, face paint, jeans, and a foam finger */
+ART.skin.fbfan=function(X){
+  var T=spTm(),S=X.S,g='',JN='#3D5F94',JD='#2E4A76';
+  g+=X.legs(JN)+spBand(X,'l',60,140,198,8,JD)+'<path d="M 86 150 L 86.5 196 M 114 150 L 113.5 196" stroke="'+JD+'" stroke-width="1.2" opacity=".6"/>';
+  g+=csSneak('#fff',T.m,'#E6E9ED',T.m,6);
+  g+=X.arms('#EEF0F3')+X.limbs('a',160,5,T.m)+X.hands();
+  var FJ='M 82 98 C 70 98, 60 105, 56 121 L 69 127 C 70 139, 70 150, 71 160 L 129 160 C 130 150, 130 139, 131 127 L 144 121 C 140 105, 130 98, 118 98 Z';
+  g+='<clipPath id="'+X.uid+'ff"><path d="'+FJ+'"/></clipPath><path d="'+FJ+'" fill="'+T.m+'"/>';
+  g+='<g clip-path="url(#'+X.uid+'ff)"><path d="M 50 114 L 69 122 M 150 114 L 131 122" stroke="#fff" stroke-width="3"/><path d="M 50 119 L 69 127 M 150 119 L 131 127" stroke="'+T.t+'" stroke-width="2.4"/><rect x="60" y="156" width="80" height="4" fill="#000" opacity=".1"/></g>';
+  g+=spNum(T.n,100,137,20,'#fff',T.d);
+  /* scarf: a ring at the collar and one striped end down the chest */
+  var sc='<path d="M 73 96 C 84 106, 116 106, 127 96 L 129 104 C 116 115, 84 115, 71 104 Z" fill="'+T.t+'"/>';
+  sc+='<path d="M 78 104 L 92 108 L 89 146 L 75 143 Z" fill="'+T.t+'"/>';
+  sc+='<clipPath id="'+X.uid+'sc"><path d="M 78 104 L 92 108 L 89 146 L 75 143 Z"/><path d="M 73 96 C 84 106, 116 106, 127 96 L 129 104 C 116 115, 84 115, 71 104 Z"/></clipPath>';
+  sc+='<g clip-path="url(#'+X.uid+'sc)" fill="'+T.d+'"><rect x="60" y="114" width="40" height="6" transform="rotate(4 80 117)"/><rect x="60" y="126" width="40" height="6" transform="rotate(4 80 129)"/><rect x="84" y="90" width="7" height="30"/><rect x="109" y="90" width="7" height="30"/></g>';
+  sc+='<path d="M 76 144 L 74.5 150 M 80 145 L 79 151 M 84 145.6 L 83.5 152 M 88 146.3 L 88 152" stroke="'+T.t+'" stroke-width="2" stroke-linecap="round"/>';
+  g+=sc;
+  g+=spHead(X,47);
+  g+=spPaint(T.m,T.t);
+  /* held in front, so long hair doesn't hide it */
+  g+=spFoam(T);
+  /* knit beanie with a fold-up cuff and a pom-pom */
+  g+='<path d="M 47 48 C 45 21, 70 5, 100 5 C 130 5, 155 21, 153 48 Z" fill="'+T.m+'"/>';
+  g+='<path d="M 62 44 C 62 30, 68 18, 76 11 M 81 45 C 81 30, 84 15, 88 7 M 100 45 L 100 6 M 119 45 C 119 30, 116 15, 112 7 M 138 44 C 138 30, 132 18, 124 11" fill="none" stroke="'+T.d+'" stroke-width="1.6" opacity=".7"/>';
+  g+='<path d="M 49 26 C 70 18, 130 18, 151 26 L 153 33 C 130 25, 70 25, 47 33 Z" fill="'+T.t+'"/>';
+  g+='<path d="M 43 41 C 70 33, 130 33, 157 41 L 158 55 C 130 47, 70 47, 42 55 Z" fill="'+T.t+'"/><path d="M 48 47 C 72 40, 128 40, 152 47" fill="none" stroke="'+T.d+'" stroke-width="1.4" stroke-dasharray="2 3" opacity=".6"/>';
+  g+='<circle cx="100" cy="2" r="11" fill="'+T.t+'"/><circle cx="96" cy="-1" r="2" fill="#fff" opacity=".7"/><circle cx="104" cy="5" r="1.6" fill="#fff" opacity=".5"/><circle cx="103" cy="-4" r="1.4" fill="#fff" opacity=".5"/>';
+  return g;
+};
+
+/* ---- basketball ---- */
+var SP_TANK='M 86 98 L 92 98 Q 100 113 108 98 L 114 98 C 117 106, 121 112, 128 115 C 128 128, 128 140, 127 152 L 73 152 C 72 140, 72 128, 72 115 C 79 112, 83 106, 86 98 Z';
+function spShorts(X,c,panel,pipe){
+  var d='M 71 144 L 129 144 C 133 156, 134 168, 134 180 L 104 180 L 100 168 L 96 180 L 66 180 C 66 168, 67 156, 71 144 Z';
+  return '<clipPath id="'+X.uid+'bs"><path d="'+d+'"/></clipPath><path d="'+d+'" fill="'+c+'"/>'+
+    '<g clip-path="url(#'+X.uid+'bs)"><path d="M 72 146 C 68 158, 67 170, 67 182 L 75 182 C 75 170, 76 158, 78 146 Z M 128 146 C 132 158, 133 170, 133 182 L 125 182 C 125 170, 124 158, 122 146 Z" fill="'+panel+'"/>'+
+    '<path d="M 78 146 C 76 158, 75 170, 75 182 M 122 146 C 124 158, 125 170, 125 182" fill="none" stroke="'+pipe+'" stroke-width="1.8"/><rect x="60" y="144" width="80" height="6" fill="'+pipe+'"/><rect x="60" y="176" width="80" height="4" fill="'+pipe+'" opacity=".8"/></g>';
+}
+function spBasket(X,away){
+  var T=spTm(),S=X.S,g='';
+  var J=away?'#F7F7F7':T.m,bind=away?T.m:'#fff',num=away?T.m:'#fff',numE=away?T.t:T.d;
+  g+=X.legs(S)+X.limbs('l',178,16,'#fff')+X.limbs('l',182,2.5,T.m)+X.limbs('l',186,2.5,T.m);
+  g+=spHighTop(away?'#F4F5F7':T.m,away?T.m:T.t,away?T.m:'#fff',away?T.m:'#fff');
+  g+=away?spShorts(X,'#F7F7F7',T.m,T.t):spShorts(X,T.m,'#fff',T.t);
+  g+=X.arms(S);
+  g+=spBand(X,'a',50,150,158,7,away?T.m:'#fff');
+  g+='<clipPath id="'+X.uid+'tk"><path d="'+SP_TANK+'"/></clipPath><path d="'+SP_TANK+'" fill="'+J+'"/>';
+  g+='<g clip-path="url(#'+X.uid+'tk)"><path d="M 72 152 L 73 120 C 79 118, 84 112, 87 104 M 128 152 L 127 120 C 121 118, 116 112, 113 104" fill="none" stroke="'+(away?T.t:T.d)+'" stroke-width="2" opacity=".5"/>'+
+    '<path d="M 72 154 L 128 154" stroke="'+bind+'" stroke-width="5"/></g>';
+  g+='<path d="M 86 98 Q 100 116 114 98" fill="none" stroke="'+bind+'" stroke-width="3.2"/>'+
+    '<path d="M 86 98 C 83 106, 79 112, 72 115 M 114 98 C 117 106, 121 112, 128 115" fill="none" stroke="'+bind+'" stroke-width="3.2" stroke-linecap="round"/>';
+  g+=spNum(T.n,100,131,20,num,numE);
+  g+=X.hands();
+  g+=csHead(X);
+  if(away)g+='<path d="M 49 44 C 70 35, 130 35, 151 44 L 152 52 C 130 43, 70 43, 48 52 Z" fill="'+T.m+'"/><path d="M 49 47 C 70 38.5, 130 38.5, 151 47" fill="none" stroke="#fff" stroke-width="1.6" opacity=".7"/>';
+  return g;
+}
+ART.skin.bbhome=function(X){return spBasket(X,false);};
+ART.skin.bbaway=function(X){return spBasket(X,true);};
+/* a little basketball: orange ball and black seams, for graphics and the fan's headband */
+function spBall(cx,cy,r){
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#F28A2E"/>'+
+    '<path d="M '+(cx-r)+' '+cy+' L '+(cx+r)+' '+cy+' M '+cx+' '+(cy-r)+' L '+cx+' '+(cy+r)+' M '+(cx-r*0.68)+' '+(cy-r*0.72)+' C '+(cx-r*0.3)+' '+(cy-r*0.3)+', '+(cx-r*0.3)+' '+(cy+r*0.3)+', '+(cx-r*0.68)+' '+(cy+r*0.72)+' M '+(cx+r*0.68)+' '+(cy-r*0.72)+' C '+(cx+r*0.3)+' '+(cy-r*0.3)+', '+(cx+r*0.3)+' '+(cy+r*0.3)+', '+(cx+r*0.68)+' '+(cy+r*0.72)+'" fill="none" stroke="#2a1a10" stroke-width="'+(r*0.12).toFixed(2)+'"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#2a1a10" stroke-width="'+(r*0.12).toFixed(2)+'"/>';
+}
+/* fan: big team tee with a basketball on it, joggers, high-tops, wristbands, face paint, and a bobble headband */
+ART.skin.bbfan=function(X){
+  var T=spTm(),S=X.S,g='',GR='#8A93A3';
+  g+=X.legs(GR)+spBand(X,'l',72,78,150,40,T.m)+spBand(X,'l',122,128,150,40,T.m)+spBand(X,'l',60,140,184,6,'#6E7685');
+  g+=spHighTop(T.m,T.t,'#fff','#fff');
+  g+='<path d="M 72 146 L 128 146 C 130 152, 130 158, 128 162 L 72 162 C 70 158, 70 152, 72 146 Z" fill="'+GR+'"/>';
+  g+=X.arms(S)+spBand(X,'a',50,150,156,8,T.t)+X.hands();
+  var TS='M 82 98 C 70 98, 60 105, 56 122 L 70 127 C 70 138, 70 150, 70 158 L 130 158 C 130 150, 130 138, 130 127 L 144 122 C 140 105, 130 98, 118 98 Z';
+  g+='<path d="'+TS+'" fill="'+T.m+'"/><path d="M 88 98 Q 100 108 112 98" fill="none" stroke="'+T.t+'" stroke-width="3.4" stroke-linecap="round"/>';
+  g+='<path d="M 57 118 L 70 123 M 143 118 L 130 123" stroke="'+T.d+'" stroke-width="2"/>';
+  g+=spBall(100,130,15)+'<path d="M 82 151 L 118 151" stroke="'+T.t+'" stroke-width="3.6" stroke-linecap="round"/>';
+  g+=csHead(X);
+  /* face paint: a basketball on one cheek, a heart on the other */
+  g+=spBall(79,87,5.5)+csHeart(121,87,1.25,T.m);
+  /* bobble headband: two basketballs on springs */
+  g+='<path d="M 42 58 C 42 12, 158 12, 158 58" fill="none" stroke="'+T.m+'" stroke-width="6" stroke-linecap="round"/>';
+  g+='<path d="M 68 24 L 63 20 L 69 16 L 63 12 L 69 8 L 64 4" fill="none" stroke="#9aa0a6" stroke-width="2" stroke-linejoin="round"/><path d="M 132 24 L 137 20 L 131 16 L 137 12 L 131 8 L 136 4" fill="none" stroke="#9aa0a6" stroke-width="2" stroke-linejoin="round"/>';
+  g+=spBall(62,-2,8)+spBall(138,-2,8);
+  return g;
+};
+
+/* ---- baseball ---- */
+var SP_BSJ='M 84 98 C 72 98, 61 104, 57 118 L 69 126 C 70 136, 71 146, 72 152 L 128 152 C 129 146, 130 136, 131 126 L 143 118 C 139 104, 128 98, 116 98 Z';
+/* ball cap: crown, stitched panels, button, front logo, brim. front: color of the two front panels (trucker style for fans) */
+function spCap(T,front){
+  var g='<path d="M 47 50 C 45 22, 70 5, 100 5 C 130 5, 155 22, 153 50 Z" fill="'+T.m+'"/>';
+  if(front)g+='<path d="M 70 50 C 70 26, 80 10, 100 6 C 120 10, 130 26, 130 50 Z" fill="'+front+'"/>';
+  g+='<path d="M 100 6 L 100 48 M 72 48 C 72 28, 82 13, 100 6 C 118 13, 128 28, 128 48" fill="none" stroke="'+T.d+'" stroke-width="1.4" opacity=".55"/>';
+  g+='<circle cx="100" cy="5" r="4" fill="'+T.d+'"/>';
+  g+='<circle cx="100" cy="31" r="10.5" fill="'+(front?T.m:'#fff')+'"/>'+avStar(100,31.5,8,3.4,front?'#fff':T.m);
+  g+='<path d="M 44 50 C 60 43, 140 43, 156 50 C 156 60, 140 65, 100 65 C 60 65, 44 60, 44 50 Z" fill="'+T.m+'"/><path d="M 48 52 C 64 47, 136 47, 152 52" fill="none" stroke="'+T.d+'" stroke-width="2" opacity=".5"/>';
+  g+='<path d="M 66 66 C 80 70, 120 70, 134 66" fill="none" stroke="#000" stroke-width="4" opacity=".12" stroke-linecap="round"/>';
+  return g;
+}
+/* batting helmet: glossy shell, short brim, and an ear flap on one side */
+function spBatHelmet(T){
+  var g='<path d="M 40 57 C 38 22, 68 1, 100 1 C 132 1, 162 22, 160 57 Z" fill="'+T.m+'"/>';
+  g+='<path d="M 41 46 C 37 66, 40 84, 48 95 C 55 101, 64 99, 67 90 C 68 78, 66 64, 62 52 Z" fill="'+T.m+'"/><path d="M 44 70 C 46 76, 50 80, 56 80" fill="none" stroke="'+T.d+'" stroke-width="1.6" opacity=".6"/>';
+  g+='<circle cx="52" cy="70" r="2" fill="'+T.d+'"/><circle cx="57" cy="74" r="2" fill="'+T.d+'"/><circle cx="52" cy="77" r="2" fill="'+T.d+'"/>';
+  g+='<path d="M 50 55 C 68 48, 132 48, 150 55 C 150 63, 132 67, 100 67 C 68 67, 50 63, 50 55 Z" fill="'+T.d+'"/>';
+  g+=avStar(132,30,8,3.4,T.t)+'<path d="M 58 34 C 64 18, 80 9, 96 8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/><circle cx="58" cy="44" r="2.6" fill="#fff" opacity=".6"/>';
+  g+='<path d="M 66 68 C 80 72, 120 72, 134 68" fill="none" stroke="#000" stroke-width="4" opacity=".12" stroke-linecap="round"/>';
+  return g;
+}
+function spBaseball(X,bat){
+  var T=spTm(),S=X.S,g='',P=bat?'#B9BEC6':'#F4F4F2',J=bat?T.m:'#F7F7F4';
+  g+=X.legs(S)+X.limbs('l',139,49,P)+spBand(X,'l',72,76,146,42,T.m)+spBand(X,'l',124,128,146,42,T.m);
+  g+=X.limbs('l',188,22,T.m)+X.limbs('l',192,2,'#fff');
+  g+=spCleats('#1d1c22','#fff');
+  g+='<path d="M 72 145 L 128 145 C 130 156, 129 166, 127 172 L 104 174 L 100 166 L 96 174 L 73 172 C 71 166, 70 156, 72 145 Z" fill="'+P+'"/>';
+  g+='<rect x="72" y="146" width="56" height="6" rx="2" fill="'+T.d+'"/><rect x="80" y="145.5" width="3" height="7" fill="'+P+'"/><rect x="117" y="145.5" width="3" height="7" fill="'+P+'"/>';
+  g+=X.arms(bat?S:T.m)+(bat?spBand(X,'a',50,150,160,12,'#fff'):'');
+  g+='<clipPath id="'+X.uid+'bj"><path d="'+SP_BSJ+'"/></clipPath><path d="'+SP_BSJ+'" fill="'+J+'"/>';
+  var pin='';
+  if(!bat){for(var x=63;x<140;x+=5.5)pin+='<rect x="'+x+'" y="96" width="1.1" height="60" fill="'+T.m+'" opacity=".55"/>';}
+  g+='<g clip-path="url(#'+X.uid+'bj)">'+pin+'<path d="M 55 116 L 69 124 M 145 116 L 131 124" stroke="'+(bat?'#fff':T.m)+'" stroke-width="3.2"/></g>';
+  g+='<path d="M 89 98 L 100 108 L 111 98 Z" fill="'+(bat?'#fff':T.m)+'"/><path d="M 84 98 C 92 100, 96 104, 100 109 C 104 104, 108 100, 116 98" fill="none" stroke="'+(bat?'#fff':T.m)+'" stroke-width="2.6"/>';
+  g+='<path d="M 100 109 L 100 152" stroke="'+(bat?'#fff':T.m)+'" stroke-width="2"/>'+[116,126,136,146].map(function(y){return '<circle cx="103" cy="'+y+'" r="1.4" fill="'+(bat?'#fff':T.d)+'"/>';}).join('');
+  g+=spNum(T.n,86,123,11,bat?'#fff':T.m,bat?T.d:T.t);
+  g+='<path d="M 108 128 C 112 120, 120 117, 126 120" fill="none" stroke="'+(bat?T.t:T.m)+'" stroke-width="2.6" stroke-linecap="round"/>';
+  g+=bat?'<circle cx="67" cy="172" r="7.5" fill="#fff"/><circle cx="133" cy="172" r="7.5" fill="#fff"/><path d="M 62 170 L 72 170 M 128 170 L 138 170" stroke="'+T.m+'" stroke-width="2"/>':X.hands();
+  if(bat){g+=spHead(X,54);g+=spBatHelmet(T);}
+  else{g+=spHead(X,50);g+=spCap(T,null);}
+  return g;
+}
+ART.skin.bsfield=function(X){return spBaseball(X,false);};
+ART.skin.bsbat=function(X){return spBaseball(X,true);};
+/* a little baseball: white with red stitches */
+function spBaseballBall(cx,cy,r){
+  var s=r*0.13;
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#FBFBF8" stroke="#C9C9C2" stroke-width="'+(r*0.08).toFixed(2)+'"/>'+
+    '<path d="M '+(cx-r*0.62)+' '+(cy-r*0.78)+' C '+(cx-r*0.25)+' '+(cy-r*0.35)+', '+(cx-r*0.25)+' '+(cy+r*0.35)+', '+(cx-r*0.62)+' '+(cy+r*0.78)+' M '+(cx+r*0.62)+' '+(cy-r*0.78)+' C '+(cx+r*0.25)+' '+(cy-r*0.35)+', '+(cx+r*0.25)+' '+(cy+r*0.35)+', '+(cx+r*0.62)+' '+(cy+r*0.78)+'" fill="none" stroke="#D8312A" stroke-width="'+(r*0.1).toFixed(2)+'" stroke-dasharray="'+s.toFixed(2)+' '+s.toFixed(2)+'"/>';
+}
+/* fan: trucker cap, raglan tee, shorts, sneakers, baseball face paint, and a team pennant */
+ART.skin.bsfan=function(X){
+  var T=spTm(),S=X.S,g='',K='#C9B48A';
+  g+=X.legs(S)+X.limbs('l',192,10,'#fff');
+  g+=csSneak(T.m,'#fff','#fff',T.d,6);
+  g+='<path d="M 70 146 L 130 146 C 133 158, 134 170, 134 180 L 104 180 L 100 170 L 96 180 L 66 180 C 66 170, 67 158, 70 146 Z" fill="'+K+'"/><rect x="70" y="146" width="60" height="5" fill="#A8946A"/><path d="M 80 158 C 84 160, 88 160, 92 158 M 108 158 C 112 160, 116 160, 120 158" fill="none" stroke="#A8946A" stroke-width="1.6"/>';
+  g+=X.arms(S)+X.limbs('a',95,48,T.m)+X.hands();
+  var RT='M 82 98 C 70 98, 60 105, 56 122 L 70 127 C 70 138, 70 150, 70 156 L 130 156 C 130 150, 130 138, 130 127 L 144 122 C 140 105, 130 98, 118 98 Z';
+  g+='<clipPath id="'+X.uid+'rg"><path d="'+RT+'"/></clipPath><path d="'+RT+'" fill="#F7F7F4"/>';
+  g+='<g clip-path="url(#'+X.uid+'rg)"><path d="M 40 96 L 86 96 L 74 132 L 40 132 Z M 160 96 L 114 96 L 126 132 L 160 132 Z" fill="'+T.m+'"/></g>';
+  g+='<path d="M 86 98 Q 100 110 114 98" fill="none" stroke="'+T.m+'" stroke-width="3.4" stroke-linecap="round"/>';
+  g+=spBaseballBall(100,132,13);
+  g+='<path d="M 82 151 L 118 151" stroke="'+T.m+'" stroke-width="3.6" stroke-linecap="round"/>';
+  g+=spHead(X,50);
+  g+=spBaseballBall(79,87,5.5)+spBaseballBall(121,87,5.5);
+  g+=spCap(T,'#F7F7F4');
+  /* pennant in the left hand when it's free, held in front of long hair */
+  if(spShield())g+='<g transform="rotate(-18 67 172)"><rect x="65" y="96" width="3.5" height="84" rx="1.5" fill="#B4803E"/><path d="M 68 99 L 68 129 L 22 114 Z" fill="'+T.m+'"/><path d="M 68 106 L 68 113 L 46 114 Z" fill="#fff" opacity=".9"/>'+avStar(59,114,4.6,2,T.t)+'</g><circle cx="67" cy="172" r="7.5" fill="'+S+'"/>';
+  return g;
+};
+
+/* ---- shields, glove, bat ---- */
+var SP_SHP='M 14 120 L 62 120 L 62 162 Q 62 192 38 204 Q 14 192 14 162 Z';
+ART.shield.football=function(hand){
+  var id='x'+(PCN++);
+  return '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6E3518"/><stop offset=".35" stop-color="#A9592A"/><stop offset="1" stop-color="#7A3C1B"/></linearGradient><clipPath id="'+id+'c"><path d="'+SP_SHP+'"/></clipPath></defs>'+
+    '<path d="'+SP_SHP+'" fill="url(#'+id+')" stroke="#4A230F" stroke-width="4" stroke-linejoin="round"/>'+
+    '<g clip-path="url(#'+id+'c)"><rect x="10" y="128" width="56" height="5" fill="#fff"/><rect x="10" y="183" width="56" height="5" fill="#fff"/></g>'+
+    '<rect x="35" y="140" width="6" height="36" rx="2" fill="#fff"/>'+[144,151,158,165,172].map(function(y){return '<rect x="29" y="'+y+'" width="18" height="3" rx="1.5" fill="#fff"/>';}).join('')+
+    '<path d="M 20 130 C 20 150, 20 168, 24 182" fill="none" stroke="#fff" stroke-width="2" opacity=".25" stroke-linecap="round"/>'+wpHL(hand);
+};
+ART.shield.basketball=function(hand){
+  var g='<circle cx="38" cy="162" r="27" fill="#2a1a10"/>'+spBall(38,162,24),i,s=17;
+  for(i=0;i<40;i++){s=(s*137+59)%1009;var a=(s%360)*Math.PI/180;s=(s*137+59)%1009;var r=4+(s%19);g+='<circle cx="'+(38+r*Math.cos(a)).toFixed(1)+'" cy="'+(162+r*Math.sin(a)).toFixed(1)+'" r=".8" fill="#C4621A" opacity=".7"/>';}
+  return g+'<path d="M 23 150 Q 28 143 37 141" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5"/>'+wpHL(hand);
+};
+ART.shield.baseball=function(hand){
+  var id='x'+(PCN++),st='stroke-dasharray="2.6 2.6"';
+  return '<defs><clipPath id="'+id+'"><path d="'+SP_SHP+'"/></clipPath></defs><path d="'+SP_SHP+'" fill="#FBFBF8" stroke="#9AA3AD" stroke-width="4" stroke-linejoin="round"/>'+
+    '<g clip-path="url(#'+id+')"><path d="M 22 120 C 32 140, 32 176, 20 200 M 54 120 C 44 140, 44 176, 56 200" fill="none" stroke="#D8312A" stroke-width="2.4"/>'+
+    '<path d="M 25 122 C 35 142, 35 176, 24 198 M 51 122 C 41 142, 41 176, 52 198" fill="none" stroke="#D8312A" stroke-width="3.2" '+st+'/></g>'+
+    '<path d="M 18 126 L 18 158" stroke="#E6E6DF" stroke-width="3" stroke-linecap="round"/>'+wpHL(hand);
+};
+/* the glove covers the left hand, with a ball tucked in the pocket */
+ART.shield.glove=function(hand){
+  var L='#B8682F',LD='#8A4A1F',LL='#D98F52';
+  return '<path d="M 38 126 C 30 128, 26 140, 26 154 C 26 172, 34 186, 50 188 C 62 189, 74 184, 78 172 C 82 164, 86 154, 84 146 C 82 140, 76 140, 74 146 L 70 156 L 70 128 C 70 122, 63 121, 62 127 L 61 124 C 60 118, 52 118, 52 124 L 51 124 C 49 118, 41 119, 41 125 Z" fill="'+L+'" stroke="'+LD+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M 70 156 C 72 150, 76 146, 80 147 L 76 162 Z" fill="'+LD+'" opacity=".6"/><path d="M 72 152 L 80 150 M 71 157 L 79 156" stroke="'+LL+'" stroke-width="1.4"/>'+
+    '<path d="M 51 126 L 51 150 M 61 127 L 61 150 M 41 127 L 40 150" fill="none" stroke="'+LD+'" stroke-width="1.6" opacity=".8"/>'+
+    '<path d="M 40 124 L 42 128 M 50 122 L 52 126 M 60 123 L 62 127 M 69 127 L 71 130" stroke="'+LL+'" stroke-width="1.6" stroke-linecap="round"/>'+
+    '<path d="M 32 176 C 40 184, 58 186, 70 178" fill="none" stroke="'+LD+'" stroke-width="5" stroke-linecap="round"/><path d="M 32 176 C 40 184, 58 186, 70 178" fill="none" stroke="'+LL+'" stroke-width="1.4" stroke-dasharray="3 3"/>'+
+    spBaseballBall(50,158,10.5);
+};
+ART.sword.bat=function(hand,sw){
+  var id='x'+(PCN++);
+  return wpTilt('<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B9844A"/><stop offset=".4" stop-color="#F0C98E"/><stop offset="1" stop-color="#A8733C"/></linearGradient></defs>'+
+    '<path d="M 131.5 190 L 131 150 C 130.5 132, 127 112, 127 92 C 127 76, 129.5 68, 134 68 C 138.5 68, 141 76, 141 92 C 141 112, 137.5 132, 137 150 L 136.5 190 Z" fill="url(#'+id+')"/>'+
+    '<path d="M 130 84 C 130 98, 131 110, 132 120 M 137.5 80 C 137.8 92, 137.5 104, 136.8 116" fill="none" stroke="#A8733C" stroke-width=".9" opacity=".7"/>'+
+    '<ellipse cx="134" cy="104" rx="3.2" ry="7" fill="#7A4A1F" opacity=".75"/><path d="M 132.6 101 L 135.4 101 M 132.4 104 L 135.6 104 M 132.6 107 L 135.4 107" stroke="#F0C98E" stroke-width=".9"/>'+
+    '<rect x="130.6" y="160" width="6.8" height="26" rx="1.5" fill="#1F1D24"/><path d="M 130.6 164 L 137.4 166 M 130.6 170 L 137.4 172 M 130.6 176 L 137.4 178 M 130.6 182 L 137.4 184" stroke="#4A4652" stroke-width="1.2"/>'+
+    '<ellipse cx="134" cy="191" rx="6" ry="3" fill="#8A5A2B"/>'+
+    '<path d="M 131 76 C 131.5 72, 133 70, 134.5 70" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>',hand);
+};
+
+/* ---- player cards ---- */
+/* night game: light towers, a packed crowd, a yellow goal post, yard lines */
+ART.card.football=function(X){var K=X.K,ln=X.ln,e=cdcEdge(K,2),id=X.id,o,crowd='',i,x,r;
+  o=cdcSky(id+'s',[[0,'#0b1640'],[.6,'#23306b'],[1,'#3d4a8a']])+cdcStars(14,7,40,'#c9d6ff');
+  for(r=0;r<4;r++){for(x=-6+(r%2)*6;x<210;x+=12){crowd+='<circle cx="'+x+'" cy="'+(78+r*12)+'" r="4.3" fill="'+['#ff5a6e','#ffd23f','#fff8e8','#4da3ff','#3ddc97'][(x/6+r*2)%5|0]+'"/>';}}
+  function tower(tx){return '<rect x="'+(tx-2.5)+'" y="14" width="5" height="56" fill="#7b7f8f"'+cdcEdge(K,1.4)+'/><rect x="'+(tx-16)+'" y="-2" width="32" height="18" rx="2" fill="#3a3f55"'+e+'/>'+
+    [0,1,2,3].map(function(c){return [0,1].map(function(rr){return '<circle cx="'+(tx-11+c*7.3)+'" cy="'+(3+rr*7.5)+'" r="2.8" fill="#fffbe0"/>';}).join('');}).join('')+
+    '<g class="tglow"><ellipse cx="'+tx+'" cy="7" rx="30" ry="18" fill="#fffbe0" opacity=".22"/></g>';}
+  o+='<rect x="-20" y="66" width="240" height="58" fill="#2b2846"'+e+'/>'+crowd+tower(18)+tower(182);
+  o+='<rect x="-20" y="118" width="240" height="10" fill="#e24b4a"'+e+'/>';
+  for(i=0;i<9;i++)o+='<rect x="'+(-8+i*26)+'" y="120" width="12" height="6" rx="1" fill="#fff" opacity=".85"/>';
+  o+='<rect x="-20" y="128" width="240" height="120" fill="#3fa34d"/>';
+  for(i=0;i<6;i++)o+='<rect x="-20" y="'+(128+i*20)+'" width="240" height="10" fill="#4cb85a"/>';
+  o+=ln('M-20 146 H220 M-20 172 H220 M-20 204 H220 M-20 242 H220','#fff',2.6);
+  for(x=-10;x<220;x+=14)o+=ln('M'+x+' 157 v5 M'+x+' 186 v6 M'+x+' 220 v7','#fff',1.6);
+  /* the goal post, off to one side so the knight doesn't hide it */
+  var gp='M 24 134 V 104 M 6 104 H 42 M 6 104 V 62 M 42 104 V 62';
+  o+='<path d="'+gp+'" fill="none" stroke="'+K+'" stroke-width="6.5" stroke-linecap="round"/><path d="'+gp+'" fill="none" stroke="#ffd23f" stroke-width="3.6" stroke-linecap="round"/>';
+  o+='<g transform="translate(176 206) rotate(-25)"><ellipse rx="13" ry="8" fill="#9a4f22"'+e+'/><path d="M -6 0 H 6 M -4 -2.5 V 2.5 M 0 -2.5 V 2.5 M 4 -2.5 V 2.5" stroke="#fff" stroke-width="1.5"/><path d="M -10 -4 v8 M 10 -4 v8" stroke="#fff" stroke-width="1.6"/></g>';
+  return o;
+};
+/* indoor court: banners, a scoreboard, the hoop on the right, wood floor and the painted key */
+ART.card.basketball=function(X){var K=X.K,ln=X.ln,e=cdcEdge(K,2),o,crowd='',i,x,r;
+  o='<rect x="-20" y="-20" width="240" height="270" fill="#2a2150"/>';
+  for(r=0;r<5;r++){for(x=-6+(r%2)*6;x<210;x+=12){crowd+='<circle cx="'+x+'" cy="'+(58+r*12)+'" r="4.2" fill="'+['#ffd23f','#ff7a1a','#fff8e8','#8b5cf6','#4da3ff'][(x/6+r*3)%5|0]+'" opacity=".9"/>';}}
+  o+='<rect x="-20" y="48" width="240" height="72" fill="#3b2f6e"/>'+crowd;
+  [[6,'#e24b4a'],[30,'#ffd23f'],[150,'#378add'],[174,'#3ddc97']].forEach(function(b){o+='<path d="M'+b[0]+' -12 H'+(b[0]+18)+' V24 L'+(b[0]+9)+' 18 L'+b[0]+' 24 Z" fill="'+b[1]+'"'+e+'/>';});
+  o+='<rect x="64" y="-6" width="72" height="36" rx="5" fill="#1b1442"'+e+'/><rect x="70" y="0" width="26" height="16" rx="2" fill="#000"/><rect x="104" y="0" width="26" height="16" rx="2" fill="#000"/>'+spNum('12',83,8,10,'#ff5a3d',null)+spNum('8',117,8,10,'#ffd23f',null)+'<rect x="78" y="21" width="44" height="5" rx="2" fill="#3ddc97" opacity=".8"/>';
+  o+='<rect x="-20" y="118" width="240" height="8" fill="#e24b4a"'+e+'/>';
+  o+='<rect x="-20" y="126" width="240" height="122" fill="#e2a462"/>';
+  for(i=0;i<16;i++)o+=ln('M'+(-20+i*16)+' 126 L'+(-60+i*22)+' 248','#c9864a',1.2);
+  o+=ln('M-20 150 H220','#c9864a',1)+ln('M-20 190 H220','#c9864a',1);
+  o+='<path d="M 62 126 L 138 126 L 152 196 L 48 196 Z" fill="#7f77dd" opacity=".85"/>'+ln('M 62 126 L 48 196 H 152 L 138 126','#fff',2.6)+'<path d="M 64 196 C 64 226, 136 226, 136 196" fill="none" stroke="#fff" stroke-width="2.6"/>';
+  o+='<path d="M -20 218 C 30 140, 170 140, 220 218" fill="none" stroke="#fff" stroke-width="2.6"/>';
+  /* the hoop */
+  o+='<rect x="183" y="58" width="6" height="70" fill="#7b7f8f"'+cdcEdge(K,1.4)+'/><rect x="150" y="40" width="46" height="34" rx="3" fill="#fff" opacity=".92"'+e+'/><rect x="164" y="54" width="18" height="14" fill="none" stroke="#e24b4a" stroke-width="2"/>'+
+    '<path d="M 160 76 L 163 98 L 168 96 L 173 98 L 178 96 L 181 98 L 186 76" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M 162 84 L 184 84 M 163 91 L 183 91 M 166 76 L 168 96 M 173 76 L 173 98 M 180 76 L 178 96" stroke="#fff" stroke-width="1"/>'+
+    '<ellipse cx="173" cy="76" rx="14" ry="3.5" fill="none" stroke="'+K+'" stroke-width="4"/><ellipse cx="173" cy="76" rx="14" ry="3.5" fill="none" stroke="#ff7a1a" stroke-width="2.4"/>';
+  o+=spBall(26,206,11);
+  return o;
+};
+/* sunny ballpark: outfield wall with a scoreboard, mowed grass, the infield dirt, a base */
+ART.card.baseball=function(X){var K=X.K,ln=X.ln,e=cdcEdge(K,2),id=X.id,o,crowd='',i,x,r;
+  o=cdcSky(id+'s',[[0,'#59b2f0'],[1,'#c9ecff']])+cdcCloud(40,18,1,'#fff')+cdcCloud(150,30,.8,'#fff');
+  for(r=0;r<3;r++){for(x=-6+(r%2)*6;x<210;x+=12){crowd+='<circle cx="'+x+'" cy="'+(66+r*12)+'" r="4.3" fill="'+['#e24b4a','#fff8e8','#378add','#ffd23f','#ff9ecb'][(x/6+r)%5|0]+'"/>';}}
+  o+='<rect x="-20" y="58" width="240" height="40" fill="#556078"'+e+'/>'+crowd;
+  o+='<rect x="-20" y="96" width="240" height="34" fill="#2f7a46"'+e+'/>'+ln('M-20 99 H220','#ffd23f',3);
+  /* scoreboard on the right, inning boxes and the score, so the knight's head doesn't hide it */
+  o+='<rect x="186" y="34" width="6" height="26" fill="#7b7f8f"/><rect x="138" y="-8" width="64" height="46" rx="4" fill="#1f5a36"'+e+'/><rect x="143" y="-3" width="54" height="8" rx="2" fill="#ffd23f" opacity=".75"/>';
+  for(i=0;i<6;i++)o+='<rect x="'+(143+i*9)+'" y="10" width="7" height="9" rx="1" fill="#173f27"/><rect x="'+(143+i*9)+'" y="23" width="7" height="9" rx="1" fill="#173f27"/>';
+  o+=spNum('3',146.5,14.5,5,'#ffd23f',null)+spNum('7',155.5,27.5,5,'#ffd23f',null)+spNum('2',164.5,14.5,5,'#ffd23f',null)+spNum('8',182.5,27.5,5,'#ffd23f',null);
+  o+='<rect x="20" y="106" width="30" height="16" rx="2" fill="#256a3b"/>'+spNum('400',35,114,8,'#ffd23f',null);
+  o+='<rect x="12" y="-2" width="4" height="62" fill="#7b7f8f"'+cdcEdge(K,1.2)+'/><rect x="-2" y="-10" width="32" height="13" rx="2" fill="#3a3f55"'+e+'/>'+[4,11,18,25].map(function(x){return '<circle cx="'+x+'" cy="-3.5" r="2.4" fill="#fffbe0"/>';}).join('');
+  o+='<rect x="-20" y="130" width="240" height="118" fill="#4fae55"/>';
+  for(i=0;i<8;i++)o+='<path d="M'+(-30+i*36)+' 130 L'+(-12+i*36)+' 130 L'+(-40+i*54)+' 248 L'+(-70+i*54)+' 248 Z" fill="#5fc066"/>';
+  o+='<path d="M -20 196 C 30 172, 170 172, 220 196 L 220 248 L -20 248 Z" fill="#c98a4b"'+e+'/><ellipse cx="100" cy="222" rx="42" ry="10" fill="#d99b5a"/><rect x="88" y="218" width="24" height="5" rx="1" fill="#fff"'+cdcEdge(K,1.2)+'/>';
+  o+=ln('M -20 238 L 30 196 M 220 238 L 170 196','#fff',2.4);
+  o+='<rect x="158" y="186" width="18" height="18" rx="2" fill="#fff" transform="rotate(45 167 195) scale(1 1)"'+cdcEdge(K,1.6)+'/>';
+  return o;
 };
 /* ---------- mode: ops ---------- */
 /* ---------- mode: Order of Operations sidekick battle ----------
@@ -5201,11 +5633,12 @@ function vsEndUpd(r){
 var CTABS=[['outfit','Outfit',['skin','armor','tabard','cloak']],['head','Head',['head','hair','haircol']],['acc','Accessories',['eyes','lash','ears','neck','brace','beard']],['weapons','Weapons',['shield','sword']],['sidekick','Sidekick & Card',['pet','card']]];
 var CTAB='outfit',EXP={};
 /* tabs in the Skin row; SKCAT stays null until the panel picks the category of the worn skin */
-var SKCATS=[['Heroes',['gamer','hero','knight','dragon']],['Cute',['cdress','ggamer','cskirt','cstreet','cberry','csun','jbunny','kitty','bunny','puppy','frog']],['Animals',['capy','tiger','gecko','penguin','wolf','turtle','axolotl','drake','zap','fox','spook','shark','kraken']],['Ninja',['nteal','npink','nsun','nfly']],['Space',['astro','ufo']],['Pirates',['pskipper','pcaptain','pegleg','naval']],['Sports',['soccer','stripe','hoops','keeper']]];
+var SKCATS=[['Heroes',['gamer','hero','knight','dragon']],['Cute',['cdress','ggamer','cskirt','cstreet','cberry','csun','jbunny','kitty','bunny','puppy','frog']],['Animals',['capy','tiger','gecko','penguin','wolf','turtle','axolotl','drake','zap','fox','spook','shark','kraken']],['Ninja',['nteal','npink','nsun','nfly']],['Space',['astro','ufo']],['Pirates',['pskipper','pcaptain','pegleg','naval']],['Soccer',['soccer','stripe','hoops','keeper']],['Football',['fbhome','fbaway','fbfan']],['Basketball',['bbhome','bbaway','bbfan']],['Baseball',['bsfield','bsbat','bsfan']]];
 var SKCAT=null;
 function skinCat(k){for(var i=0;i<SKCATS.length;i++){if(SKCATS[i][1].indexOf(k)>=0)return SKCATS[i][0];}return SKCATS[0][0];}
 var VCOL={Crimson:'#FF5A6E',Jade:'#3DDC97',Topaz:'#FFC83D',Sapphire:'#4DA3FF'};
-function variantOf(n){
+function variantOf(n,o){
+  if(o&&o.vg){var t=SPT[o.tm]||SPT.red;return {base:o.vg,label:t.l,col:t.m};}
   var m=n.match(/^(Crimson|Jade|Topaz|Sapphire) (Symbiote.*)$/);if(m)return {base:m[2],label:m[1],col:VCOL[m[1]]};
   var g=n.match(/^Gold (helmet|plumed helmet|great helm)$/);if(g)return {base:{'helmet':'Knight helmet','plumed helmet':'Plumed helmet','great helm':'Great helm'}[g[1]],label:'Gold',col:'#ffd23f'};
   return null;
@@ -5266,7 +5699,7 @@ function renderAvatarPanel(){
     // group colour versions of the same item together
     var groups=[],byName={};
     items.forEach(function(pair){
-      var o=pair[0],i=pair[1],v=variantOf(o.n),key=v?v.base:o.n;
+      var o=pair[0],i=pair[1],v=variantOf(o.n,o),key=v?v.base:o.n;
       var g=byName[key];
       if(!g){g=byName[key]={name:key,members:[]};groups.push(g);}
       var m={i:i,o:o,label:v?v.label:null,col:v?v.col:null};
