@@ -46,8 +46,23 @@
             background-size: 250px 250px;
         }
         .num-chip { min-width: 2.25rem; }
+        /* Missing work report: built off-screen and shown only when printing. */
+        #report-print { display: none; }
+        #report-print h1 { font-family: 'Fraunces', serif; font-size: 20pt; margin: 0 0 4pt; }
+        #report-print h2 { font-size: 13pt; margin: 14pt 0 4pt; }
+        #report-print h2 span { font-weight: normal; font-size: 10pt; color: #555; }
+        #report-print table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+        #report-print th, #report-print td { border: 1px solid #999; padding: 3pt 6pt; text-align: left; vertical-align: top; }
+        #report-print th { background: #eee; }
+        #report-print .rp-meta, #report-print .rp-note { font-size: 10pt; color: #444; margin: 0 0 6pt; }
+        #report-print .rp-late { font-weight: bold; }
+        #report-print .rp-student { break-inside: avoid; }
+        #report-print .rp-break { break-before: page; }
         @media print {
-            #turnin-modal, #peek-modal, #activity-modal, #admin-activity, #task-toolbar, #create-toggle-btn { display: none !important; }
+            body.print-report #app { display: none !important; }
+            body.print-report #report-print { display: block; color: black; }
+            #turnin-modal, #peek-modal, #activity-modal, #rewards-modal, #report-modal, #admin-activity, #task-toolbar, #create-toggle-btn,
+            #report-btn, #rewards-btn, #archive-done-btn { display: none !important; }
             html, body, .school-bg, #app { background: none !important; background-color: white !important; }
             html { font-size: 11pt; }
             body { color: black; }
@@ -105,6 +120,7 @@
                 <button id="peek-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
             </div>
             <div id="peek-summary" class="px-5 pb-2 text-sm" style="color:#666;"></div>
+            <p id="peek-rewards" class="hidden px-5 pb-2 text-xs break-words" style="color:#8a6d0b;"></p>
             <p class="px-5 pb-2 text-xs" style="color:#888;">Tap a task to check or un-check it for this student.</p>
             <div id="peek-list" class="flex flex-col gap-2 px-5 pb-3 overflow-y-auto"></div>
             <div class="px-5 pb-4 pt-2">
@@ -127,15 +143,62 @@
             <p id="activity-empty" class="text-center text-sm py-6 hidden" style="color:#aaa;">No completed tasks yet.</p>
         </div>
     </div>
+    <!-- REWARDS MODAL (teacher): prizes students can buy, and what they've spent -->
+    <div id="rewards-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4" role="dialog" aria-modal="true" aria-labelledby="rewards-title">
+        <div class="bg-white rounded-2xl shadow-lg p-5 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-2">
+                <h3 id="rewards-title" class="font-display text-xl font-bold" style="color:#1a1a2e;">Reward Shop</h3>
+                <button id="rewards-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
+            </div>
+            <p class="text-xs mb-3" style="color:#666;">Students tap Redeem to buy these with their tokens. With no prizes, they type how many tokens to spend instead.</p>
+            <div id="prize-list" class="flex flex-col gap-2 mb-3"></div>
+            <div class="rounded-xl p-3 mb-5" style="background:#f5f3ff;">
+                <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Add a prize</p>
+                <div class="flex gap-2">
+                    <label for="prize-name" class="sr-only">Prize name</label>
+                    <input id="prize-name" type="text" maxlength="60" placeholder="e.g. Sit with a friend" class="flex-1 min-w-0 border-2 rounded-xl px-3 py-2 text-base" style="border-color:#ddd;">
+                    <label for="prize-cost" class="sr-only">Cost in tokens</label>
+                    <input id="prize-cost" type="number" min="1" max="9999" placeholder="Cost" class="w-20 border-2 rounded-xl px-3 py-2 text-base" style="border-color:#ddd;">
+                    <button id="prize-add" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#6366f1;">Add</button>
+                </div>
+                <p id="prize-error" class="hidden text-sm mt-2" style="color:#e74c3c;"></p>
+            </div>
+            <h4 class="font-display text-lg font-bold mb-1" style="color:#1a1a2e;">Spent so far</h4>
+            <p class="text-xs mb-2" style="color:#666;">Newest first. Undo gives the tokens back.</p>
+            <div id="redeem-log" class="flex flex-col gap-2"></div>
+            <p id="redeem-log-empty" class="text-center text-sm py-4 hidden" style="color:#aaa;">Nothing spent yet.</p>
+        </div>
+    </div>
+    <!-- MISSING WORK REPORT MODAL (teacher) -->
+    <div id="report-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4" role="dialog" aria-modal="true" aria-labelledby="report-title">
+        <div class="bg-white rounded-2xl shadow-lg p-5 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-2">
+                <h3 id="report-title" class="font-display text-xl font-bold" style="color:#1a1a2e;">Missing Work Report</h3>
+                <button id="report-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
+            </div>
+            <p id="report-summary" class="text-sm mb-3" style="color:#1a1a2e;"></p>
+            <label class="flex items-center gap-2 text-sm mb-2 cursor-pointer" style="color:#1a1a2e;"><input type="checkbox" id="report-late-only" class="w-4 h-4"> Only work that is past due</label>
+            <label class="flex items-center gap-2 text-sm mb-4 cursor-pointer" style="color:#1a1a2e;"><input type="checkbox" id="report-page-each" class="w-4 h-4"> Put each student on their own page (to hand out)</label>
+            <div class="flex gap-2 flex-wrap">
+                <button id="report-print-btn" class="flex-1 py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Print</button>
+                <button id="report-csv-btn" class="flex-1 py-3 rounded-xl font-semibold text-base" style="background:#e8e6ff;color:#6366f1;">Download spreadsheet</button>
+            </div>
+            <p class="text-xs mt-3" style="color:#888;">Uses student numbers only. The spreadsheet saves to this device.</p>
+        </div>
+    </div>
     <datalist id="subject-options"></datalist>
-    <!-- REDEEM MODAL -->
-    <div id="redeem-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
-        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
-            <h3 class="text-xl font-bold mb-2" style="color:#1a1a2e;">Redeem Tokens</h3>
+    <!-- REDEEM MODAL (student): a reward shop when the teacher has set prizes, otherwise type an amount -->
+    <div id="redeem-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4" role="dialog" aria-modal="true" aria-labelledby="redeem-title">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm flex flex-col" style="max-height:90vh;">
+            <h3 id="redeem-title" class="text-xl font-bold mb-2" style="color:#1a1a2e;">Redeem Tokens</h3>
             <p class="text-sm mb-4" style="color:#666;">You have <span id="redeem-balance" class="font-bold" style="color:#b8860b;">0</span> &#129689;</p>
-            <label for="redeem-amount" class="sr-only">Amount</label>
-            <input id="redeem-amount" type="number" min="1" placeholder="How many tokens?" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
-            <p id="redeem-error" class="text-sm mb-3 hidden" style="color:#e74c3c;"></p>
+            <div id="redeem-shop" class="hidden flex flex-col gap-2 overflow-y-auto min-h-0 p-1"></div>
+            <p id="redeem-ask" class="hidden text-lg font-semibold text-center py-4 break-words" style="color:#2d1b4e;"></p>
+            <div id="redeem-custom">
+                <label for="redeem-amount" class="sr-only">Amount</label>
+                <input id="redeem-amount" type="number" min="1" placeholder="How many tokens?" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+            </div>
+            <p id="redeem-error" class="text-sm mt-2 hidden" style="color:#e74c3c;"></p>
             <div class="flex gap-2 justify-end mt-3">
                 <button id="redeem-cancel" class="px-4 py-2 rounded-xl font-semibold" style="background:#e8e6ff;color:#6366f1;">Cancel</button>
                 <button id="redeem-confirm" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#b8860b;">Redeem</button>
@@ -341,7 +404,10 @@
                 </div>
                 <!-- Overview (default) -->
                 <div id="dashboard-overview">
-                    <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">Task Snapshot</h2>
+                    <div class="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                        <h2 class="font-display text-2xl font-bold" style="color:#1a1a2e;">Task Snapshot</h2>
+                        <button id="report-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="printer" style="width:16px;height:16px;"></i> Missing Work Report</button>
+                    </div>
                     <div id="task-snapshot-list" class="flex flex-col gap-2 mb-6"></div>
                     <p id="task-snapshot-empty" class="text-center py-4 mb-6 hidden" style="color:#aaa;">No tasks assigned yet.</p>
                     <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">In Progress</h2>
@@ -359,6 +425,7 @@
                 <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                     <button id="create-toggle-btn" type="button" class="flex items-center gap-2 text-base font-semibold px-4 py-2 rounded-xl text-white" style="background:#6366f1;" aria-expanded="false" aria-controls="add-task-form">+ New Task</button>
                     <div class="flex items-center gap-2 flex-wrap">
+                        <button id="rewards-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#fdf6e3;color:#b8860b;border:1px solid #b8860b;"><i data-lucide="gift" style="width:16px;height:16px;"></i> Rewards</button>
                         <button id="groups-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="users" style="width:16px;height:16px;"></i> Groups</button>
                         <button id="bulk-add-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-plus" style="width:16px;height:16px;"></i> Bulk Add</button>
                     </div>
@@ -418,16 +485,21 @@
                         <option value="open">Still being worked on</option>
                         <option value="done">All students done</option>
                         <option value="scheduled">Scheduled</option>
+                        <option value="archived">Archived</option>
                     </select>
                     <button id="expand-all-btn" type="button" class="text-sm font-medium px-3 py-2 rounded-xl" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;">Open all</button>
                 </div>
                 <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                     <div id="bulk-action-bar" class="items-center gap-2" style="display:none;">
                         <span class="text-xs font-semibold" style="color:#1a1a2e;"><span id="bulk-selected-count">0</span> selected</span>
+                        <button id="bulk-archive-btn" class="text-xs font-semibold px-3 py-2 rounded-lg" style="background:#f3f4f6;color:#374151;border:1px solid #9ca3af;">Archive Selected</button>
                         <button id="bulk-delete-btn" class="text-xs font-semibold px-3 py-2 rounded-lg text-white" style="background:#e74c3c;">Delete Selected</button>
                         <button id="bulk-clear-btn" class="text-xs font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;">Clear</button>
                     </div>
-                    <button id="remove-all-tasks-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg ml-auto" style="background:#ffe8e8;color:#e74c3c;border:1px solid #e74c3c;">Remove All Tasks</button>
+                    <div class="flex items-center gap-2 ml-auto flex-wrap justify-end">
+                        <button id="archive-done-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg" style="background:#f3f4f6;color:#374151;border:1px solid #9ca3af;">Archive Finished Tasks</button>
+                        <button id="remove-all-tasks-btn" class="hidden text-xs font-semibold px-3 py-2 rounded-lg" style="background:#ffe8e8;color:#e74c3c;border:1px solid #e74c3c;">Remove All Tasks</button>
+                    </div>
                 </div>
                 <div id="admin-task-list" class="flex flex-col gap-2"></div>
                 <p id="admin-empty" class="text-center py-10" style="color:#aaa;">No tasks yet. Add one above!</p>
@@ -467,6 +539,7 @@
         </div>
     </div>
 </div>
+<div id="report-print"></div>
 <script>
     // =====================================================================
     // FIREBASE CONFIGURATION
@@ -496,6 +569,8 @@
     function tokensRef()        { return db.ref('teachers/' + teacherUid + '/tokens'); }
     function totalStudentsRef() { return db.ref('teachers/' + teacherUid + '/config/totalStudents'); }
     function groupsRef()        { return db.ref('teachers/' + teacherUid + '/groups'); }
+    function prizesRef()        { return db.ref('teachers/' + teacherUid + '/config/prizes'); }
+    function redeemLogRef()     { return db.ref('teachers/' + teacherUid + '/redemptions'); }
 
     // =====================================================================
     // APP CONFIG
@@ -546,6 +621,8 @@
     let peek = null;                 // { student, fromTaskId } while the teacher's student pop-up is open
     let knownCompletionKeys = null;  // null until the first load, so old check-offs don't raise alerts
     let turnInPending = false;
+    let prizeData = {};      // prizeId -> { name, cost }   (config/prizes, readable by students)
+    let redeemLog = {};      // entryId -> { student, name, cost, at }   (teacher only)
 
     // Scheduled posting and countdowns follow Firebase's clock, so a school
     // device with the wrong time doesn't show tasks early.
@@ -556,17 +633,18 @@
     auth.onAuthStateChanged((user) => {
         if (!user) {
             closePeek();
-            document.getElementById("activity-modal").classList.add("hidden");
-            document.getElementById("activity-badge").classList.add("hidden");
+            ["activity-modal", "rewards-modal", "report-modal", "activity-badge"].forEach(id => document.getElementById(id).classList.add("hidden"));
             isAdminAuthed = false;
             adminCheckPromise = Promise.resolve();
             subscribeToScope(DEFAULT_TEACHER_UID);
             subscribeToGroups(null);
+            subscribeToRedeemLog(null);
             if (currentView === "admin") showView("select");
             return;
         }
         subscribeToScope(user.uid);
         subscribeToGroups(user.uid);
+        subscribeToRedeemLog(user.uid);
         adminCheckPromise = Promise.all([
             db.ref('teachers/' + user.uid + '/profile').get(),
             db.ref('admins/' + user.uid).get()
@@ -608,6 +686,7 @@
 
     function _tokensHandler(snapshot) {
         tokenData = snapshot.val() || {};
+        refreshRedeemIfOpen();
         tokensLoaded = true;
         updateLoadingOverlay();
         if (currentView === "admin") renderAdmin();
@@ -653,6 +732,7 @@
         allData = [];
         tokenData = {};
         knownCompletionKeys = null;
+        prizeData = {};
         recordsLoaded = false;
         tokensLoaded = false;
 
@@ -660,6 +740,7 @@
         const recRef = recordsRef();        recRef.on("value", _recordsHandler);        _activeSubs.push({ ref: recRef, event: "value", handler: _recordsHandler });
         const tokRef = tokensRef();         tokRef.on("value", _tokensHandler);         _activeSubs.push({ ref: tokRef, event: "value", handler: _tokensHandler });
         const cfgRef = totalStudentsRef();  cfgRef.on("value", _totalStudentsHandler);  _activeSubs.push({ ref: cfgRef, event: "value", handler: _totalStudentsHandler });
+        const przRef = prizesRef();         przRef.on("value", _prizesHandler);         _activeSubs.push({ ref: przRef, event: "value", handler: _prizesHandler });
     }
 
     // Groups are teacher-only data: students never read them, so this listener is
@@ -672,6 +753,33 @@
     }
 
     let _groupSub = null;
+
+    function _prizesHandler(snapshot) {
+        prizeData = snapshot.val() || {};
+        refreshRedeemIfOpen();
+        if (!document.getElementById("rewards-modal").classList.contains("hidden")) renderRewards();
+    }
+
+    // The spending log is teacher-only, so it follows sign-in like groups do.
+    function _redeemLogHandler(snapshot) {
+        redeemLog = snapshot.val() || {};
+        if (!document.getElementById("rewards-modal").classList.contains("hidden")) renderRewards();
+        if (peek) renderPeek();
+    }
+
+    let _redeemLogSub = null;
+
+    function subscribeToRedeemLog(uid) {
+        if (_redeemLogSub) {
+            try { _redeemLogSub.ref.off("value", _redeemLogSub.handler); } catch (e) { /* ignore */ }
+            _redeemLogSub = null;
+        }
+        redeemLog = {};
+        if (!uid) return;
+        const ref = db.ref("teachers/" + uid + "/redemptions");
+        ref.on("value", _redeemLogHandler);
+        _redeemLogSub = { ref, handler: _redeemLogHandler };
+    }
 
     function subscribeToGroups(uid) {
         if (_groupSub) {
@@ -783,9 +891,11 @@
                     }
                 }
             }
+            return true;
         } catch (e) {
             console.error("Token update error:", e);
             showToast("Error updating tokens", "error");
+            return false;
         }
     }
 
@@ -875,9 +985,14 @@
     // =====================================================================
     // DATA HELPERS
     // =====================================================================
-    function getTasks() {
+    // Every task, archived ones included, newest first.
+    function getAllTasks() {
         return allData.filter(r => r.type === "task").sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
     }
+    // Archived tasks are put away: students and the dashboard don't see them,
+    // but they (and their check-offs) are kept for looking back on.
+    function getTasks() { return getAllTasks().filter(t => !t.task_archived); }
+    function getArchivedTasks() { return getAllTasks().filter(t => t.task_archived); }
     // A task with a future `task_publish` time is scheduled: only the teacher sees it.
     function isPublished(task) {
         if (!task.task_publish) return true;
@@ -1000,7 +1115,7 @@
     // off until that prerequisite is done, and cannot un-check a prerequisite
     // while something that depends on it is still checked off.
     function getTaskById(taskId) {
-        return getTasks().find(t => t.task_id === taskId) || null;
+        return getAllTasks().find(t => t.task_id === taskId) || null;
     }
 
     // The prerequisite that actually applies to this student, or null. A link to
@@ -1009,7 +1124,7 @@
     function getPrereqFor(task, studentNum) {
         if (!task || !task.task_prereq) return null;
         const pre = getTaskById(task.task_prereq);
-        if (!pre || !isPublished(pre)) return null;
+        if (!pre || pre.task_archived || !isPublished(pre)) return null;
         if (studentNum != null && !parseStudentList(pre.assigned_to).includes(studentNum)) return null;
         return pre;
     }
@@ -1165,7 +1280,7 @@
     // waiting on a task that no longer exists.
     async function clearPrereqReferences(taskIds) {
         const ids = new Set(taskIds);
-        const orphans = getTasks().filter(t => t.task_prereq && ids.has(t.task_prereq) && !ids.has(t.task_id));
+        const orphans = getAllTasks().filter(t => t.task_prereq && ids.has(t.task_prereq) && !ids.has(t.task_id));
         for (const t of orphans) {
             await fbUpdate({ ...t, task_prereq: "" });
         }
@@ -1325,7 +1440,7 @@
 
     function subjectOf(task) { return (task.task_subject || "").trim(); }
     function usedSubjects() {
-        return [...new Set(getTasks().map(subjectOf).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+        return [...new Set(getAllTasks().map(subjectOf).filter(Boolean))].sort((a, b) => a.localeCompare(b));
     }
 
     function makeOption(value, label) {
@@ -1360,7 +1475,8 @@
 
     function getVisibleAdminTasks() {
         const q = taskView.search.trim().toLowerCase();
-        const tasks = getTasks().filter(t => {
+        const source = taskView.status === "archived" ? getArchivedTasks() : getTasks();
+        const tasks = source.filter(t => {
             if (q && !(t.task_text + " " + (t.task_desc || "") + " " + subjectOf(t)).toLowerCase().includes(q)) return false;
             if (taskView.subject === NO_SUBJECT && subjectOf(t)) return false;
             if (taskView.subject !== "all" && taskView.subject !== NO_SUBJECT && subjectOf(t) !== taskView.subject) return false;
@@ -1395,7 +1511,7 @@
         const el = document.createElement("div");
         el.className = "bg-white rounded-xl px-3 py-2 shadow-sm";
         el.dataset.id = task.task_id;
-        el.style.borderLeft = "4px solid " + (!published ? "#a78bfa" : allDone ? "#86efac" : "#fdba74");
+        el.style.borderLeft = "4px solid " + (task.task_archived ? "#d1d5db" : !published ? "#a78bfa" : allDone ? "#86efac" : "#fdba74");
 
         const head = document.createElement("div");
         head.className = "flex items-center gap-2";
@@ -1419,6 +1535,7 @@
         title.style.color = "#1a1a2e";
         title.textContent = (task.task_priority ? "\u2B50 " : "") + task.task_text;
         summary.appendChild(title);
+        if (task.task_archived) summary.appendChild(makeBadge("Archived " + fmtDay(task.task_archived), "background:#f3f4f6;color:#555;"));
         if (subjectOf(task) && taskView.sort !== "subject") summary.appendChild(makeBadge(subjectOf(task), "background:#e0f2fe;color:#075985;"));
         if (!published) summary.appendChild(makeBadge("\uD83D\uDD52 Posts " + fmtWhen(task.task_publish), "background:#ede9fe;color:#5b21b6;"));
         if (task.task_due) summary.appendChild(makeBadge("Due " + fmtDue(task.task_due), "background:#fff3e0;color:#e65100;"));
@@ -1507,9 +1624,31 @@
         const groupWrap = document.createElement("div");
         groupWrap.className = "task-group-container flex gap-2 flex-wrap items-center";
         body.appendChild(groupWrap);
+        if (!task.task_archived) {
+            const archiveBtn = document.createElement("button");
+            archiveBtn.type = "button";
+            archiveBtn.className = "self-start text-xs font-semibold px-3 py-1 rounded-lg";
+            archiveBtn.style.cssText = "background:#f3f4f6;color:#374151;border:1px solid #9ca3af;";
+            archiveBtn.textContent = "Archive this task";
+            archiveBtn.addEventListener("click", () => setArchived([task], true));
+            body.appendChild(archiveBtn);
+        }
         el.appendChild(body);
         renderTaskGroupButtons(el, task);
         return el;
+    }
+
+    // Finished = posted, and every assigned student has checked it off.
+    function isFinishedTask(t) { return isPublished(t) && isTaskAllComplete(t); }
+
+    async function setArchived(tasks, archived) {
+        if (tasks.length === 0) return;
+        const stamp = archived ? new Date(nowMs()).toISOString() : "";
+        const results = await Promise.all(tasks.map(t => fbUpdate({ ...t, task_archived: stamp })));
+        const failed = results.filter(r => !r.isOk).length;
+        const n = tasks.length - failed;
+        if (failed) showToast("Couldn't update " + failed + " task" + (failed === 1 ? "" : "s"), "error");
+        if (n) showToast((archived ? "Archived " : "Restored ") + n + " task" + (n === 1 ? "" : "s") + (archived ? ". Find them under Archived." : "!"));
     }
 
     async function postNow(task) {
@@ -1520,13 +1659,17 @@
 
     function renderAdmin() {
         refreshSubjectLists();
-        const allTasks = getTasks();
+        const viewingArchive = taskView.status === "archived";
+        const allTasks = viewingArchive ? getArchivedTasks() : getTasks();
         const tasks = getVisibleAdminTasks();
         const list = document.getElementById("admin-task-list");
         const empty = document.getElementById("admin-empty");
-        empty.textContent = allTasks.length === 0 ? "No tasks yet. Tap + New Task to add one!" : "No tasks match your search or filters.";
+        empty.textContent = allTasks.length > 0 ? "No tasks match your search or filters."
+            : viewingArchive ? "No archived tasks yet." : "No tasks yet. Tap + New Task to add one!";
         empty.classList.toggle("hidden", tasks.length > 0);
-        document.getElementById("remove-all-tasks-btn").classList.toggle("hidden", allTasks.length === 0);
+        document.getElementById("remove-all-tasks-btn").classList.toggle("hidden", viewingArchive || allTasks.length === 0);
+        document.getElementById("archive-done-btn").classList.toggle("hidden", viewingArchive || !getTasks().some(isFinishedTask));
+        document.getElementById("bulk-archive-btn").textContent = viewingArchive ? "Restore Selected" : "Archive Selected";
         document.getElementById("task-count").textContent = allTasks.length === 0 ? ""
             : "(" + (tasks.length === allTasks.length ? allTasks.length : tasks.length + " of " + allTasks.length) + ")";
         document.getElementById("expand-all-btn").textContent =
@@ -1602,7 +1745,7 @@
                 subtitle: "\u201c" + task.task_text + "\u201d can only be started after:",
                 apply: (id) => applyPrereqToTask(task, id)
             }));
-            btnGroup.appendChild(linkBtn);
+            if (!task.task_archived) btnGroup.appendChild(linkBtn);
 
             const editBtn = document.createElement("button");
             editBtn.className = "p-2 rounded-lg hover:bg-green-50 transition-colors";
@@ -1619,7 +1762,17 @@
             delBtn.setAttribute("aria-label", "Delete task");
             delBtn.addEventListener("click", () => { deleteConfirmId = task.task_id; renderAdmin(); lucide.createIcons(); });
 
-            btnGroup.appendChild(editBtn);
+            if (task.task_archived) {
+                const restoreBtn = document.createElement("button");
+                restoreBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold";
+                restoreBtn.style.cssText = "background:#e8e6ff;color:#6366f1;";
+                restoreBtn.textContent = "Restore";
+                restoreBtn.setAttribute("aria-label", "Restore " + task.task_text);
+                restoreBtn.addEventListener("click", () => setArchived([task], false));
+                btnGroup.appendChild(restoreBtn);
+            } else {
+                btnGroup.appendChild(editBtn);
+            }
             btnGroup.appendChild(delBtn);
         }
         container.appendChild(btnGroup);
@@ -2069,6 +2222,10 @@
         const num = peek.student;
         document.getElementById("peek-title").textContent = "Student " + num;
         renderStudentSummary(document.getElementById("peek-summary"), num);
+        const spent = getRedeemLog().filter(r => r.student === String(num)).slice(0, 3);
+        const rewardsLine = document.getElementById("peek-rewards");
+        rewardsLine.textContent = spent.length ? "Recent rewards: " + spent.map(r => redeemLabel(r) + " (" + fmtDay(r.at) + ")").join(" \u00B7 ") : "";
+        rewardsLine.classList.toggle("hidden", spent.length === 0);
 
         const list = document.getElementById("peek-list");
         const keepScroll = list.scrollTop;
@@ -2119,6 +2276,377 @@
     }
 
     // =====================================================================
+    // REWARD SHOP
+    // =====================================================================
+    // Prizes live in config/prizes so students can read them. Each purchase is
+    // logged under redemptions (student number, prize, cost, time) for the teacher.
+    const CUSTOM_REDEEM = "Tokens";
+
+    function getPrizes() {
+        return Object.keys(prizeData)
+            .map(id => ({ id, name: String((prizeData[id] && prizeData[id].name) || "").trim(), cost: parseInt(prizeData[id] && prizeData[id].cost, 10) }))
+            .filter(p => p.name && p.cost >= 1)
+            .sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
+    }
+
+    function getRedeemLog() {
+        return Object.keys(redeemLog)
+            .map(id => ({ id, ...redeemLog[id] }))
+            .sort((a, b) => (b.at || "").localeCompare(a.at || ""));
+    }
+
+    function redeemLabel(r) {
+        return r.name === CUSTOM_REDEEM ? r.cost + " token" + (r.cost === 1 ? "" : "s") : r.name;
+    }
+
+    // Spend first, then log. If the log can't be written (for example, the new
+    // database rules aren't published yet), the student still gets the reward.
+    async function spendTokens(studentNum, cost, name) {
+        const ok = await changeTokens(studentNum, -cost);
+        if (!ok) return false;
+        try {
+            await redeemLogRef().push({ student: String(studentNum), name, cost, at: new Date(nowMs()).toISOString() });
+        } catch (e) {
+            console.warn("Couldn't log the reward. Are the new database rules published?", e);
+        }
+        return true;
+    }
+
+    // ------------------------------------------------- student: redeem pop-up ---
+    let redeemChoice = null;   // the prize a student tapped, waiting for "Yes"
+
+    function openRedeem() {
+        if (currentStudent == null) return;
+        redeemChoice = null;
+        document.getElementById("redeem-amount").value = "";
+        document.getElementById("redeem-error").classList.add("hidden");
+        document.getElementById("redeem-modal").classList.remove("hidden");
+        renderRedeem();
+        if (getPrizes().length === 0) document.getElementById("redeem-amount").focus();
+        else document.getElementById("redeem-cancel").focus({ preventScroll: true });
+    }
+
+    function closeRedeem() {
+        redeemChoice = null;
+        document.getElementById("redeem-modal").classList.add("hidden");
+    }
+
+    function refreshRedeemIfOpen() {
+        if (!document.getElementById("redeem-modal").classList.contains("hidden")) renderRedeem();
+    }
+
+    function renderRedeem() {
+        if (currentStudent == null) return;
+        const prizes = getPrizes();
+        const balance = getTokens(currentStudent);
+        const shopMode = prizes.length > 0;
+        const choice = redeemChoice ? prizes.find(p => p.id === redeemChoice) : null;
+        if (!choice) redeemChoice = null;
+
+        document.getElementById("redeem-title").textContent = shopMode ? "Reward Shop" : "Redeem Tokens";
+        document.getElementById("redeem-balance").textContent = balance;
+        const shop = document.getElementById("redeem-shop");
+        const ask = document.getElementById("redeem-ask");
+        const confirmBtn = document.getElementById("redeem-confirm");
+        document.getElementById("redeem-custom").classList.toggle("hidden", shopMode);
+        shop.classList.toggle("hidden", !shopMode || !!choice);
+        ask.classList.toggle("hidden", !choice);
+        confirmBtn.classList.toggle("hidden", shopMode && !choice);
+        confirmBtn.textContent = choice ? "Yes, spend it!" : "Redeem";
+        document.getElementById("redeem-cancel").textContent = choice ? "Back" : shopMode ? "Close" : "Cancel";
+        if (choice) ask.textContent = "Spend " + choice.cost + " \uD83E\uDE99 on \u201C" + choice.name + "\u201D?";
+        if (!shopMode || choice) return;
+
+        const keepScroll = shop.scrollTop;
+        shop.innerHTML = "";
+        prizes.forEach(p => {
+            const canBuy = p.cost <= balance;
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "w-full text-left px-4 py-3 rounded-xl flex items-center justify-between gap-2 flex-shrink-0";
+            btn.style.cssText = canBuy ? "background:#fdf6e3;border:2px solid #b8860b;color:#1a1a2e;" : "background:#f3f4f6;border:2px solid #e5e7eb;color:#999;cursor:not-allowed;";
+            btn.disabled = !canBuy;
+            const name = document.createElement("span");
+            name.className = "font-semibold break-words min-w-0";
+            name.textContent = p.name;
+            const price = document.createElement("span");
+            price.className = "text-sm font-bold whitespace-nowrap";
+            price.style.color = canBuy ? "#b8860b" : "#999";
+            price.textContent = canBuy ? "\uD83E\uDE99 " + p.cost : "Need " + (p.cost - Math.max(0, balance)) + " more";
+            btn.appendChild(name);
+            btn.appendChild(price);
+            btn.addEventListener("click", () => {
+                redeemChoice = p.id;
+                document.getElementById("redeem-error").classList.add("hidden");
+                renderRedeem();
+                document.getElementById("redeem-confirm").focus({ preventScroll: true });
+            });
+            shop.appendChild(btn);
+        });
+        shop.scrollTop = keepScroll;
+    }
+
+    async function confirmRedeem() {
+        const err = document.getElementById("redeem-error");
+        const showErr = msg => { err.textContent = msg; err.classList.remove("hidden"); };
+        const balance = getTokens(currentStudent);
+        let cost, name;
+        if (redeemChoice) {
+            const p = getPrizes().find(x => x.id === redeemChoice);
+            if (!p) { redeemChoice = null; renderRedeem(); showErr("That prize isn't in the shop anymore."); return; }
+            cost = p.cost; name = p.name;
+        } else if (getPrizes().length === 0) {
+            cost = parseInt(document.getElementById("redeem-amount").value, 10);
+            name = CUSTOM_REDEEM;
+            if (!Number.isFinite(cost) || cost < 1) { showErr("Enter a number of 1 or more."); return; }
+        } else return;
+        if (cost > balance) {
+            showErr(balance > 0 ? "You only have " + balance + " token" + (balance === 1 ? "" : "s") + "." : "You don't have any tokens to spend yet.");
+            return;
+        }
+        err.classList.add("hidden");
+        const btn = document.getElementById("redeem-confirm");
+        btn.disabled = true;
+        const ok = await spendTokens(currentStudent, cost, name);
+        btn.disabled = false;
+        if (!ok) return;
+        closeRedeem();
+        showToast(name === CUSTOM_REDEEM ? "Redeemed " + cost + " token" + (cost === 1 ? "" : "s") + "!" : "Enjoy your reward! \uD83C\uDF89");
+    }
+
+    // ---------------------------------------------- teacher: rewards pop-up ---
+    function openRewards() {
+        if (!auth.currentUser) { showToast("Sign in first", "error"); return; }
+        document.getElementById("prize-error").classList.add("hidden");
+        document.getElementById("rewards-modal").classList.remove("hidden");
+        renderRewards();
+        setTimeout(() => document.getElementById("prize-name").focus(), 0);
+    }
+
+    function closeRewards() {
+        document.getElementById("rewards-modal").classList.add("hidden");
+    }
+
+    function renderRewards() {
+        const list = document.getElementById("prize-list");
+        list.innerHTML = "";
+        const prizes = getPrizes();
+        if (prizes.length === 0) {
+            const none = document.createElement("p");
+            none.className = "text-center text-sm py-2";
+            none.style.color = "#aaa";
+            none.textContent = "No prizes yet. Add one below.";
+            list.appendChild(none);
+        }
+        prizes.forEach(p => {
+            const row = document.createElement("div");
+            row.className = "flex items-center gap-2 rounded-xl px-3 py-2";
+            row.style.cssText = "background:#fdf6e3;border:1px solid #f3e2b3;";
+            const name = document.createElement("span");
+            name.className = "flex-1 min-w-0 font-semibold text-sm break-words";
+            name.style.color = "#1a1a2e";
+            name.textContent = p.name;
+            const cost = document.createElement("span");
+            cost.className = "text-sm font-bold whitespace-nowrap";
+            cost.style.color = "#b8860b";
+            cost.textContent = "\uD83E\uDE99 " + p.cost;
+            const del = document.createElement("button");
+            del.className = "px-3 py-1 rounded-lg text-xs font-semibold flex-shrink-0";
+            del.style.cssText = "background:#ffe8e8;color:#e74c3c;";
+            del.textContent = "Delete";
+            del.setAttribute("aria-label", "Delete prize " + p.name);
+            del.addEventListener("click", () => deletePrize(p));
+            row.appendChild(name);
+            row.appendChild(cost);
+            row.appendChild(del);
+            list.appendChild(row);
+        });
+
+        const logList = document.getElementById("redeem-log");
+        logList.innerHTML = "";
+        const log = getRedeemLog();
+        document.getElementById("redeem-log-empty").classList.toggle("hidden", log.length > 0);
+        log.slice(0, 100).forEach(r => {
+            const row = document.createElement("div");
+            row.className = "flex items-center gap-2 rounded-xl px-3 py-2";
+            row.style.cssText = "background:#fff;border:1px solid #e5e7eb;";
+            const info = document.createElement("div");
+            info.className = "flex-1 min-w-0";
+            const what = document.createElement("p");
+            what.className = "text-sm font-medium break-words";
+            what.style.color = "#1a1a2e";
+            what.textContent = "Student " + r.student + (r.name === CUSTOM_REDEEM ? " spent " + redeemLabel(r) : " bought \u201C" + r.name + "\u201D (\uD83E\uDE99 " + r.cost + ")");
+            const when = document.createElement("p");
+            when.className = "text-xs";
+            when.style.color = "#888";
+            when.textContent = r.at ? fmtWhen(r.at) : "";
+            info.appendChild(what);
+            info.appendChild(when);
+            const undo = document.createElement("button");
+            undo.className = "px-3 py-1 rounded-lg text-xs font-semibold flex-shrink-0";
+            undo.style.cssText = "background:#e8e6ff;color:#6366f1;";
+            undo.textContent = "Undo";
+            undo.setAttribute("aria-label", "Undo and refund student " + r.student);
+            undo.addEventListener("click", () => undoRedeem(r));
+            row.appendChild(info);
+            row.appendChild(undo);
+            logList.appendChild(row);
+        });
+    }
+
+    async function addPrize() {
+        const err = document.getElementById("prize-error");
+        const nameInput = document.getElementById("prize-name");
+        const costInput = document.getElementById("prize-cost");
+        const name = nameInput.value.trim();
+        const cost = parseInt(costInput.value, 10);
+        const showErr = msg => { err.textContent = msg; err.classList.remove("hidden"); };
+        if (!name) { showErr("Give the prize a name."); return; }
+        if (!Number.isFinite(cost) || cost < 1 || cost > 9999) { showErr("Cost must be a whole number from 1 to 9999."); return; }
+        if (getPrizes().some(p => p.name.toLowerCase() === name.toLowerCase())) { showErr("That prize is already in the shop."); return; }
+        err.classList.add("hidden");
+        try {
+            await prizesRef().push({ name, cost });
+            nameInput.value = "";
+            costInput.value = "";
+            nameInput.focus();
+            showToast("Prize added!");
+        } catch (e) {
+            console.error("Prize save error:", e);
+            showErr("Couldn't save the prize. Try again.");
+        }
+    }
+
+    async function deletePrize(prize) {
+        if (!confirm("Remove \u201C" + prize.name + "\u201D from the shop?")) return;
+        try { await prizesRef().child(prize.id).remove(); showToast("Prize removed"); }
+        catch (e) { console.error("Prize delete error:", e); showToast("Error removing prize", "error"); }
+    }
+
+    async function undoRedeem(entry) {
+        if (!confirm("Give student " + entry.student + " back " + entry.cost + " token" + (entry.cost === 1 ? "" : "s") + " and remove this from the list?")) return;
+        const ok = await changeTokens(parseInt(entry.student, 10), entry.cost);
+        if (!ok) return;
+        try { await redeemLogRef().child(entry.id).remove(); showToast("Tokens given back"); }
+        catch (e) { console.error("Log remove error:", e); showToast("Tokens given back, but the list didn't update", "error"); }
+    }
+
+    // =====================================================================
+    // MISSING WORK REPORT (teacher)
+    // =====================================================================
+    // Built from student numbers only. Printing uses a hidden part of this page,
+    // and the spreadsheet is saved straight to the teacher's device.
+    function getMissingWork(lateOnly) {
+        const byStudent = [];
+        for (let n = 1; n <= TOTAL_STUDENTS; n++) {
+            const missing = getTasksForStudent(n)
+                .filter(t => getCompletionsByTaskAndStudent(t.task_id, n).length === 0)
+                .map(t => ({ task: t, days: t.task_due ? daysUntil(t.task_due) : null }))
+                .filter(m => !lateOnly || (m.days !== null && m.days < 0))
+                .sort((a, b) => compareBlankLast(a.task.task_due, b.task.task_due));
+            if (missing.length) byStudent.push({ student: n, missing });
+        }
+        return byStudent;
+    }
+
+    function dueStatus(days) {
+        if (days === null) return "No due date";
+        if (days < 0) return (-days) + (days === -1 ? " day late" : " days late");
+        if (days === 0) return "Due today";
+        if (days === 1) return "Due tomorrow";
+        return days + " days left";
+    }
+
+    function reportOptions() {
+        return {
+            lateOnly: document.getElementById("report-late-only").checked,
+            pageEach: document.getElementById("report-page-each").checked
+        };
+    }
+
+    function renderReportSummary() {
+        const groups = getMissingWork(reportOptions().lateOnly);
+        const total = groups.reduce((n, g) => n + g.missing.length, 0);
+        document.getElementById("report-summary").textContent = total === 0
+            ? "No missing work right now! \uD83C\uDF89"
+            : groups.length + " student" + (groups.length === 1 ? "" : "s") + " with " + total + " missing task" + (total === 1 ? "" : "s") + ".";
+        document.getElementById("report-print-btn").disabled = total === 0;
+        document.getElementById("report-csv-btn").disabled = total === 0;
+        document.getElementById("report-print-btn").style.opacity = total === 0 ? "0.5" : "";
+        document.getElementById("report-csv-btn").style.opacity = total === 0 ? "0.5" : "";
+    }
+
+    function openReport() {
+        document.getElementById("report-modal").classList.remove("hidden");
+        renderReportSummary();
+    }
+
+    function closeReport() {
+        document.getElementById("report-modal").classList.add("hidden");
+    }
+
+    function todayLabel() {
+        const d = new Date(nowMs());
+        return (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
+    }
+
+    function printReport() {
+        const { lateOnly, pageEach } = reportOptions();
+        const groups = getMissingWork(lateOnly);
+        if (groups.length === 0) return;
+        const total = groups.reduce((n, g) => n + g.missing.length, 0);
+        let html = "";
+        if (!pageEach) {
+            html += "<h1>" + (lateOnly ? "Late Work" : "Missing Work") + "</h1>" +
+                "<p class=\"rp-meta\">" + escHtml(todayLabel()) + " \u00B7 " + groups.length + " student" + (groups.length === 1 ? "" : "s") + " \u00B7 " + total + " task" + (total === 1 ? "" : "s") + "</p>";
+        }
+        groups.forEach((g, i) => {
+            html += "<section class=\"rp-student" + (pageEach && i > 0 ? " rp-break" : "") + "\">";
+            html += pageEach ? "<h1>Student " + g.student + "</h1><p class=\"rp-meta\">" + escHtml(todayLabel()) + "</p>"
+                + "<p class=\"rp-note\">These still need to be turned in. Remember to put your name on each one!</p>"
+                : "<h2>Student " + g.student + " <span>(" + g.missing.length + " missing)</span></h2>";
+            html += "<table><thead><tr><th>Task</th><th>Subject</th><th>Due</th><th>Status</th></tr></thead><tbody>";
+            g.missing.forEach(m => {
+                html += "<tr><td>" + escHtml(m.task.task_text) + "</td><td>" + escHtml(subjectOf(m.task)) + "</td><td>"
+                    + (m.task.task_due ? escHtml(fmtDue(m.task.task_due)) : "") + "</td><td" + (m.days !== null && m.days < 0 ? " class=\"rp-late\"" : "") + ">"
+                    + escHtml(dueStatus(m.days)) + "</td></tr>";
+            });
+            html += "</tbody></table></section>";
+        });
+        document.getElementById("report-print").innerHTML = html;
+        document.body.classList.add("print-report");
+        window.print();
+    }
+    window.addEventListener("afterprint", () => document.body.classList.remove("print-report"));
+
+    function csvCell(v) {
+        let text = String(v == null ? "" : v);
+        if (/^[=+\-@]/.test(text)) text = "'" + text;   // keep spreadsheets from treating titles as formulas
+        return "\"" + text.replace(/"/g, "\"\"") + "\"";
+    }
+
+    function downloadReportCsv() {
+        const groups = getMissingWork(reportOptions().lateOnly);
+        if (groups.length === 0) return;
+        const lines = [["Student", "Task", "Subject", "Due date", "Status", "Days late"].map(csvCell).join(",")];
+        groups.forEach(g => g.missing.forEach(m => {
+            lines.push([g.student, m.task.task_text, subjectOf(m.task), m.task.task_due || "", dueStatus(m.days),
+                m.days !== null && m.days < 0 ? -m.days : ""].map(csvCell).join(","));
+        }));
+        const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const d = new Date(nowMs());
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "missing-work-" + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast("Spreadsheet downloaded!");
+    }
+
+    // =====================================================================
     // COMPLETION NOTIFICATIONS (teacher)
     // =====================================================================
     // Alerts work while the teacher is signed in and this page is open in a tab.
@@ -2134,7 +2662,7 @@
 
     // Newest first. Check-offs the teacher made from the admin screens are left out.
     function getStudentCompletions() {
-        const titles = new Map(getTasks().map(t => [t.task_id, t.task_text]));
+        const titles = new Map(getAllTasks().map(t => [t.task_id, t.task_text]));
         return allData
             .filter(r => r.type === "completion" && !r.by_teacher && titles.has(r.task_id))
             .map(r => ({ ...r, title: titles.get(r.task_id) }))
@@ -2299,12 +2827,21 @@
         });
     }
 
+    // Work still to do comes first, most urgent on top: late, then due today,
+    // then the next due dates, then work with no due date. Finished tasks move
+    // to the bottom.
+    function urgencyOrder(tasks) {
+        const isDone = t => getCompletionsByTaskAndStudent(t.task_id, currentStudent).length > 0;
+        const todo = tasks.filter(t => !isDone(t)).sort((a, b) => compareBlankLast(a.task_due, b.task_due));
+        return [...orderByPrereqChain(todo), ...tasks.filter(isDone)];
+    }
+
     function renderStudent() {
         if (!currentStudent) return;
         const tasks = getTasksForStudent(currentStudent);
         // Keep each linked pair in order so the prerequisite is listed first.
-        const priorityTasks = orderByPrereqChain(tasks.filter(t => t.task_priority));
-        const regularTasks = orderByPrereqChain(tasks.filter(t => !t.task_priority));
+        const priorityTasks = urgencyOrder(tasks.filter(t => t.task_priority));
+        const regularTasks = urgencyOrder(tasks.filter(t => !t.task_priority));
 
         const prioritySection = document.getElementById("student-priority-section");
         const priorityList = document.getElementById("student-priority-list");
@@ -2480,6 +3017,8 @@
 
     function escHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
     function fmtDue(d) { const [y, m, day] = d.split("-"); return parseInt(m) + "/" + parseInt(day); }
+    // "11/30"
+    function fmtDay(iso) { const d = new Date(iso); return (d.getMonth() + 1) + "/" + d.getDate(); }
     // "11/30 at 8:00 AM"
     function fmtWhen(iso) {
         const d = new Date(iso);
@@ -2808,6 +3347,36 @@
         document.getElementById("turnin-yes").addEventListener("click", () => answerTurnedIn(true));
         document.getElementById("turnin-no").addEventListener("click", () => answerTurnedIn(false));
 
+        // Archive, rewards and the missing work report
+        document.getElementById("bulk-archive-btn").addEventListener("click", async () => {
+            const ids = [...selectedTaskIds];
+            if (ids.length === 0) return;
+            const restoring = taskView.status === "archived";
+            const tasks = getAllTasks().filter(t => ids.includes(t.task_id));
+            selectedTaskIds.clear();
+            updateBulkBar();
+            await setArchived(tasks, !restoring);
+        });
+        document.getElementById("archive-done-btn").addEventListener("click", async () => {
+            const done = getTasks().filter(isFinishedTask);
+            if (done.length === 0) return;
+            if (!confirm("Archive " + done.length + " finished task" + (done.length === 1 ? "" : "s") + "? Every assigned student has checked " + (done.length === 1 ? "it" : "them") + " off. You can find them later under Archived.")) return;
+            await setArchived(done, true);
+        });
+        document.getElementById("rewards-btn").addEventListener("click", openRewards);
+        document.getElementById("rewards-close").addEventListener("click", closeRewards);
+        document.getElementById("rewards-modal").addEventListener("click", (e) => { if (e.target.id === "rewards-modal") closeRewards(); });
+        document.getElementById("prize-add").addEventListener("click", addPrize);
+        ["prize-name", "prize-cost"].forEach(id => document.getElementById(id).addEventListener("keydown", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); addPrize(); }
+        }));
+        document.getElementById("report-btn").addEventListener("click", openReport);
+        document.getElementById("report-close").addEventListener("click", closeReport);
+        document.getElementById("report-modal").addEventListener("click", (e) => { if (e.target.id === "report-modal") closeReport(); });
+        document.getElementById("report-late-only").addEventListener("change", renderReportSummary);
+        document.getElementById("report-print-btn").addEventListener("click", printReport);
+        document.getElementById("report-csv-btn").addEventListener("click", downloadReportCsv);
+
         // Events
         document.getElementById("admin-btn").addEventListener("click", async () => {
             await adminCheckPromise;
@@ -2827,7 +3396,7 @@
             showView("select");
         });
         document.getElementById("admin-back").addEventListener("click", () => { deleteConfirmId = null; closePeek(); showView("select"); });
-        document.getElementById("student-back").addEventListener("click", () => { currentStudent = null; showView("select"); });
+        document.getElementById("student-back").addEventListener("click", () => { closeRedeem(); currentStudent = null; showView("select"); });
 
         function setAdminView(view) {
             const dashSection = document.getElementById("dashboard-section");
@@ -2887,7 +3456,7 @@
             if (selectedTaskIds.size === 0) return;
             const ids = [...selectedTaskIds];
             if (!confirm("Delete " + ids.length + " selected task" + (ids.length === 1 ? "" : "s") + "? This cannot be undone.")) return;
-            const tasksToDelete = getTasks().filter(t => ids.includes(t.task_id));
+            const tasksToDelete = getAllTasks().filter(t => ids.includes(t.task_id));
             await clearPrereqReferences(ids);
             for (const task of tasksToDelete) {
                 const completions = allData.filter(r => r.type === "completion" && r.task_id === task.task_id);
@@ -2937,38 +3506,14 @@
         document.getElementById("edit-cancel").addEventListener("click", closeEditModal);
         document.getElementById("edit-save").addEventListener("click", saveEditTask);
 
-        document.getElementById("redeem-btn").addEventListener("click", () => {
-            if (currentStudent == null) return;
-            document.getElementById("redeem-balance").textContent = getTokens(currentStudent);
-            document.getElementById("redeem-amount").value = "";
-            document.getElementById("redeem-error").classList.add("hidden");
-            document.getElementById("redeem-modal").classList.remove("hidden");
-            document.getElementById("redeem-amount").focus();
-        });
+        document.getElementById("redeem-btn").addEventListener("click", openRedeem);
         document.getElementById("redeem-cancel").addEventListener("click", () => {
-            document.getElementById("redeem-modal").classList.add("hidden");
+            if (redeemChoice) { redeemChoice = null; document.getElementById("redeem-error").classList.add("hidden"); renderRedeem(); }
+            else closeRedeem();
         });
-        document.getElementById("redeem-confirm").addEventListener("click", async () => {
-            const balance = getTokens(currentStudent);
-            const amount = parseInt(document.getElementById("redeem-amount").value, 10);
-            const err = document.getElementById("redeem-error");
-            if (!Number.isFinite(amount) || amount < 1) {
-                err.textContent = "Enter a number of 1 or more.";
-                err.classList.remove("hidden");
-                return;
-            }
-            if (amount > balance) {
-                err.textContent = balance > 0 ? "You only have " + balance + " token" + (balance === 1 ? "" : "s") + "." : "You don't have any tokens to spend yet.";
-                err.classList.remove("hidden");
-                return;
-            }
-            err.classList.add("hidden");
-            await changeTokens(currentStudent, -amount);
-            document.getElementById("redeem-modal").classList.add("hidden");
-            showToast("Redeemed " + amount + " token" + (amount === 1 ? "" : "s") + "!");
-        });
+        document.getElementById("redeem-confirm").addEventListener("click", confirmRedeem);
         document.getElementById("redeem-amount").addEventListener("keydown", (e) => {
-            if (e.key === "Enter") document.getElementById("redeem-confirm").click();
+            if (e.key === "Enter") confirmRedeem();
         });
 
         let authMode = "signin"; // or "signup"
@@ -3045,7 +3590,7 @@
 
         // Backdrop click and Escape key close any open modal.
         document.getElementById("redeem-modal").addEventListener("click", (e) => {
-            if (e.target.id === "redeem-modal") document.getElementById("redeem-modal").classList.add("hidden");
+            if (e.target.id === "redeem-modal") closeRedeem();
         });
         document.getElementById("edit-modal").addEventListener("click", (e) => {
             if (e.target.id === "edit-modal") closeEditModal();
@@ -3061,10 +3606,12 @@
             if (turnInPending) { answerTurnedIn(false); return; }
             if (linkModal && !linkModal.classList.contains("hidden")) { closeLinkModal(); return; }
             if (peek) { closePeek(); return; }
+            if (!document.getElementById("rewards-modal").classList.contains("hidden")) { closeRewards(); return; }
+            if (!document.getElementById("report-modal").classList.contains("hidden")) { closeReport(); return; }
             if (!document.getElementById("activity-modal").classList.contains("hidden")) { closeActivity(); return; }
             if (groups && !groups.classList.contains("hidden")) { closeGroupsModal(); return; }
             if (settings && !settings.classList.contains("hidden")) { closeSettingsModal(); return; }
-            if (redeem && !redeem.classList.contains("hidden")) { redeem.classList.add("hidden"); return; }
+            if (redeem && !redeem.classList.contains("hidden")) { closeRedeem(); return; }
             if (edit && !edit.classList.contains("hidden")) { closeEditModal(); return; }
             if (bulk && !bulk.classList.contains("hidden")) { closeBulkModal(); return; }
         });
