@@ -1828,13 +1828,14 @@
             .map(task => {
                 const assigned = task.assigned_to.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n));
                 const notDone = assigned.filter(s => getCompletionsByTaskAndStudent(task.task_id, s).length === 0).sort((a, b) => a - b);
-                return { task, assigned, notDone };
+                const done = assigned.filter(s => !notDone.includes(s)).sort((a, b) => a - b);
+                return { task, assigned, notDone, done };
             })
             .filter(t => t.notDone.length > 0);
 
         empty.classList.toggle("hidden", tasks.length > 0);
 
-        tasks.forEach(({ task, assigned, notDone }) => {
+        tasks.forEach(({ task, assigned, notDone, done }) => {
             const doneCount = assigned.length - notDone.length;
 
             const el = document.createElement("div");
@@ -1855,22 +1856,39 @@
             titleRow.appendChild(stat);
             el.appendChild(titleRow);
 
+            // Still working on the left in red, done on the right in green.
+            const makeGroup = (labelText, nums, css) => {
+                const group = document.createElement("div");
+                group.className = "flex flex-wrap items-center gap-1";
+                const label = document.createElement("span");
+                label.className = "text-xs mr-1";
+                label.style.color = "#666";
+                label.textContent = labelText;
+                group.appendChild(label);
+                nums.forEach(s => {
+                    const badge = document.createElement("button");
+                    badge.className = "num-chip text-xs font-semibold px-2 py-1 rounded-lg";
+                    badge.style.cssText = css;
+                    badge.textContent = s;
+                    badge.setAttribute("aria-label", "View student " + s);
+                    badge.addEventListener("click", () => renderStudentStatus(s));
+                    group.appendChild(badge);
+                });
+                if (nums.length === 0) {
+                    const none = document.createElement("span");
+                    none.className = "text-xs";
+                    none.style.color = "#aaa";
+                    none.textContent = "nobody yet";
+                    group.appendChild(none);
+                }
+                return group;
+            };
             const badgesRow = document.createElement("div");
-            badgesRow.className = "flex flex-wrap items-center gap-1";
-            const label = document.createElement("span");
-            label.className = "text-xs mr-1";
-            label.style.color = "#666";
-            label.textContent = "Working on it:";
-            badgesRow.appendChild(label);
-            notDone.forEach(s => {
-                const badge = document.createElement("button");
-                badge.className = "text-xs font-semibold px-2 py-1 rounded-lg";
-                badge.style.cssText = "background:#fee2e2;color:#b91c1c;";
-                badge.textContent = s;
-                badge.setAttribute("aria-label", "View student " + s);
-                badge.addEventListener("click", () => renderStudentStatus(s));
-                badgesRow.appendChild(badge);
-            });
+            badgesRow.className = "flex flex-wrap items-start justify-between gap-x-4 gap-y-2";
+            badgesRow.appendChild(makeGroup("Working on it:", notDone, "background:#fee2e2;color:#b91c1c;"));
+            const doneGroup = makeGroup("✓ Done:", done, "background:#dcfce7;color:#166534;");
+            doneGroup.classList.add("sm:justify-end", "ml-auto");
+            badgesRow.appendChild(doneGroup);
             el.appendChild(badgesRow);
 
             container.appendChild(el);
