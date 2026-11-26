@@ -61,8 +61,8 @@
         @media print {
             body.print-report #app { display: none !important; }
             body.print-report #report-print { display: block; color: black; }
-            #turnin-modal, #peek-modal, #activity-modal, #rewards-modal, #report-modal, #admin-activity, #task-toolbar, #create-toggle-btn,
-            #report-btn, #rewards-btn, #archive-done-btn { display: none !important; }
+            #turnin-modal, #peek-modal, #activity-modal, #report-modal, #admin-activity, #task-toolbar, #create-toggle-btn,
+            #report-btn, #btn-rewards, #archive-done-btn, #prize-add-card, #redeem-filter, #redeem-more, .redeem-undo { display: none !important; }
             html, body, .school-bg, #app { background: none !important; background-color: white !important; }
             html { font-size: 11pt; }
             body { color: black; }
@@ -141,32 +141,6 @@
             </div>
             <div id="activity-list" class="flex flex-col gap-2 overflow-y-auto"></div>
             <p id="activity-empty" class="text-center text-sm py-6 hidden" style="color:#aaa;">No completed tasks yet.</p>
-        </div>
-    </div>
-    <!-- REWARDS MODAL (teacher): prizes students can buy, and what they've spent -->
-    <div id="rewards-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4" role="dialog" aria-modal="true" aria-labelledby="rewards-title">
-        <div class="bg-white rounded-2xl shadow-lg p-5 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between mb-2">
-                <h3 id="rewards-title" class="font-display text-xl font-bold" style="color:#1a1a2e;">Reward Shop</h3>
-                <button id="rewards-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
-            </div>
-            <p class="text-xs mb-3" style="color:#666;">Students tap Redeem to buy these with their tokens. With no prizes, they type how many tokens to spend instead.</p>
-            <div id="prize-list" class="flex flex-col gap-2 mb-3"></div>
-            <div class="rounded-xl p-3 mb-5" style="background:#f5f3ff;">
-                <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Add a prize</p>
-                <div class="flex gap-2">
-                    <label for="prize-name" class="sr-only">Prize name</label>
-                    <input id="prize-name" type="text" maxlength="60" placeholder="e.g. Sit with a friend" class="flex-1 min-w-0 border-2 rounded-xl px-3 py-2 text-base" style="border-color:#ddd;">
-                    <label for="prize-cost" class="sr-only">Cost in tokens</label>
-                    <input id="prize-cost" type="number" min="1" max="9999" placeholder="Cost" class="w-20 border-2 rounded-xl px-3 py-2 text-base" style="border-color:#ddd;">
-                    <button id="prize-add" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#6366f1;">Add</button>
-                </div>
-                <p id="prize-error" class="hidden text-sm mt-2" style="color:#e74c3c;"></p>
-            </div>
-            <h4 class="font-display text-lg font-bold mb-1" style="color:#1a1a2e;">Spent so far</h4>
-            <p class="text-xs mb-2" style="color:#666;">Newest first. Undo gives the tokens back.</p>
-            <div id="redeem-log" class="flex flex-col gap-2"></div>
-            <p id="redeem-log-empty" class="text-center text-sm py-4 hidden" style="color:#aaa;">Nothing spent yet.</p>
         </div>
     </div>
     <!-- MISSING WORK REPORT MODAL (teacher) -->
@@ -379,6 +353,7 @@
                     <button id="admin-activity" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;" aria-label="Completed task notifications"><i data-lucide="bell" style="width:16px;height:16px;"></i><span id="activity-badge" class="hidden text-xs font-bold px-2 rounded-full text-white" style="background:#e74c3c;">0</span></button>
                     <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
                     <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
+                    <button id="btn-rewards" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="gift" style="width:16px;height:16px;"></i> Rewards</button>
                 </div>
             </div>
             <div id="migration-banner" class="hidden mb-4 p-4 rounded-xl flex items-center justify-between gap-3 flex-wrap" style="background:#fff3e0;border:1px solid #e65100;">
@@ -420,12 +395,39 @@
                     <div id="dashboard-grid-complete" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
                     <p id="dashboard-complete-empty" class="text-center py-4 hidden" style="color:#aaa;">No students completed yet.</p>
                 </div>
+            </div><!-- REWARDS VIEW -->
+            <div id="rewards-section" class="hidden mb-6">
+                <h2 class="font-display text-2xl font-bold mb-1" style="color:#1a1a2e;">Reward Shop</h2>
+                <p class="text-xs mb-3" style="color:#666;">Students tap Redeem to buy these with their tokens. With no prizes, they type how many tokens to spend instead.</p>
+                <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+                    <div id="prize-list" class="flex flex-col gap-2 mb-3"></div>
+                    <div id="prize-add-card" class="rounded-xl p-3" style="background:#f5f3ff;">
+                        <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Add a prize</p>
+                        <div class="flex gap-2">
+                            <label for="prize-name" class="sr-only">Prize name</label>
+                            <input id="prize-name" type="text" maxlength="60" placeholder="e.g. Sit with a friend" class="flex-1 min-w-0 border-2 rounded-xl px-3 py-2 text-base" style="border-color:#ddd;">
+                            <label for="prize-cost" class="sr-only">Cost in tokens</label>
+                            <input id="prize-cost" type="number" min="1" max="9999" placeholder="Cost" class="w-20 border-2 rounded-xl px-3 py-2 text-base" style="border-color:#ddd;">
+                            <button id="prize-add" class="px-4 py-2 rounded-xl font-semibold text-white" style="background:#6366f1;">Add</button>
+                        </div>
+                        <p id="prize-error" class="hidden text-sm mt-2" style="color:#e74c3c;"></p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                    <h2 class="font-display text-2xl font-bold" style="color:#1a1a2e;">Rewards Redeemed</h2>
+                    <select id="redeem-filter" aria-label="Show rewards for" class="border-2 rounded-xl px-2 py-2 text-sm bg-white" style="border-color:#ddd;"></select>
+                </div>
+                <p class="text-xs mb-3" style="color:#666;">Grouped by day, newest first. Undo gives the tokens back.</p>
+                <div id="redeem-log" class="flex flex-col gap-4"></div>
+                <p id="redeem-log-empty" class="text-center text-sm py-6 hidden" style="color:#aaa;">Nothing redeemed yet.</p>
+                <div class="flex justify-center mt-4">
+                    <button id="redeem-more" type="button" class="hidden text-sm font-medium px-4 py-2 rounded-xl" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;">Show earlier days</button>
+                </div>
             </div><!-- TASKS MANAGEMENT VIEW -->
             <div id="tasks-section">
                 <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                     <button id="create-toggle-btn" type="button" class="flex items-center gap-2 text-base font-semibold px-4 py-2 rounded-xl text-white" style="background:#6366f1;" aria-expanded="false" aria-controls="add-task-form">+ New Task</button>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <button id="rewards-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#fdf6e3;color:#b8860b;border:1px solid #b8860b;"><i data-lucide="gift" style="width:16px;height:16px;"></i> Rewards</button>
                         <button id="groups-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="users" style="width:16px;height:16px;"></i> Groups</button>
                         <button id="bulk-add-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-plus" style="width:16px;height:16px;"></i> Bulk Add</button>
                     </div>
@@ -633,7 +635,7 @@
     auth.onAuthStateChanged((user) => {
         if (!user) {
             closePeek();
-            ["activity-modal", "rewards-modal", "report-modal", "activity-badge"].forEach(id => document.getElementById(id).classList.add("hidden"));
+            ["activity-modal", "report-modal", "activity-badge"].forEach(id => document.getElementById(id).classList.add("hidden"));
             isAdminAuthed = false;
             adminCheckPromise = Promise.resolve();
             subscribeToScope(DEFAULT_TEACHER_UID);
@@ -757,13 +759,13 @@
     function _prizesHandler(snapshot) {
         prizeData = snapshot.val() || {};
         refreshRedeemIfOpen();
-        if (!document.getElementById("rewards-modal").classList.contains("hidden")) renderRewards();
+        if (rewardsVisible()) renderRewards();
     }
 
     // The spending log is teacher-only, so it follows sign-in like groups do.
     function _redeemLogHandler(snapshot) {
         redeemLog = snapshot.val() || {};
-        if (!document.getElementById("rewards-modal").classList.contains("hidden")) renderRewards();
+        if (rewardsVisible()) renderRewards();
         if (peek) renderPeek();
     }
 
@@ -1706,6 +1708,7 @@
         }
         if (peek) renderPeek();
         renderActivity();
+        if (rewardsVisible()) renderRewards();
         lucide.createIcons();
     }
 
@@ -2414,17 +2417,38 @@
         showToast(name === CUSTOM_REDEEM ? "Redeemed " + cost + " token" + (cost === 1 ? "" : "s") + "!" : "Enjoy your reward! \uD83C\uDF89");
     }
 
-    // ---------------------------------------------- teacher: rewards pop-up ---
-    function openRewards() {
-        if (!auth.currentUser) { showToast("Sign in first", "error"); return; }
-        document.getElementById("prize-error").classList.add("hidden");
-        document.getElementById("rewards-modal").classList.remove("hidden");
-        renderRewards();
-        setTimeout(() => document.getElementById("prize-name").focus(), 0);
+    // ------------------------------------------------- teacher: rewards page ---
+    let rewardDaysShown = 7;   // how many days of purchases are on screen
+
+    function rewardsVisible() {
+        return currentView === "admin" && !document.getElementById("rewards-section").classList.contains("hidden");
     }
 
-    function closeRewards() {
-        document.getElementById("rewards-modal").classList.add("hidden");
+    // Purchases are grouped by the day they happened on this device's calendar.
+    function localDayKey(iso) {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return "";
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    function dayHeading(key) {
+        if (!key) return "Unknown day";
+        const [y, m, d] = key.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+        const label = date.toLocaleDateString([], { weekday: "long" }) + " " + m + "/" + d;
+        const today = localDayKey(new Date(nowMs()).toISOString());
+        const yesterday = localDayKey(new Date(nowMs() - 86400000).toISOString());
+        return key === today ? "Today \u00B7 " + label : key === yesterday ? "Yesterday \u00B7 " + label : label;
+    }
+
+    function renderRedeemFilter() {
+        const select = document.getElementById("redeem-filter");
+        const current = select.value || "all";
+        select.innerHTML = "";
+        select.appendChild(makeOption("all", "All students"));
+        for (let n = 1; n <= TOTAL_STUDENTS; n++) select.appendChild(makeOption(String(n), "Student " + n));
+        select.value = current;
+        if (!select.value) select.value = "all";
     }
 
     function renderRewards() {
@@ -2462,35 +2486,91 @@
             list.appendChild(row);
         });
 
+        renderRedeemFilter();
+        const who = document.getElementById("redeem-filter").value;
+        const log = getRedeemLog().filter(r => who === "all" || r.student === who);
+
+        // Newest day first; within a day, newest first.
+        const days = [];
+        log.forEach(r => {
+            const key = localDayKey(r.at);
+            const last = days[days.length - 1];
+            if (last && last.key === key) last.entries.push(r);
+            else days.push({ key, entries: [r] });
+        });
+
         const logList = document.getElementById("redeem-log");
         logList.innerHTML = "";
-        const log = getRedeemLog();
-        document.getElementById("redeem-log-empty").classList.toggle("hidden", log.length > 0);
-        log.slice(0, 100).forEach(r => {
-            const row = document.createElement("div");
-            row.className = "flex items-center gap-2 rounded-xl px-3 py-2";
-            row.style.cssText = "background:#fff;border:1px solid #e5e7eb;";
-            const info = document.createElement("div");
-            info.className = "flex-1 min-w-0";
-            const what = document.createElement("p");
-            what.className = "text-sm font-medium break-words";
-            what.style.color = "#1a1a2e";
-            what.textContent = "Student " + r.student + (r.name === CUSTOM_REDEEM ? " spent " + redeemLabel(r) : " bought \u201C" + r.name + "\u201D (\uD83E\uDE99 " + r.cost + ")");
-            const when = document.createElement("p");
-            when.className = "text-xs";
-            when.style.color = "#888";
-            when.textContent = r.at ? fmtWhen(r.at) : "";
-            info.appendChild(what);
-            info.appendChild(when);
-            const undo = document.createElement("button");
-            undo.className = "px-3 py-1 rounded-lg text-xs font-semibold flex-shrink-0";
-            undo.style.cssText = "background:#e8e6ff;color:#6366f1;";
-            undo.textContent = "Undo";
-            undo.setAttribute("aria-label", "Undo and refund student " + r.student);
-            undo.addEventListener("click", () => undoRedeem(r));
-            row.appendChild(info);
-            row.appendChild(undo);
-            logList.appendChild(row);
+        const empty = document.getElementById("redeem-log-empty");
+        empty.textContent = who === "all" ? "Nothing redeemed yet." : "Student " + who + " hasn't redeemed anything yet.";
+        empty.classList.toggle("hidden", log.length > 0);
+        document.getElementById("redeem-more").classList.toggle("hidden", days.length <= rewardDaysShown);
+
+        days.slice(0, rewardDaysShown).forEach(day => {
+            const card = document.createElement("section");
+            card.className = "bg-white rounded-xl shadow-sm overflow-hidden";
+
+            const head = document.createElement("div");
+            head.className = "flex items-center justify-between gap-2 flex-wrap px-4 py-2";
+            head.style.cssText = "background:#fdf6e3;border-bottom:1px solid #f3e2b3;";
+            const title = document.createElement("h3");
+            title.className = "font-display text-lg font-bold";
+            title.style.color = "#2d1b4e";
+            title.textContent = dayHeading(day.key);
+            const totals = document.createElement("span");
+            totals.className = "text-xs font-semibold";
+            totals.style.color = "#8a6d0b";
+            const spentTotal = day.entries.reduce((n, r) => n + (r.cost || 0), 0);
+            totals.textContent = day.entries.length + " reward" + (day.entries.length === 1 ? "" : "s") + " \u00B7 \uD83E\uDE99 " + spentTotal;
+            head.appendChild(title);
+            head.appendChild(totals);
+            card.appendChild(head);
+
+            // A quick tally of each prize, handy when handing them out.
+            const tally = new Map();
+            day.entries.forEach(r => { const k = redeemLabel(r); tally.set(k, (tally.get(k) || 0) + 1); });
+            const tallyLine = document.createElement("p");
+            tallyLine.className = "px-4 pt-2 text-xs font-medium break-words";
+            tallyLine.style.color = "#555";
+            tallyLine.textContent = [...tally].map(([k, n]) => k + (n > 1 ? " \u00D7" + n : "")).join(" \u00B7 ");
+            card.appendChild(tallyLine);
+
+            const rows = document.createElement("div");
+            rows.className = "flex flex-col px-2 pb-2 pt-1";
+            day.entries.forEach(r => {
+                const row = document.createElement("div");
+                row.className = "flex items-center gap-2 px-2 py-2";
+                row.style.borderTop = "1px solid #f3f4f6";
+                const time = document.createElement("span");
+                time.className = "text-xs whitespace-nowrap";
+                time.style.cssText = "color:#888;min-width:4.5rem;";
+                time.textContent = r.at ? new Date(r.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+                const what = document.createElement("span");
+                what.className = "flex-1 min-w-0 text-sm break-words";
+                what.style.color = "#1a1a2e";
+                const num = document.createElement("button");
+                num.type = "button";
+                num.className = "num-chip text-xs font-semibold px-2 py-1 rounded-lg mr-1";
+                num.style.cssText = "background:#e8e6ff;color:#4338ca;";
+                num.textContent = r.student;
+                num.setAttribute("aria-label", "View student " + r.student);
+                num.addEventListener("click", () => openPeek(parseInt(r.student, 10)));
+                what.appendChild(num);
+                what.appendChild(document.createTextNode(
+                    r.name === CUSTOM_REDEEM ? "spent " + redeemLabel(r) : r.name + " (\uD83E\uDE99 " + r.cost + ")"));
+                const undo = document.createElement("button");
+                undo.className = "redeem-undo px-3 py-1 rounded-lg text-xs font-semibold flex-shrink-0";
+                undo.style.cssText = "background:#e8e6ff;color:#6366f1;";
+                undo.textContent = "Undo";
+                undo.setAttribute("aria-label", "Undo and refund student " + r.student);
+                undo.addEventListener("click", () => undoRedeem(r));
+                row.appendChild(time);
+                row.appendChild(what);
+                row.appendChild(undo);
+                rows.appendChild(row);
+            });
+            card.appendChild(rows);
+            logList.appendChild(card);
         });
     }
 
@@ -3363,9 +3443,8 @@
             if (!confirm("Archive " + done.length + " finished task" + (done.length === 1 ? "" : "s") + "? Every assigned student has checked " + (done.length === 1 ? "it" : "them") + " off. You can find them later under Archived.")) return;
             await setArchived(done, true);
         });
-        document.getElementById("rewards-btn").addEventListener("click", openRewards);
-        document.getElementById("rewards-close").addEventListener("click", closeRewards);
-        document.getElementById("rewards-modal").addEventListener("click", (e) => { if (e.target.id === "rewards-modal") closeRewards(); });
+        document.getElementById("redeem-filter").addEventListener("change", () => { rewardDaysShown = 7; renderRewards(); });
+        document.getElementById("redeem-more").addEventListener("click", () => { rewardDaysShown += 7; renderRewards(); });
         document.getElementById("prize-add").addEventListener("click", addPrize);
         ["prize-name", "prize-cost"].forEach(id => document.getElementById(id).addEventListener("keydown", (e) => {
             if (e.key === "Enter") { e.preventDefault(); addPrize(); }
@@ -3399,36 +3478,31 @@
         document.getElementById("student-back").addEventListener("click", () => { closeRedeem(); currentStudent = null; showView("select"); });
 
         function setAdminView(view) {
-            const dashSection = document.getElementById("dashboard-section");
-            const taskSection = document.getElementById("tasks-section");
-            const btnDash = document.getElementById("btn-dashboard");
-            const btnTasks = document.getElementById("btn-tasks");
+            const views = { tasks: ["tasks-section", "btn-tasks"], dashboard: ["dashboard-section", "btn-dashboard"], rewards: ["rewards-section", "btn-rewards"] };
+            Object.keys(views).forEach(k => {
+                const on = k === view;
+                document.getElementById(views[k][0]).classList.toggle("hidden", !on);
+                const btn = document.getElementById(views[k][1]);
+                btn.style.background = on ? "#6366f1" : "#e8e6ff";
+                btn.style.color = on ? "#fff" : "#6366f1";
+                btn.style.border = "1px solid #6366f1";
+            });
             if (view === "dashboard") {
                 statusStudentNum = null;
-                dashSection.classList.remove("hidden");
-                taskSection.classList.add("hidden");
-                btnDash.style.background = "#6366f1";
-                btnDash.style.color = "#fff";
-                btnDash.style.border = "1px solid #6366f1";
-                btnTasks.style.background = "#e8e6ff";
-                btnTasks.style.color = "#6366f1";
-                btnTasks.style.border = "1px solid #6366f1";
                 document.getElementById("dashboard-overview").classList.remove("hidden");
                 document.getElementById("student-status-detail").classList.add("hidden");
                 renderDashboard();
-            } else {
-                dashSection.classList.add("hidden");
-                taskSection.classList.remove("hidden");
-                btnTasks.style.background = "#6366f1";
-                btnTasks.style.color = "#fff";
-                btnTasks.style.border = "1px solid #6366f1";
-                btnDash.style.background = "#e8e6ff";
-                btnDash.style.color = "#6366f1";
-                btnDash.style.border = "1px solid #6366f1";
             }
+            if (view === "rewards") {
+                rewardDaysShown = 7;
+                document.getElementById("prize-error").classList.add("hidden");
+                renderRewards();
+            }
+            document.getElementById("app").scrollTop = 0;
         }
         document.getElementById("btn-dashboard").addEventListener("click", () => setAdminView("dashboard"));
         document.getElementById("btn-tasks").addEventListener("click", () => setAdminView("tasks"));
+        document.getElementById("btn-rewards").addEventListener("click", () => setAdminView("rewards"));
 
         document.getElementById("students-plus").addEventListener("click", () => {
             if (TOTAL_STUDENTS < MAX_STUDENTS) setTotalStudents(TOTAL_STUDENTS + 1);
@@ -3606,7 +3680,6 @@
             if (turnInPending) { answerTurnedIn(false); return; }
             if (linkModal && !linkModal.classList.contains("hidden")) { closeLinkModal(); return; }
             if (peek) { closePeek(); return; }
-            if (!document.getElementById("rewards-modal").classList.contains("hidden")) { closeRewards(); return; }
             if (!document.getElementById("report-modal").classList.contains("hidden")) { closeReport(); return; }
             if (!document.getElementById("activity-modal").classList.contains("hidden")) { closeActivity(); return; }
             if (groups && !groups.classList.contains("hidden")) { closeGroupsModal(); return; }
