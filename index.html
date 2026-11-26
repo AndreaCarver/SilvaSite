@@ -188,7 +188,7 @@
             </div>
             <label for="bulk-task-subject" class="sr-only">Subject (optional)</label>
             <input id="bulk-task-subject" type="text" list="subject-options" maxlength="40" placeholder="Subject (optional)" autocomplete="off" class="w-full border-2 rounded-xl px-4 py-3 mb-3 text-base" style="border-color:#ddd;">
-            <label for="bulk-task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">SHOW TO STUDENTS ON (leave blank to show now)</label>
+            <label for="bulk-task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">Schedule Task for Later <span class="font-normal" style="color:#999;">(leave blank to post now)</span></label>
             <input id="bulk-task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 mb-4 text-base" style="border-color:#ddd;">
             <div class="mb-3">
                 <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign all to students:</p>
@@ -250,7 +250,7 @@
             <div class="mb-4"><label for="edit-task-text" class="sr-only">Task title</label> <input id="edit-task-text" type="text" placeholder="Task title" maxlength="200" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
                 <label for="edit-task-desc" class="sr-only">Description (optional)</label> <textarea id="edit-task-desc" placeholder="Description (optional)" maxlength="500" rows="2" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;resize:vertical;"></textarea>
                 <label for="edit-task-subject" class="sr-only">Subject (optional)</label> <input id="edit-task-subject" type="text" list="subject-options" maxlength="40" placeholder="Subject (optional)" autocomplete="off" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
-                <label for="edit-task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">SHOW TO STUDENTS ON (blank = now)</label> <input id="edit-task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+                <label for="edit-task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">Schedule Task for Later <span class="font-normal" style="color:#999;">(leave blank to post now)</span></label> <input id="edit-task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
                 <div id="edit-links-container" class="flex flex-col gap-2 mb-2"></div>
                 <button type="button" id="edit-add-link-btn" class="text-xs font-medium px-3 py-1 rounded-lg mb-2" style="background:#e8e6ff;color:#6366f1;">+ Add another link</button>
                 <label for="edit-task-due" class="sr-only">Due date (optional)</label>
@@ -374,7 +374,7 @@
                         <label for="task-subject" class="sr-only">Subject (optional)</label> <input id="task-subject" type="text" list="subject-options" maxlength="40" placeholder="Subject (optional)" autocomplete="off" class="w-full border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
                     </div>
                     <div class="mb-4">
-                        <label for="task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">SHOW TO STUDENTS ON (leave blank to show now)</label>
+                        <label for="task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">Schedule Task for Later <span class="font-normal" style="color:#999;">(leave blank to post now)</span></label>
                         <input id="task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
                     </div>
                     <div class="mb-4">
