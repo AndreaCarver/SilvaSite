@@ -45,7 +45,9 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 250 250'%3E%3Cg opacity='0.12' fill='%232d1b4e' stroke='%232d1b4e' stroke-width='0.5'%3E%3C!-- Pencil --%3E%3Crect x='30' y='10' width='8' height='50' rx='1' fill='%23f4c542' stroke='%23c9a020'/%3E%3Cpolygon points='30,60 38,60 34,72' fill='%23f5e0b0' stroke='%23c9a020'/%3E%3Crect x='30' y='10' width='8' height='6' rx='1' fill='%23e87d7d' stroke='%23c9a020'/%3E%3C!-- Notebook --%3E%3Crect x='160' y='15' width='45' height='55' rx='3' fill='%236366f1' stroke='%234f46b0'/%3E%3Cline x1='170' y1='28' x2='196' y2='28' stroke='white' stroke-width='1.2'/%3E%3Cline x1='170' y1='36' x2='196' y2='36' stroke='white' stroke-width='1.2'/%3E%3Cline x1='170' y1='44' x2='190' y2='44' stroke='white' stroke-width='1.2'/%3E%3Ccircle cx='163' cy='25' r='2' fill='%234f46b0'/%3E%3Ccircle cx='163' cy='35' r='2' fill='%234f46b0'/%3E%3Ccircle cx='163' cy='45' r='2' fill='%234f46b0'/%3E%3C!-- Ruler --%3E%3Crect x='85' y='90' width='55' height='14' rx='2' fill='%23fbbf24' stroke='%23d4a017'/%3E%3Cline x1='95' y1='90' x2='95' y2='97' stroke='%23d4a017' stroke-width='0.8'/%3E%3Cline x1='105' y1='90' x2='105' y2='100' stroke='%23d4a017' stroke-width='0.8'/%3E%3Cline x1='115' y1='90' x2='115' y2='97' stroke='%23d4a017' stroke-width='0.8'/%3E%3Cline x1='125' y1='90' x2='125' y2='100' stroke='%23d4a017' stroke-width='0.8'/%3E%3C!-- Apple --%3E%3Cellipse cx='200' cy='140' rx='16' ry='18' fill='%23ef4444' stroke='%23b91c1c'/%3E%3Cpath d='M200,122 Q203,115 198,113' fill='none' stroke='%23166534' stroke-width='1.5'/%3E%3Cellipse cx='200' cy='140' rx='5' ry='8' fill='%23f87171' opacity='0.4'/%3E%3C!-- Star --%3E%3Cpolygon points='45,130 49,142 62,142 51,150 55,162 45,154 35,162 39,150 28,142 41,142' fill='%23fbbf24' stroke='%23d4a017'/%3E%3C!-- Scissors --%3E%3Cellipse cx='25' cy='200' rx='8' ry='10' fill='none' stroke='%232d1b4e' stroke-width='1.8'/%3E%3Cellipse cx='45' cy='200' rx='8' ry='10' fill='none' stroke='%232d1b4e' stroke-width='1.8'/%3E%3Cline x1='30' y1='192' x2='50' y2='175' stroke='%232d1b4e' stroke-width='1.8'/%3E%3Cline x1='40' y1='192' x2='20' y2='175' stroke='%232d1b4e' stroke-width='1.8'/%3E%3C!-- Book --%3E%3Crect x='100' y='170' width='40' height='50' rx='2' fill='%23a78bfa' stroke='%237c5cbf'/%3E%3Crect x='103' y='173' width='34' height='44' rx='1' fill='%23c4b5fd' stroke='%237c5cbf'/%3E%3Cline x1='120' y1='173' x2='120' y2='217' stroke='%237c5cbf' stroke-width='0.8'/%3E%3C!-- Crayon --%3E%3Crect x='180' y='185' width='10' height='40' rx='1' fill='%2386efac' stroke='%2322c55e'/%3E%3Cpolygon points='180,225 190,225 185,237' fill='%2386efac' stroke='%2322c55e'/%3E%3Crect x='180' y='185' width='10' height='8' rx='1' fill='%23166534' stroke='%2322c55e'/%3E%3C!-- ABC --%3E%3Ctext x='75' y='45' font-family='serif' font-size='22' font-weight='bold' fill='%23a78bfa' stroke='none' opacity='0.7'%3EABc%3C/text%3E%3C/g%3E%3C/svg%3E");
             background-size: 250px 250px;
         }
+        .num-chip { min-width: 2.25rem; }
         @media print {
+            #turnin-modal, #peek-modal, #activity-modal, #admin-activity, #task-toolbar, #create-toggle-btn { display: none !important; }
             html, body, .school-bg, #app { background: none !important; background-color: white !important; }
             html { font-size: 11pt; }
             body { color: black; }
@@ -56,7 +58,7 @@
             #migration-banner, #share-classroom-card, #bulk-action-bar,
             #remove-all-tasks-btn, #remove-all-complete-btn, #admin-btn,
             #redeem-btn, #add-task-form,
-            .action-area, .student-delete-container,
+            .action-area,
             .priority-toggle, .delete-student-btn,
             .confetti-container, .toast-anim { display: none !important; }
             [id^="dashboard-grid"] > div, .task-enter,
@@ -83,6 +85,49 @@
             <p class="text-sm font-medium" style="color:#666;">Loading…</p>
         </div>
     </div>
+    <!-- TURN-IN REMINDER MODAL (student) -->
+    <div id="turnin-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4" style="z-index:60;" role="dialog" aria-modal="true" aria-labelledby="turnin-title">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm text-center">
+            <div class="mb-2" style="font-size:40px;line-height:1;">&#128221;</div>
+            <h3 id="turnin-title" class="font-display text-xl font-bold mb-2" style="color:#2d1b4e;">Did you make sure to turn in the assignment with your name?</h3>
+            <p id="turnin-task" class="text-sm mb-4 break-words" style="color:#666;"></p>
+            <div class="flex flex-col gap-2">
+                <button id="turnin-yes" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Yes, I did!</button>
+                <button id="turnin-no" class="w-full py-3 rounded-xl font-semibold text-base" style="background:#e8e6ff;color:#6366f1;">Not yet</button>
+            </div>
+        </div>
+    </div>
+    <!-- STUDENT PEEK MODAL (teacher): opens on top of the page, so closing it leaves you exactly where you were -->
+    <div id="peek-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4" style="z-index:55;" role="dialog" aria-modal="true" aria-labelledby="peek-title">
+        <div class="rounded-2xl shadow-lg w-full max-w-lg flex flex-col" style="background:#f5f3ff;max-height:90vh;">
+            <div class="flex items-center justify-between px-5 pt-4 pb-2 gap-2">
+                <h3 id="peek-title" class="font-display text-xl font-bold" style="color:#1a1a2e;">Student</h3>
+                <button id="peek-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
+            </div>
+            <div id="peek-summary" class="px-5 pb-2 text-sm" style="color:#666;"></div>
+            <p class="px-5 pb-2 text-xs" style="color:#888;">Tap a task to check or un-check it for this student.</p>
+            <div id="peek-list" class="flex flex-col gap-2 px-5 pb-3 overflow-y-auto"></div>
+            <div class="px-5 pb-4 pt-2">
+                <button id="peek-done" class="w-full py-3 rounded-xl font-semibold text-white text-base" style="background:#6366f1;">Back to where I was</button>
+            </div>
+        </div>
+    </div>
+    <!-- ACTIVITY MODAL (teacher) -->
+    <div id="activity-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4" role="dialog" aria-modal="true" aria-labelledby="activity-title">
+        <div class="bg-white rounded-2xl shadow-lg p-5 w-full max-w-lg flex flex-col" style="max-height:90vh;">
+            <div class="flex items-center justify-between mb-2">
+                <h3 id="activity-title" class="font-display text-xl font-bold" style="color:#1a1a2e;">Completed Tasks</h3>
+                <button id="activity-close" class="p-1 rounded-lg text-2xl leading-none" aria-label="Close" style="color:#888;">&times;</button>
+            </div>
+            <div class="rounded-xl p-3 mb-3" style="background:#f5f3ff;">
+                <button id="alerts-toggle" class="text-xs font-semibold px-3 py-2 rounded-lg text-white" style="background:#6366f1;">Turn on desktop alerts</button>
+                <p id="alerts-note" class="text-xs mt-2" style="color:#666;"></p>
+            </div>
+            <div id="activity-list" class="flex flex-col gap-2 overflow-y-auto"></div>
+            <p id="activity-empty" class="text-center text-sm py-6 hidden" style="color:#aaa;">No completed tasks yet.</p>
+        </div>
+    </div>
+    <datalist id="subject-options"></datalist>
     <!-- REDEEM MODAL -->
     <div id="redeem-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
@@ -141,6 +186,10 @@
                 <input id="bulk-task-due" type="date" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
                 <label class="priority-toggle flex items-center gap-1 cursor-pointer text-xs font-medium px-3 py-1 rounded-lg flex-shrink-0"><input type="checkbox" id="bulk-task-priority"> Top Priority</label>
             </div>
+            <label for="bulk-task-subject" class="sr-only">Subject (optional)</label>
+            <input id="bulk-task-subject" type="text" list="subject-options" maxlength="40" placeholder="Subject (optional)" autocomplete="off" class="w-full border-2 rounded-xl px-4 py-3 mb-3 text-base" style="border-color:#ddd;">
+            <label for="bulk-task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">SHOW TO STUDENTS ON (leave blank to show now)</label>
+            <input id="bulk-task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 mb-4 text-base" style="border-color:#ddd;">
             <div class="mb-3">
                 <p class="text-sm font-semibold mb-2" style="color:#1a1a2e;">Assign all to students:</p>
                 <div id="bulk-group-chips" class="flex flex-wrap items-center gap-2 mb-2"></div>
@@ -200,6 +249,8 @@
             <h3 class="text-xl font-bold mb-4" style="color:#1a1a2e;">Edit Task</h3>
             <div class="mb-4"><label for="edit-task-text" class="sr-only">Task title</label> <input id="edit-task-text" type="text" placeholder="Task title" maxlength="200" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
                 <label for="edit-task-desc" class="sr-only">Description (optional)</label> <textarea id="edit-task-desc" placeholder="Description (optional)" maxlength="500" rows="2" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;resize:vertical;"></textarea>
+                <label for="edit-task-subject" class="sr-only">Subject (optional)</label> <input id="edit-task-subject" type="text" list="subject-options" maxlength="40" placeholder="Subject (optional)" autocomplete="off" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
+                <label for="edit-task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">SHOW TO STUDENTS ON (blank = now)</label> <input id="edit-task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 mb-2 text-base" style="border-color:#ddd;">
                 <div id="edit-links-container" class="flex flex-col gap-2 mb-2"></div>
                 <button type="button" id="edit-add-link-btn" class="text-xs font-medium px-3 py-1 rounded-lg mb-2" style="background:#e8e6ff;color:#6366f1;">+ Add another link</button>
                 <label for="edit-task-due" class="sr-only">Due date (optional)</label>
@@ -262,6 +313,7 @@
                 </div>
                 <h2 id="admin-title" class="font-display text-2xl font-bold text-center" style="color:#1a1a2e;">Teacher Admin Panel</h2>
                 <div class="flex justify-end gap-2 flex-wrap">
+                    <button id="admin-activity" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;" aria-label="Completed task notifications"><i data-lucide="bell" style="width:16px;height:16px;"></i><span id="activity-badge" class="hidden text-xs font-bold px-2 rounded-full text-white" style="background:#e74c3c;">0</span></button>
                     <button id="btn-tasks" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-checks" style="width:16px;height:16px;"></i> Task Panel</button>
                     <button id="btn-dashboard" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Dashboard</button>
                 </div>
@@ -305,18 +357,25 @@
             </div><!-- TASKS MANAGEMENT VIEW -->
             <div id="tasks-section">
                 <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
-                    <h2 class="font-display text-2xl font-bold" style="color:#1a1a2e;">Create Task</h2>
+                    <button id="create-toggle-btn" type="button" class="flex items-center gap-2 text-base font-semibold px-4 py-2 rounded-xl text-white" style="background:#6366f1;" aria-expanded="false" aria-controls="add-task-form">+ New Task</button>
                     <div class="flex items-center gap-2 flex-wrap">
                         <button id="groups-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="users" style="width:16px;height:16px;"></i> Groups</button>
                         <button id="bulk-add-btn" type="button" class="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded-lg" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;"><i data-lucide="list-plus" style="width:16px;height:16px;"></i> Bulk Add</button>
                     </div>
                 </div>
-                <form id="add-task-form" class="mb-6 bg-white rounded-xl p-4 shadow-sm">
+                <form id="add-task-form" class="hidden mb-6 bg-white rounded-xl p-4 shadow-sm">
                     <div class="flex gap-2 mb-4">
                         <label for="task-input" class="sr-only">Task title</label> <input id="task-input" type="text" placeholder="Task title..." maxlength="200" class="flex-1 border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
                     </div>
                     <div class="mb-4">
                         <label for="task-desc" class="sr-only">Description (optional)</label> <textarea id="task-desc" placeholder="Description (optional)" maxlength="500" rows="2" class="w-full border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;resize:vertical;"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="task-subject" class="sr-only">Subject (optional)</label> <input id="task-subject" type="text" list="subject-options" maxlength="40" placeholder="Subject (optional)" autocomplete="off" class="w-full border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
+                    </div>
+                    <div class="mb-4">
+                        <label for="task-publish" class="block text-xs font-semibold mb-1" style="color:#666;">SHOW TO STUDENTS ON (leave blank to show now)</label>
+                        <input id="task-publish" type="datetime-local" class="w-full border-2 rounded-xl px-4 py-3 text-base" style="border-color:#ddd;">
                     </div>
                     <div class="mb-4">
                         <div id="task-links-container" class="flex flex-col gap-2">
@@ -344,7 +403,24 @@
                         <button type="submit" class="px-5 py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 w-full max-w-md" style="background:#6366f1;"> <i data-lucide="plus" style="width:18px;height:18px;"></i> Add </button>
                     </div>
                 </form>
-                <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">Manage Tasks</h2>
+                <h2 class="font-display text-2xl font-bold mb-3" style="color:#1a1a2e;">Manage Tasks <span id="task-count" class="text-sm font-semibold" style="color:#666;font-family:'DM Sans',sans-serif;"></span></h2>
+                <div id="task-toolbar" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                    <input id="task-search" type="search" placeholder="Search tasks..." aria-label="Search tasks" class="col-span-2 sm:col-span-4 border-2 rounded-xl px-3 py-2 text-sm" style="border-color:#ddd;">
+                    <select id="task-sort" aria-label="Sort tasks" class="border-2 rounded-xl px-2 py-2 text-sm bg-white" style="border-color:#ddd;">
+                        <option value="newest">Sort: Newest</option>
+                        <option value="az">Sort: A to Z</option>
+                        <option value="subject">Sort: By subject</option>
+                        <option value="due">Sort: Due date</option>
+                    </select>
+                    <select id="task-filter-subject" aria-label="Filter by subject" class="border-2 rounded-xl px-2 py-2 text-sm bg-white" style="border-color:#ddd;"></select>
+                    <select id="task-filter-status" aria-label="Filter by status" class="border-2 rounded-xl px-2 py-2 text-sm bg-white" style="border-color:#ddd;">
+                        <option value="all">All tasks</option>
+                        <option value="open">Still being worked on</option>
+                        <option value="done">All students done</option>
+                        <option value="scheduled">Scheduled</option>
+                    </select>
+                    <button id="expand-all-btn" type="button" class="text-sm font-medium px-3 py-2 rounded-xl" style="background:#e8e6ff;color:#6366f1;border:1px solid #6366f1;">Open all</button>
+                </div>
                 <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                     <div id="bulk-action-bar" class="items-center gap-2" style="display:none;">
                         <span class="text-xs font-semibold" style="color:#1a1a2e;"><span id="bulk-selected-count">0</span> selected</span>
@@ -372,6 +448,7 @@
                     </div>
                 </div>
             </div>
+            <p id="token-debt-note" class="hidden text-sm font-medium text-center rounded-xl px-3 py-2 mb-3" style="background:#fee2e2;color:#b91c1c;">Your tokens are below zero. Finish tasks to earn them back!</p>
             <div class="mb-4">
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
@@ -426,6 +503,19 @@
     let TOTAL_STUDENTS = 26;
     const MIN_STUDENTS = 1;
     const MAX_STUDENTS = 50;
+    // Each device remembers the last student count it saw for a classroom, so
+    // the number grid opens at the right size instead of flashing the default.
+    // With nothing remembered, the grid waits for the real count.
+    let studentCountKnown = false;
+    function cachedStudentCount(uid) {
+        try {
+            const n = parseInt(localStorage.getItem("mwc_students_" + uid), 10);
+            return n >= MIN_STUDENTS && n <= MAX_STUDENTS ? n : null;
+        } catch (e) { return null; }
+    }
+    function cacheStudentCount(uid, n) {
+        try { localStorage.setItem("mwc_students_" + uid, String(n)); } catch (e) { /* ignore */ }
+    }
 
     const COLORS = {
         lavender: "#a78bfa",
@@ -452,9 +542,22 @@
     let adminCheckPromise = Promise.resolve();
     let groupData = {};       // groupId -> { name, students, created_at }
     let editingGroupId = null;
+    let expandedTaskIds = new Set();
+    let peek = null;                 // { student, fromTaskId } while the teacher's student pop-up is open
+    let knownCompletionKeys = null;  // null until the first load, so old check-offs don't raise alerts
+    let turnInPending = false;
+
+    // Scheduled posting and countdowns follow Firebase's clock, so a school
+    // device with the wrong time doesn't show tasks early.
+    let serverOffset = 0;
+    db.ref(".info/serverTimeOffset").on("value", s => { serverOffset = s.val() || 0; });
+    function nowMs() { return Date.now() + serverOffset; }
 
     auth.onAuthStateChanged((user) => {
         if (!user) {
+            closePeek();
+            document.getElementById("activity-modal").classList.add("hidden");
+            document.getElementById("activity-badge").classList.add("hidden");
             isAdminAuthed = false;
             adminCheckPromise = Promise.resolve();
             subscribeToScope(DEFAULT_TEACHER_UID);
@@ -474,6 +577,8 @@
                 isAdminAuthed = isProfile || isLegacyAdmin;
                 if (!isAdminAuthed && currentView === "admin") {
                     showView("select");
+                } else if (currentView === "admin") {
+                    renderActivity();
                 }
             })
             .catch(err => {
@@ -496,6 +601,7 @@
         allData = data;
         recordsLoaded = true;
         updateLoadingOverlay();
+        noteNewCompletions();
         if (currentView === "admin") renderAdmin();
         if (currentView === "student") renderStudent();
     }
@@ -512,7 +618,9 @@
         const val = snapshot.val();
         if (typeof val === "number" && val >= MIN_STUDENTS && val <= MAX_STUDENTS) {
             TOTAL_STUDENTS = val;
+            cacheStudentCount(teacherUid, val);
         }
+        studentCountKnown = true;
         const countEl = document.getElementById("students-count");
         if (countEl) countEl.textContent = TOTAL_STUDENTS;
         buildStudentGrid();
@@ -538,8 +646,13 @@
 
         // Reset cached state so the new scope's data fully replaces the old.
         teacherUid = uid;
+        const cachedCount = cachedStudentCount(uid);
+        studentCountKnown = cachedCount !== null;
+        if (studentCountKnown) TOTAL_STUDENTS = cachedCount;
+        buildStudentGrid();
         allData = [];
         tokenData = {};
+        knownCompletionKeys = null;
         recordsLoaded = false;
         tokensLoaded = false;
 
@@ -654,9 +767,11 @@
         return tokenData[String(studentNum)] || 0;
     }
 
+    // Balances may go below zero. Otherwise a student could spend their tokens,
+    // un-check everything, and check it all again to earn them twice.
     async function changeTokens(studentNum, delta) {
         try {
-            await tokensRef().child(String(studentNum)).transaction(curr => Math.max(0, (curr || 0) + delta));
+            await tokensRef().child(String(studentNum)).transaction(curr => (curr || 0) + delta);
             if (delta > 0) {
                 playCoinSound();
                 if (currentView === "student" && currentStudent === studentNum) {
@@ -763,11 +878,20 @@
     function getTasks() {
         return allData.filter(r => r.type === "task").sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
     }
+    // A task with a future `task_publish` time is scheduled: only the teacher sees it.
+    function isPublished(task) {
+        if (!task.task_publish) return true;
+        const at = Date.parse(task.task_publish);
+        return isNaN(at) || at <= nowMs();
+    }
+    // Only tasks the student can see right now.
     function getTasksForStudent(studentNum) {
-        return getTasks().filter(t => {
-            const assigned = t.assigned_to ? t.assigned_to.split(",").map(x => parseInt(x)) : [];
-            return assigned.includes(studentNum);
-        });
+        return getTasks().filter(t => isPublished(t) && parseStudentList(t.assigned_to).includes(studentNum));
+    }
+    function getScheduledTasksForStudent(studentNum) {
+        return getTasks()
+            .filter(t => !isPublished(t) && parseStudentList(t.assigned_to).includes(studentNum))
+            .sort((a, b) => a.task_publish.localeCompare(b.task_publish));
     }
     function getCompletionsByTaskAndStudent(taskId, studentNum) {
         return allData.filter(r => r.type === "completion" && r.task_id === taskId && r.assigned_to === String(studentNum));
@@ -880,11 +1004,12 @@
     }
 
     // The prerequisite that actually applies to this student, or null. A link to
-    // a deleted task, or to one this student was never assigned, does not lock.
+    // a deleted or not-yet-posted task, or to one this student was never
+    // assigned, does not lock.
     function getPrereqFor(task, studentNum) {
         if (!task || !task.task_prereq) return null;
         const pre = getTaskById(task.task_prereq);
-        if (!pre) return null;
+        if (!pre || !isPublished(pre)) return null;
         if (studentNum != null && !parseStudentList(pre.assigned_to).includes(studentNum)) return null;
         return pre;
     }
@@ -1053,7 +1178,7 @@
         const c = document.getElementById("toast-container");
         const t = document.createElement("div");
         t.className = "toast-anim px-4 py-3 rounded-xl text-sm font-medium text-white shadow-lg";
-        t.style.background = type === "success" ? "#22c55e" : "#e74c3c";
+        t.style.background = type === "success" ? "#22c55e" : type === "info" ? "#6366f1" : "#e74c3c";
         t.textContent = msg;
         c.appendChild(t);
         setTimeout(() => t.remove(), 3000);
@@ -1138,6 +1263,7 @@
     function buildStudentGrid() {
         const grid = document.getElementById("student-grid");
         grid.innerHTML = "";
+        if (!studentCountKnown) return;
         for (let i = 1; i <= TOTAL_STUDENTS; i++) {
             const btn = document.createElement("button");
             btn.className = "student-btn w-12 h-12 rounded-xl font-bold text-base flex items-center justify-center shadow-sm";
@@ -1184,117 +1310,260 @@
         bar.style.display = selectedTaskIds.size > 0 ? "flex" : "none";
     }
 
-    function renderAdmin() {
-        const tasks = getTasks().slice().sort((a, b) => {
-            const aDone = isTaskAllComplete(a) ? 1 : 0;
-            const bDone = isTaskAllComplete(b) ? 1 : 0;
-            return bDone - aDone;
+    // View choices are remembered on the teacher's device only.
+    const taskView = { search: "", sort: "newest", subject: "all", status: "all" };
+    try {
+        const saved = JSON.parse(localStorage.getItem("mwc_taskView") || "{}");
+        if (saved.sort) taskView.sort = saved.sort;
+    } catch (e) { /* storage blocked: use defaults */ }
+    function saveTaskView() {
+        try { localStorage.setItem("mwc_taskView", JSON.stringify({ sort: taskView.sort })); } catch (e) { /* ignore */ }
+    }
+
+    const DEFAULT_SUBJECTS = ["Math", "Reading", "Writing", "Science", "Social Studies"];
+    const NO_SUBJECT = "__none__";
+
+    function subjectOf(task) { return (task.task_subject || "").trim(); }
+    function usedSubjects() {
+        return [...new Set(getTasks().map(subjectOf).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    }
+
+    function makeOption(value, label) {
+        const o = document.createElement("option");
+        o.value = value;
+        if (label != null) o.textContent = label;
+        return o;
+    }
+
+    function refreshSubjectLists() {
+        const used = usedSubjects();
+        const datalist = document.getElementById("subject-options");
+        datalist.innerHTML = "";
+        [...new Set([...DEFAULT_SUBJECTS, ...used])].sort((a, b) => a.localeCompare(b))
+            .forEach(v => datalist.appendChild(makeOption(v)));
+
+        const filter = document.getElementById("task-filter-subject");
+        if (taskView.subject !== "all" && taskView.subject !== NO_SUBJECT && !used.includes(taskView.subject)) taskView.subject = "all";
+        filter.innerHTML = "";
+        filter.appendChild(makeOption("all", "All subjects"));
+        used.forEach(v => filter.appendChild(makeOption(v, v)));
+        filter.appendChild(makeOption(NO_SUBJECT, "No subject"));
+        filter.value = taskView.subject;
+    }
+
+    function compareTitles(a, b) { return a.task_text.localeCompare(b.task_text, undefined, { numeric: true, sensitivity: "base" }); }
+    // Blanks (no due date, no subject) sort to the bottom.
+    function compareBlankLast(x, y) {
+        if (!x || !y) return (x ? -1 : 0) + (y ? 1 : 0);
+        return x.localeCompare(y, undefined, { numeric: true, sensitivity: "base" });
+    }
+
+    function getVisibleAdminTasks() {
+        const q = taskView.search.trim().toLowerCase();
+        const tasks = getTasks().filter(t => {
+            if (q && !(t.task_text + " " + (t.task_desc || "") + " " + subjectOf(t)).toLowerCase().includes(q)) return false;
+            if (taskView.subject === NO_SUBJECT && subjectOf(t)) return false;
+            if (taskView.subject !== "all" && taskView.subject !== NO_SUBJECT && subjectOf(t) !== taskView.subject) return false;
+            if (taskView.status === "scheduled" && isPublished(t)) return false;
+            if (taskView.status === "done" && !(isPublished(t) && isTaskAllComplete(t))) return false;
+            if (taskView.status === "open" && (!isPublished(t) || isTaskAllComplete(t))) return false;
+            return true;
         });
+        if (taskView.sort === "az") tasks.sort(compareTitles);
+        else if (taskView.sort === "due") tasks.sort((a, b) => compareBlankLast(a.task_due, b.task_due) || compareTitles(a, b));
+        else if (taskView.sort === "subject") tasks.sort((a, b) => compareBlankLast(subjectOf(a), subjectOf(b)) || compareTitles(a, b));
+        else tasks.sort((a, b) => (isTaskAllComplete(b) ? 1 : 0) - (isTaskAllComplete(a) ? 1 : 0));
+        return tasks;
+    }
+
+    function makeBadge(text, css) {
+        const span = document.createElement("span");
+        span.className = "text-xs font-medium px-2 py-1 rounded-lg";
+        span.style.cssText = css;
+        span.textContent = text;
+        return span;
+    }
+
+    // One task: a short summary row, with the details tucked underneath until opened.
+    function createAdminTaskEl(task) {
+        const open = expandedTaskIds.has(task.task_id);
+        const published = isPublished(task);
+        const assigned = parseStudentList(task.assigned_to);
+        const doneSet = new Set(assigned.filter(n => getCompletionsByTaskAndStudent(task.task_id, n).length > 0));
+        const allDone = published && assigned.length > 0 && doneSet.size === assigned.length;
+
+        const el = document.createElement("div");
+        el.className = "bg-white rounded-xl px-3 py-2 shadow-sm";
+        el.dataset.id = task.task_id;
+        el.style.borderLeft = "4px solid " + (!published ? "#a78bfa" : allDone ? "#86efac" : "#fdba74");
+
+        const head = document.createElement("div");
+        head.className = "flex items-center gap-2";
+        const select = document.createElement("input");
+        select.type = "checkbox";
+        select.className = "task-select-checkbox w-4 h-4 cursor-pointer flex-shrink-0";
+        select.dataset.taskId = task.task_id;
+        select.checked = selectedTaskIds.has(task.task_id);
+        select.setAttribute("aria-label", "Select " + task.task_text);
+        head.appendChild(select);
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "task-toggle flex-1 min-w-0 text-left flex items-start gap-1";
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.innerHTML = '<i data-lucide="' + (open ? "chevron-down" : "chevron-right") + '" style="width:16px;height:16px;flex-shrink:0;margin-top:3px;color:#6366f1;"></i>';
+        const summary = document.createElement("span");
+        summary.className = "flex-1 min-w-0 flex items-center gap-1 flex-wrap";
+        const title = document.createElement("span");
+        title.className = "task-text font-medium text-sm break-words mr-1";
+        title.style.color = "#1a1a2e";
+        title.textContent = (task.task_priority ? "\u2B50 " : "") + task.task_text;
+        summary.appendChild(title);
+        if (subjectOf(task) && taskView.sort !== "subject") summary.appendChild(makeBadge(subjectOf(task), "background:#e0f2fe;color:#075985;"));
+        if (!published) summary.appendChild(makeBadge("\uD83D\uDD52 Posts " + fmtWhen(task.task_publish), "background:#ede9fe;color:#5b21b6;"));
+        if (task.task_due) summary.appendChild(makeBadge("Due " + fmtDue(task.task_due), "background:#fff3e0;color:#e65100;"));
+        if (published) summary.appendChild(makeBadge(
+            assigned.length === 0 ? "Nobody assigned" : (allDone ? "\u2713 " : "") + doneSet.size + "/" + assigned.length + " done",
+            allDone ? "background:#e8f5e9;color:#2e7d32;" : "background:#f3f4f6;color:#555;"));
+        toggle.appendChild(summary);
+        toggle.addEventListener("click", () => {
+            if (open) expandedTaskIds.delete(task.task_id);
+            else expandedTaskIds.add(task.task_id);
+            renderAdmin();
+            const again = document.querySelector('#admin-task-list [data-id="' + task.task_id + '"] .task-toggle');
+            if (again) again.focus({ preventScroll: true });
+        });
+        head.appendChild(toggle);
+
+        const actions = document.createElement("div");
+        actions.className = "flex items-center gap-1 action-area flex-shrink-0";
+        head.appendChild(actions);
+        el.appendChild(head);
+        renderDeleteButton(actions, task);
+        if (!open) return el;
+
+        const body = document.createElement("div");
+        body.className = "flex flex-col gap-2 mt-2 pt-2";
+        body.style.borderTop = "1px solid #eee";
+
+        if (!published) {
+            const row = document.createElement("div");
+            row.className = "flex items-center gap-2 flex-wrap";
+            row.appendChild(makeBadge("Students can't see this yet.", "background:#ede9fe;color:#5b21b6;"));
+            const now = document.createElement("button");
+            now.type = "button";
+            now.className = "text-xs font-semibold px-3 py-1 rounded-lg text-white";
+            now.style.background = "#6366f1";
+            now.textContent = "Post now";
+            now.addEventListener("click", () => postNow(task));
+            row.appendChild(now);
+            body.appendChild(row);
+        }
+
+        if (task.task_desc) {
+            const desc = document.createElement("p");
+            desc.className = "task-desc text-xs";
+            desc.style.color = "#666";
+            desc.textContent = task.task_desc;
+            body.appendChild(desc);
+        }
+
+        const info = document.createElement("div");
+        info.className = "flex items-center gap-2 flex-wrap";
+        const links = getLinks(task);
+        links.forEach((lnk, i) => {
+            const a = document.createElement("a");
+            a.href = lnk.url; a.target = "_blank"; a.rel = "noopener";
+            a.className = "admin-link-badge text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1";
+            a.style.cssText = "background:#e8e6ff;color:#6366f1;";
+            a.innerHTML = '<i data-lucide="external-link" style="width:12px;height:12px;"></i> ' + escHtml(lnk.title || 'Link' + (links.length > 1 ? ' ' + (i + 1) : ''));
+            info.appendChild(a);
+        });
+        const prereqBadge = makePrereqBadge(task);
+        if (prereqBadge) info.appendChild(prereqBadge);
+        if (info.children.length) body.appendChild(info);
+
+        const label = document.createElement("p");
+        label.className = "text-xs font-semibold";
+        label.style.color = "#666";
+        label.textContent = assigned.length === 0 ? "Assigned: nobody" : "Assigned (tap a number to see that student). Green \u2713 means done:";
+        body.appendChild(label);
+        const chips = document.createElement("div");
+        chips.className = "flex gap-1 flex-wrap";
+        assigned.forEach(n => {
+            const done = doneSet.has(n);
+            const chip = document.createElement("button");
+            chip.type = "button";
+            chip.className = "num-chip text-sm font-semibold px-2 py-1 rounded-lg";
+            chip.style.cssText = !published ? "background:#ede9fe;color:#5b21b6;"
+                : done ? "background:#dcfce7;color:#166534;" : "background:#fee2e2;color:#b91c1c;";
+            chip.textContent = (done ? "\u2713 " : "") + n;
+            chip.setAttribute("aria-label", "View student " + n + (done ? " (done)" : ""));
+            chip.addEventListener("click", () => openPeek(n, task.task_id));
+            chips.appendChild(chip);
+        });
+        body.appendChild(chips);
+
+        const groupWrap = document.createElement("div");
+        groupWrap.className = "task-group-container flex gap-2 flex-wrap items-center";
+        body.appendChild(groupWrap);
+        el.appendChild(body);
+        renderTaskGroupButtons(el, task);
+        return el;
+    }
+
+    async function postNow(task) {
+        const r = await fbUpdate({ ...task, task_publish: "" });
+        if (r.isOk) showToast("Task posted!");
+        else showToast("Error updating task", "error");
+    }
+
+    function renderAdmin() {
+        refreshSubjectLists();
+        const allTasks = getTasks();
+        const tasks = getVisibleAdminTasks();
         const list = document.getElementById("admin-task-list");
         const empty = document.getElementById("admin-empty");
+        empty.textContent = allTasks.length === 0 ? "No tasks yet. Tap + New Task to add one!" : "No tasks match your search or filters.";
         empty.classList.toggle("hidden", tasks.length > 0);
-        document.getElementById("remove-all-tasks-btn").classList.toggle("hidden", tasks.length === 0);
+        document.getElementById("remove-all-tasks-btn").classList.toggle("hidden", allTasks.length === 0);
+        document.getElementById("task-count").textContent = allTasks.length === 0 ? ""
+            : "(" + (tasks.length === allTasks.length ? allTasks.length : tasks.length + " of " + allTasks.length) + ")";
+        document.getElementById("expand-all-btn").textContent =
+            tasks.length > 0 && tasks.every(t => expandedTaskIds.has(t.task_id)) ? "Close all" : "Open all";
 
-        const existingEls = new Map([...list.children].map(el => [el.dataset.id, el]));
-        const currentIds = new Set(tasks.map(t => t.task_id));
-
-        existingEls.forEach((el, id) => { if (!currentIds.has(id)) el.remove(); });
-
+        const currentIds = new Set(allTasks.map(t => t.task_id));
         for (const id of [...selectedTaskIds]) { if (!currentIds.has(id)) selectedTaskIds.delete(id); }
         updateBulkBar();
 
-        tasks.forEach((task, idx) => {
-            let el = list.querySelector(`[data-id="${task.task_id}"]`);
-            if (el) {
-                el.querySelector(".task-text").textContent = task.task_text;
-                const indicator = el.querySelector(".task-all-complete-indicator");
-                if (indicator) indicator.style.display = isTaskAllComplete(task) ? "inline-flex" : "none";
-                const cb = el.querySelector(".task-select-checkbox");
-                if (cb) cb.checked = selectedTaskIds.has(task.task_id);
-                // Update description
-                let descEl = el.querySelector(".task-desc");
-                if (task.task_desc) {
-                    if (!descEl) { descEl = document.createElement("p"); descEl.className = "task-desc text-xs"; descEl.style.color = "#666"; el.querySelector(".task-text").parentElement.after(descEl); }
-                    descEl.textContent = task.task_desc;
-                } else if (descEl) { descEl.remove(); }
-                const assignedNums = task.assigned_to ? task.assigned_to.split(",").sort((a, b) => parseInt(a) - parseInt(b)).join(", ") : "None";
-                el.querySelector(".assigned-text").textContent = "Assigned: " + assignedNums;
-                const infoRow = el.querySelector(".assigned-text").parentElement;
-                infoRow.querySelectorAll(".task-priority-badge, .admin-link-badge, .task-due, .task-prereq-badge").forEach(el2 => el2.remove());
-                if (task.task_priority) {
-                    const span = document.createElement("span");
-                    span.className = "task-priority-badge text-xs font-semibold px-2 py-1 rounded-lg";
-                    span.style.cssText = "background:#fdf6e3;color:#b8860b;";
-                    span.innerHTML = "&#11088; Top Priority";
-                    infoRow.appendChild(span);
+        const frag = document.createDocumentFragment();
+        const grouped = taskView.sort === "subject";
+        let lastGroup = null;
+        tasks.forEach(task => {
+            if (grouped) {
+                const group = subjectOf(task) || "No subject";
+                if (lastGroup === null || group.toLowerCase() !== lastGroup.toLowerCase()) {
+                    lastGroup = group;
+                    const h = document.createElement("h3");
+                    h.className = "font-display text-lg font-bold mt-2";
+                    h.style.color = "#2d1b4e";
+                    h.textContent = group;
+                    frag.appendChild(h);
                 }
-                const updLinks = getLinks(task);
-                updLinks.forEach((lnk, i) => {
-                    const a = document.createElement("a");
-                    a.href = lnk.url; a.target = "_blank"; a.rel = "noopener";
-                    a.className = "admin-link-badge text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1";
-                    a.style.cssText = "background:#e8e6ff;color:#6366f1;";
-                    a.innerHTML = '<i data-lucide="external-link" style="width:12px;height:12px;"></i> ' + escHtml(lnk.title || 'Link' + (updLinks.length > 1 ? ' ' + (i + 1) : ''));
-                    infoRow.appendChild(a);
-                });
-                if (task.task_due) {
-                    const span = document.createElement("span");
-                    span.className = "task-due text-xs font-medium px-2 py-1 rounded-lg";
-                    span.style.cssText = "background:#fff3e0;color:#e65100;";
-                    span.textContent = "Due: " + fmtDue(task.task_due);
-                    infoRow.appendChild(span);
-                }
-                const updPrereqBadge = makePrereqBadge(task);
-                if (updPrereqBadge) infoRow.appendChild(updPrereqBadge);
-                const actionArea = el.querySelector(".action-area");
-                renderDeleteButton(actionArea, task);
-                renderStudentDeleteButtons(el, task);
-                renderTaskGroupButtons(el, task);
-            } else {
-                el = document.createElement("div");
-                el.className = "task-enter flex flex-col gap-3 bg-white rounded-xl px-4 py-3 shadow-sm";
-                el.dataset.id = task.task_id;
-                const assignedNums = task.assigned_to ? task.assigned_to.split(",").sort((a, b) => parseInt(a) - parseInt(b)).join(", ") : "None";
-                const priorityHtml = task.task_priority ? `<span class="task-priority-badge text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#11088; Top Priority</span>` : "";
-                const linksArr = getLinks(task);
-                const linkHtml = linksArr.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="admin-link-badge text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (linksArr.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
-                const dueHtml = task.task_due ? `<span class="task-due text-xs font-medium px-2 py-1 rounded-lg" style="background:#fff3e0;color:#e65100;">Due: ${fmtDue(task.task_due)}</span>` : "";
-                const prereqTask = task.task_prereq ? getTaskById(task.task_prereq) : null;
-                const prereqHtml = task.task_prereq ? `<span class="task-prereq-badge text-xs font-medium px-2 py-1 rounded-lg" style="background:#eef2ff;color:#4338ca;">\uD83D\uDD12 After: ${escHtml(prereqTask ? prereqTask.task_text : "(deleted task)")}</span>` : "";
-                const descHtml = task.task_desc ? `<p class="task-desc text-xs" style="color:#666;">${escHtml(task.task_desc)}</p>` : "";
-                const allCompleteInit = isTaskAllComplete(task);
-                const isSelected = selectedTaskIds.has(task.task_id);
-                el.innerHTML = `
-        <div class="flex items-center gap-2">
-          <input type="checkbox" class="task-select-checkbox w-4 h-4 cursor-pointer flex-shrink-0" data-task-id="${task.task_id}" ${isSelected ? 'checked' : ''}>
-          <span class="task-text font-medium text-xl" style="color:#1a1a2e;">${escHtml(task.task_text)}</span>
-          <span class="task-all-complete-indicator" title="All assigned students completed" style="color:#22c55e;display:${allCompleteInit ? 'inline-flex' : 'none'};align-items:center;gap:4px;font-size:0.875rem;font-weight:600;">
-            <i data-lucide="check-circle-2" style="width:22px;height:22px;"></i> All students done
-          </span>
-          <div class="flex items-center gap-1 action-area ml-auto"></div>
-        </div>
-        ${descHtml}
-        <div class="flex items-center gap-2 flex-wrap">
-          <p class="assigned-text text-xs" style="color:#999;">Assigned: ${escHtml(assignedNums)}</p>
-          ${priorityHtml}${linkHtml}${dueHtml}${prereqHtml}
-        </div>
-        <div class="student-delete-container flex gap-2 flex-wrap"></div>
-        <div class="task-group-container flex gap-2 flex-wrap items-center"></div>
-      `;
-                const actionArea = el.querySelector(".action-area");
-                renderDeleteButton(actionArea, task);
-                renderStudentDeleteButtons(el, task);
-                renderTaskGroupButtons(el, task);
             }
-            const refNode = list.children[idx];
-            if (refNode !== el) list.insertBefore(el, refNode || null);
+            frag.appendChild(createAdminTaskEl(task));
         });
+        // Swapped in one step so the page doesn't jump while the teacher is scrolled down.
+        list.replaceChildren(frag);
 
         refreshCreatePrereqButton();
         renderDashboard();
         if (statusStudentNum != null && !document.getElementById("student-status-detail").classList.contains("hidden")) {
             renderStudentStatus(statusStudentNum);
         }
+        if (peek) renderPeek();
+        renderActivity();
+        lucide.createIcons();
     }
 
     function renderDeleteButton(container, task) {
@@ -1354,33 +1623,6 @@
             btnGroup.appendChild(delBtn);
         }
         container.appendChild(btnGroup);
-        lucide.createIcons();
-    }
-
-    function renderStudentDeleteButtons(container, task) {
-        const assignedStr = task.assigned_to || "";
-        const assigned = assignedStr ? assignedStr.split(",").map(s => parseInt(s.trim())).sort((a, b) => a - b) : [];
-
-        const deleteContainer = container.querySelector(".student-delete-container");
-        deleteContainer.innerHTML = "";
-
-        if (assigned.length === 0) return;
-
-        const label = document.createElement("p");
-        label.textContent = "Remove from student:";
-        label.className = "text-xs font-semibold w-full";
-        label.style.color = "#666";
-        deleteContainer.appendChild(label);
-
-        assigned.forEach(studentNum => {
-            const btn = document.createElement("button");
-            btn.className = "px-2 py-1 rounded-lg text-xs font-medium";
-            btn.style.background = "#ffe8e8";
-            btn.style.color = "#e74c3c";
-            btn.textContent = "Student " + studentNum + " \u2715";
-            btn.addEventListener("click", () => removeTaskFromStudent(task, studentNum));
-            deleteContainer.appendChild(btn);
-        });
     }
 
     // One-click assign/unassign of a whole group on an existing task.
@@ -1582,7 +1824,7 @@
         container.innerHTML = "";
 
         const tasks = getTasks()
-            .filter(t => t.assigned_to && t.assigned_to.trim() !== "")
+            .filter(t => isPublished(t) && t.assigned_to && t.assigned_to.trim() !== "")
             .map(task => {
                 const assigned = task.assigned_to.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n));
                 const notDone = assigned.filter(s => getCompletionsByTaskAndStudent(task.task_id, s).length === 0).sort((a, b) => a - b);
@@ -1698,15 +1940,9 @@
         lucide.createIcons();
     }
 
-    function renderStudentStatus(studentNum) {
-        statusStudentNum = studentNum;
-        document.getElementById("dashboard-overview").classList.add("hidden");
-        document.getElementById("student-status-detail").classList.remove("hidden");
-        document.getElementById("status-student-num").textContent = studentNum;
-
+    function renderStudentSummary(summary, studentNum) {
         const tasks = getTasksForStudent(studentNum);
         const doneCount = tasks.filter(t => getCompletionsByTaskAndStudent(t.task_id, studentNum).length > 0).length;
-        const summary = document.getElementById("status-summary");
         summary.innerHTML = "";
         const summaryText = document.createElement("span");
         summaryText.textContent = doneCount + " of " + tasks.length + " tasks complete";
@@ -1719,11 +1955,12 @@
         minusBtn.style.cssText = "background:#fdf6e3;color:#b8860b;border:1px solid #b8860b;";
         minusBtn.textContent = "\u2212";
         minusBtn.setAttribute("aria-label", "Take one token");
-        minusBtn.addEventListener("click", () => { if (getTokens(studentNum) > 0) changeTokens(studentNum, -1); });
+        minusBtn.addEventListener("click", () => changeTokens(studentNum, -1));
+        const tokens = getTokens(studentNum);
         const tokenCount = document.createElement("span");
         tokenCount.className = "font-semibold";
-        tokenCount.style.color = "#b8860b";
-        tokenCount.innerHTML = "&#129689; " + getTokens(studentNum);
+        tokenCount.style.color = tokens < 0 ? "#b91c1c" : "#b8860b";
+        tokenCount.innerHTML = "&#129689; " + tokens;
         const plusBtn = document.createElement("button");
         plusBtn.className = "w-6 h-6 rounded-full font-bold leading-none";
         plusBtn.style.cssText = "background:#fdf6e3;color:#b8860b;border:1px solid #b8860b;";
@@ -1736,34 +1973,30 @@
         summary.appendChild(summaryText);
         summary.appendChild(sep);
         summary.appendChild(tokenGroup);
+    }
 
-        const list = document.getElementById("status-task-list");
-        list.innerHTML = "";
+    // A teacher's view of one task for one student. Clicking it flips the check.
+    function createTeacherTaskRow(task, studentNum) {
+        const done = getCompletionsByTaskAndStudent(task.task_id, studentNum).length > 0;
+        const el = document.createElement("div");
+        el.className = "flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm cursor-pointer";
+        el.dataset.id = task.task_id;
+        el.style.borderLeft = `4px solid ${done ? "#86efac" : "#ef4444"}`;
 
-        tasks.forEach(task => {
-            const done = getCompletionsByTaskAndStudent(task.task_id, studentNum).length > 0;
-            const el = document.createElement("div");
-            el.className = "flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm cursor-pointer";
-            el.style.borderLeft = `4px solid ${done ? "#86efac" : "#ef4444"}`;
+        const priorityHtml = task.task_priority
+            ? '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#11088; Top Priority</span>'
+            : "";
 
-            const priorityHtml = task.task_priority
-                ? '<span class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:#fdf6e3;color:#b8860b;">&#11088; Top Priority</span>'
-                : "";
+        const statusLinks = getLinks(task);
+        const linkHtml = statusLinks.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="status-link-btn text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (statusLinks.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
 
-            const dueHtml = task.task_due
-                ? `<span class="text-xs font-medium px-2 py-1 rounded-lg" style="background:#fff3e0;color:#e65100;">Due: ${fmtDue(task.task_due)}</span>`
-                : "";
+        const descHtml = task.task_desc ? `<p class="text-xs mt-1" style="color:${done ? '#ccc' : '#666'};">${escHtml(task.task_desc)}</p>` : "";
 
-            const statusLinks = getLinks(task);
-            const linkHtml = statusLinks.map((l, i) => `<a href="${escHtml(l.url)}" target="_blank" rel="noopener" class="status-link-btn text-xs font-medium px-2 py-1 rounded-lg inline-flex items-center gap-1" style="background:#e8e6ff;color:#6366f1;"><i data-lucide="external-link" style="width:12px;height:12px;"></i> ${escHtml(l.title || 'Link' + (statusLinks.length > 1 ? ' ' + (i+1) : ''))}</a>`).join("");
+        const checkHtml = `<div class="custom-check w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 ${done ? 'checked' : ''}" style="border-color:${done ? '#a78bfa' : '#ccc'};${done ? 'background:#a78bfa;' : ''}">
+          ${done ? '<i data-lucide="check" style="width:14px;height:14px;color:white;"></i>' : ''}
+        </div>`;
 
-            const descHtml = task.task_desc ? `<p class="text-xs mt-1" style="color:${done ? '#ccc' : '#666'};">${escHtml(task.task_desc)}</p>` : "";
-
-            const checkHtml = `<div class="custom-check w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 ${done ? 'checked' : ''}" style="border-color:${done ? '#a78bfa' : '#ccc'};${done ? 'background:#a78bfa;' : ''}">
-              ${done ? '<i data-lucide="check" style="width:14px;height:14px;color:white;"></i>' : ''}
-            </div>`;
-
-            el.innerHTML = `
+        el.innerHTML = `
         ${checkHtml}
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
@@ -1771,16 +2004,222 @@
             ${priorityHtml}
           </div>
           ${descHtml}
-          <div class="flex items-center gap-2 mt-1">${dueHtml}${linkHtml}</div>
+          <div class="task-meta flex items-center gap-2 mt-1 flex-wrap">${linkHtml}</div>
         </div>
       `;
-            el.addEventListener("click", (e) => {
-                if (e.target.closest(".status-link-btn")) return;
-                toggleCompletion(task.task_id, studentNum, { teacher: true });
-            });
-            list.appendChild(el);
+        if (task.task_due) el.querySelector(".task-meta").prepend(makeDueBadge(task.task_due, done));
+        el.addEventListener("click", (e) => {
+            if (e.target.closest(".status-link-btn")) return;
+            toggleCompletion(task.task_id, studentNum, { teacher: true });
         });
+        return el;
+    }
+
+    function renderStudentStatus(studentNum) {
+        statusStudentNum = studentNum;
+        document.getElementById("dashboard-overview").classList.add("hidden");
+        document.getElementById("student-status-detail").classList.remove("hidden");
+        document.getElementById("status-student-num").textContent = studentNum;
+        renderStudentSummary(document.getElementById("status-summary"), studentNum);
+
+        const list = document.getElementById("status-task-list");
+        list.innerHTML = "";
+        getTasksForStudent(studentNum).forEach(task => list.appendChild(createTeacherTaskRow(task, studentNum)));
         lucide.createIcons();
+    }
+
+    // ------------------------------------------------------ student pop-up ---
+    // It sits on top of the task list, so the list keeps its scroll position and
+    // open tasks while the teacher looks at one student.
+    function openPeek(studentNum, fromTaskId) {
+        peek = { student: studentNum, fromTaskId: fromTaskId || null, returnFocus: document.activeElement };
+        document.getElementById("peek-modal").classList.remove("hidden");
+        renderPeek();
+        document.getElementById("peek-list").scrollTop = 0;
+        document.getElementById("peek-close").focus({ preventScroll: true });
+    }
+
+    function closePeek() {
+        const back = peek && peek.returnFocus;
+        peek = null;
+        document.getElementById("peek-modal").classList.add("hidden");
+        if (back && back.isConnected) back.focus({ preventScroll: true });
+    }
+
+    function renderPeek() {
+        if (!peek) return;
+        const num = peek.student;
+        document.getElementById("peek-title").textContent = "Student " + num;
+        renderStudentSummary(document.getElementById("peek-summary"), num);
+
+        const list = document.getElementById("peek-list");
+        const keepScroll = list.scrollTop;
+        list.innerHTML = "";
+        const tasks = getTasksForStudent(num);
+        // The order stays put when something is checked, so rows don't jump under the pointer.
+        const scheduled = getScheduledTasksForStudent(num);
+
+        const addRow = (row, task) => {
+            const wrap = document.createElement("div");
+            wrap.className = "flex flex-col flex-shrink-0 px-1 pt-1";
+            if (task.task_id === peek.fromTaskId) row.style.outline = "2px solid #6366f1";
+            wrap.appendChild(row);
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "self-end text-xs font-medium px-2 py-1";
+            remove.style.color = "#e74c3c";
+            remove.textContent = "Remove from this student";
+            remove.addEventListener("click", () => {
+                if (confirm("Remove \"" + task.task_text + "\" from student " + num + "?")) removeTaskFromStudent(task, num);
+            });
+            wrap.appendChild(remove);
+            list.appendChild(wrap);
+        };
+
+        tasks.forEach(task => addRow(createTeacherTaskRow(task, num), task));
+        scheduled.forEach(task => {
+            const row = document.createElement("div");
+            row.className = "bg-white rounded-xl px-4 py-3 shadow-sm";
+            row.style.borderLeft = "4px solid #a78bfa";
+            const name = document.createElement("p");
+            name.className = "font-medium";
+            name.style.color = "#1a1a2e";
+            name.textContent = task.task_text;
+            row.appendChild(name);
+            row.appendChild(makeBadge("\uD83D\uDD52 Posts " + fmtWhen(task.task_publish), "background:#ede9fe;color:#5b21b6;"));
+            addRow(row, task);
+        });
+        if (list.children.length === 0) {
+            const none = document.createElement("p");
+            none.className = "text-center text-sm py-4";
+            none.style.color = "#888";
+            none.textContent = "No tasks assigned.";
+            list.appendChild(none);
+        }
+        list.scrollTop = keepScroll;
+        lucide.createIcons();
+    }
+
+    // =====================================================================
+    // COMPLETION NOTIFICATIONS (teacher)
+    // =====================================================================
+    // Alerts work while the teacher is signed in and this page is open in a tab.
+    // Only student numbers are involved, and nothing extra leaves the device.
+    function isOwnClassroom() {
+        const user = auth.currentUser;
+        return !!(isAdminAuthed && user && user.uid === teacherUid);
+    }
+    function readPref(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function writePref(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* ignore */ } }
+    function alertsSupported() { return typeof window.Notification !== "undefined"; }
+    function alertsOn() { return alertsSupported() && Notification.permission === "granted" && readPref("mwc_alerts") === "on"; }
+
+    // Newest first. Check-offs the teacher made from the admin screens are left out.
+    function getStudentCompletions() {
+        const titles = new Map(getTasks().map(t => [t.task_id, t.task_text]));
+        return allData
+            .filter(r => r.type === "completion" && !r.by_teacher && titles.has(r.task_id))
+            .map(r => ({ ...r, title: titles.get(r.task_id) }))
+            .sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
+    }
+
+    function completionMessage(rec) {
+        return "Student " + rec.assigned_to + " finished \"" + rec.title + "\"";
+    }
+
+    function noteNewCompletions() {
+        const known = knownCompletionKeys;
+        knownCompletionKeys = new Set(allData.filter(r => r.type === "completion").map(r => r._key));
+        if (!known || !isOwnClassroom()) return;
+        const fresh = getStudentCompletions().filter(r => !known.has(r._key));
+        if (fresh.length === 0) return;
+        const msg = fresh.length === 1 ? completionMessage(fresh[0]) : fresh.length + " tasks were just completed";
+        if (currentView === "admin") showToast("\uD83D\uDD14 " + msg, "info");
+        if (alertsOn()) {
+            try { new Notification("Missing Work Checklist", { body: msg }); } catch (e) { /* some phones don't allow this */ }
+        }
+    }
+
+    function activitySeenKey() { return "mwc_activitySeen_" + teacherUid; }
+    function markActivitySeen() { writePref(activitySeenKey(), new Date(nowMs()).toISOString()); }
+
+    function renderActivity() {
+        const badge = document.getElementById("activity-badge");
+        const modalOpen = !document.getElementById("activity-modal").classList.contains("hidden");
+        const done = getStudentCompletions();
+        let seen = readPref(activitySeenKey());
+        if (seen === null && recordsLoaded && isOwnClassroom()) {
+            markActivitySeen();
+            seen = readPref(activitySeenKey());
+        }
+        const unread = seen === null || modalOpen ? 0 : done.filter(r => (r.created_at || "") > seen).length;
+        badge.textContent = unread > 99 ? "99+" : unread;
+        badge.classList.toggle("hidden", unread === 0);
+        if (modalOpen) renderActivityList(done);
+    }
+
+    function renderActivityList(done) {
+        const list = document.getElementById("activity-list");
+        const keepScroll = list.scrollTop;
+        list.innerHTML = "";
+        const newSince = list.dataset.newSince || "";
+        done.slice(0, 100).forEach(rec => {
+            const isNew = newSince && (rec.created_at || "") > newSince;
+            const row = document.createElement("button");
+            row.type = "button";
+            row.className = "text-left rounded-xl px-3 py-2 flex-shrink-0";
+            row.style.cssText = isNew ? "background:#eef2ff;border:1px solid #6366f1;" : "background:#fff;border:1px solid #e5e7eb;";
+            const msg = document.createElement("p");
+            msg.className = "text-sm font-medium break-words";
+            msg.style.color = "#1a1a2e";
+            msg.textContent = (isNew ? "\u2022 " : "") + completionMessage(rec);
+            const when = document.createElement("p");
+            when.className = "text-xs";
+            when.style.color = "#888";
+            when.textContent = rec.created_at ? fmtWhen(rec.created_at) : "";
+            row.appendChild(msg);
+            row.appendChild(when);
+            row.addEventListener("click", () => { closeActivity(); openPeek(parseInt(rec.assigned_to, 10), rec.task_id); });
+            list.appendChild(row);
+        });
+        document.getElementById("activity-empty").classList.toggle("hidden", done.length > 0);
+        list.scrollTop = keepScroll;
+    }
+
+    function renderAlertControls() {
+        const btn = document.getElementById("alerts-toggle");
+        const note = document.getElementById("alerts-note");
+        btn.classList.toggle("hidden", !alertsSupported() || Notification.permission === "denied");
+        btn.textContent = alertsOn() ? "Turn off desktop alerts" : "Turn on desktop alerts";
+        if (!alertsSupported()) note.textContent = "This browser doesn't support pop-up alerts. This list and the bell still work.";
+        else if (Notification.permission === "denied") note.textContent = "Alerts are blocked. Allow notifications for this site in your browser settings.";
+        else note.textContent = "Pop-up alerts arrive only while you're signed in and this page is open in a tab. This list shows tasks that are checked off right now.";
+    }
+
+    async function toggleAlerts() {
+        if (alertsOn()) writePref("mwc_alerts", "off");
+        else {
+            const permission = Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
+            if (permission === "granted") writePref("mwc_alerts", "on");
+        }
+        renderAlertControls();
+    }
+
+    function openActivity() {
+        const list = document.getElementById("activity-list");
+        // Remember what was unread so it stays highlighted while the list is open.
+        list.dataset.newSince = readPref(activitySeenKey()) || "";
+        markActivitySeen();
+        document.getElementById("activity-modal").classList.remove("hidden");
+        list.scrollTop = 0;
+        renderAlertControls();
+        renderActivity();
+    }
+
+    function closeActivity() {
+        markActivitySeen();
+        document.getElementById("activity-modal").classList.add("hidden");
+        renderActivity();
     }
 
     // =====================================================================
@@ -1855,6 +2294,9 @@
         const empty = document.getElementById("student-empty");
         document.getElementById("student-num-display").textContent = currentStudent;
         empty.classList.toggle("hidden", tasks.length > 0);
+        const inDebt = getTokens(currentStudent) < 0;
+        document.getElementById("token-debt-note").classList.toggle("hidden", !inDebt);
+        document.getElementById("token-badge").style.color = inDebt ? "#b91c1c" : "#b8860b";
 
         prioritySection.classList.toggle("hidden", priorityTasks.length === 0);
         document.getElementById("student-donext-title").classList.toggle("hidden", priorityTasks.length === 0 || regularTasks.length === 0);
@@ -1913,6 +2355,7 @@
         const meta = el.querySelector(".task-meta");
         if (meta) {
             meta.innerHTML = "";
+            meta.classList.add("flex-wrap");
             const taskLinks = getLinks(task);
             taskLinks.forEach((lnk, i) => {
                 const a = document.createElement("a");
@@ -1922,13 +2365,7 @@
                 a.textContent = lnk.title || (taskLinks.length > 1 ? "Follow me! (" + (i + 1) + ")" : "Follow me!");
                 meta.appendChild(a);
             });
-            if (task.task_due) {
-                const span = document.createElement("span");
-                span.className = "text-xs font-medium px-2 py-1 rounded-lg";
-                span.style.cssText = "background:#fff3e0;color:#e65100;";
-                span.textContent = "Due: " + fmtDue(task.task_due);
-                meta.appendChild(span);
-            }
+            if (task.task_due) meta.appendChild(makeDueBadge(task.task_due, done));
         }
     }
 
@@ -1960,13 +2397,44 @@
             if (r.isOk) changeTokens(target, -1);
             else showToast("Error updating", "error");
         } else {
-            const r = await fbCreate({ type: "completion", task_id: taskId, task_text: "", assigned_to: String(target), completed: true, created_at: new Date().toISOString() });
+            const byTeacher = !!(opts && opts.teacher);
+            if (!byTeacher) {
+                if (turnInPending) return;
+                if (!(await askTurnedIn(task))) return;
+                // Things may have changed while the question was on screen.
+                const now = getTaskById(taskId);
+                if (!now || isTaskLockedFor(now, target) || getCompletionsByTaskAndStudent(taskId, target).length > 0) return;
+            }
+            const record = { type: "completion", task_id: taskId, task_text: "", assigned_to: String(target), completed: true, created_at: new Date(nowMs()).toISOString() };
+            if (byTeacher) record.by_teacher = true;
+            const r = await fbCreate(record);
             if (r.isOk) changeTokens(target, 1);
             else showToast("Error updating", "error");
         }
     }
 
-    async function addTask(text, desc, assignedStudents, link, dueDate, priority, prereq) {
+    // ------------------------------------------------------ turn-in check ---
+    // Students must answer this before a task gets checked off.
+    let turnInResolve = null;
+
+    function askTurnedIn(task) {
+        turnInPending = true;
+        document.getElementById("turnin-task").textContent = task ? task.task_text : "";
+        document.getElementById("turnin-modal").classList.remove("hidden");
+        document.getElementById("turnin-no").focus({ preventScroll: true });
+        return new Promise(resolve => { turnInResolve = resolve; });
+    }
+
+    function answerTurnedIn(yes) {
+        if (!turnInResolve) return;
+        const resolve = turnInResolve;
+        turnInResolve = null;
+        turnInPending = false;
+        document.getElementById("turnin-modal").classList.add("hidden");
+        resolve(yes);
+    }
+
+    async function addTask(text, desc, assignedStudents, link, dueDate, priority, prereq, subject, publishAt) {
         const taskId = "t_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
         const assignedStr = assignedStudents.join(",");
         const taskData = { type: "task", task_id: taskId, task_text: text, assigned_to: assignedStr, completed: false, created_at: new Date().toISOString() };
@@ -1975,8 +2443,10 @@
         if (dueDate) taskData.task_due = dueDate;
         if (priority) taskData.task_priority = true;
         if (prereq) taskData.task_prereq = prereq;
+        if (subject) taskData.task_subject = subject;
+        if (publishAt) taskData.task_publish = publishAt;
         const r = await fbCreate(taskData);
-        if (r.isOk) showToast("Task added!");
+        if (r.isOk) showToast(isPublished(taskData) ? "Task added!" : "Task scheduled for " + fmtWhen(publishAt));
         else showToast("Error adding task", "error");
     }
 
@@ -1992,6 +2462,63 @@
 
     function escHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
     function fmtDue(d) { const [y, m, day] = d.split("-"); return parseInt(m) + "/" + parseInt(day); }
+    // "11/30 at 8:00 AM"
+    function fmtWhen(iso) {
+        const d = new Date(iso);
+        return (d.getMonth() + 1) + "/" + d.getDate() + " at " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    }
+    // <input type="datetime-local"> speaks local time; the database stores ISO.
+    function toLocalInput(iso) {
+        const d = new Date(iso || "");
+        if (isNaN(d.getTime())) return "";
+        const pad = n => String(n).padStart(2, "0");
+        return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
+    }
+    function fromLocalInput(value) {
+        const d = new Date(value || "");
+        return isNaN(d.getTime()) ? "" : d.toISOString();
+    }
+
+    // Whole calendar days from today to the due date (negative once it's late).
+    function daysUntil(due) {
+        const [y, m, d] = due.split("-").map(Number);
+        const today = new Date(nowMs());
+        return Math.round((Date.UTC(y, m - 1, d) - Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+    }
+    // The due date, plus a countdown (or a days-late count) while the work isn't done.
+    function makeDueBadge(due, done) {
+        let text = "Due: " + fmtDue(due);
+        let css = "background:#fff3e0;color:#e65100;";
+        if (!done) {
+            const days = daysUntil(due);
+            if (days > 1) { text += " \u00B7 \u23F3 " + days + " days left"; css = "background:#e0f2fe;color:#075985;"; }
+            else if (days === 1) text += " \u00B7 \u23F3 Due tomorrow!";
+            else if (days === 0) { text += " \u00B7 \u23F0 Due today!"; css = "background:#fef08a;color:#713f12;"; }
+            else if (days < 0) {
+                text += " \u00B7 \uD83D\uDEA8 " + (-days) + (days === -1 ? " day" : " days") + " late";
+                css = "background:#fee2e2;color:#b91c1c;";
+            }
+        }
+        const span = document.createElement("span");
+        span.className = "task-due text-xs font-semibold px-2 py-1 rounded-lg";
+        span.style.cssText = css;
+        span.textContent = text;
+        return span;
+    }
+
+    // Scheduled tasks appear, and countdowns roll over at midnight, without a
+    // refresh. Redraws only when something has actually changed.
+    let lastClockStamp = "";
+    function checkClock() {
+        const stamp = new Date(nowMs()).toDateString() + "|" +
+            getTasks().filter(isPublished).map(t => t.task_id).join(",");
+        if (stamp === lastClockStamp) return;
+        lastClockStamp = stamp;
+        if (currentView === "admin") renderAdmin();
+        if (currentView === "student") renderStudent();
+    }
+    setInterval(checkClock, 10000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) checkClock(); });
     function getLinks(task) {
         return (task.task_link || "").split("\n").map(s => s.trim()).filter(Boolean).map(s => {
             const idx = s.indexOf("|");
@@ -2053,6 +2580,8 @@
         else { links.forEach(l => editLinksContainer.appendChild(createLinkRow(l.title, l.url))); }
         updateRemoveBtns(editLinksContainer);
         document.getElementById("edit-task-due").value = task.task_due || "";
+        document.getElementById("edit-task-subject").value = task.task_subject || "";
+        document.getElementById("edit-task-publish").value = toLocalInput(task.task_publish);
         document.getElementById("edit-task-priority").checked = !!task.task_priority;
         document.getElementById("edit-task-priority").parentElement.classList.toggle("active", !!task.task_priority);
         editPrereqValue = task.task_prereq || "";
@@ -2110,7 +2639,9 @@
             task_link: newLink || "",
             task_due: newDue || "",
             task_priority: newPriority || false,
-            task_prereq: newPrereq || ""
+            task_prereq: newPrereq || "",
+            task_subject: document.getElementById("edit-task-subject").value.trim(),
+            task_publish: fromLocalInput(document.getElementById("edit-task-publish").value)
         };
 
         const r = await fbUpdate(updatedTask);
@@ -2224,6 +2755,41 @@
             updateGroupCountHint();
         });
 
+        // Task manager: new-task form, search, sort and filters
+        function setCreateFormOpen(open) {
+            document.getElementById("add-task-form").classList.toggle("hidden", !open);
+            const btn = document.getElementById("create-toggle-btn");
+            btn.textContent = open ? "\u2212 Hide New Task" : "+ New Task";
+            btn.setAttribute("aria-expanded", String(open));
+        }
+        document.getElementById("create-toggle-btn").addEventListener("click", () => {
+            setCreateFormOpen(document.getElementById("add-task-form").classList.contains("hidden"));
+        });
+        const sortSelect = document.getElementById("task-sort");
+        sortSelect.value = taskView.sort;
+        if (!sortSelect.value) { taskView.sort = "newest"; sortSelect.value = "newest"; }
+        sortSelect.addEventListener("change", (e) => { taskView.sort = e.target.value; saveTaskView(); renderAdmin(); });
+        document.getElementById("task-search").addEventListener("input", (e) => { taskView.search = e.target.value; renderAdmin(); });
+        document.getElementById("task-filter-subject").addEventListener("change", (e) => { taskView.subject = e.target.value; renderAdmin(); });
+        document.getElementById("task-filter-status").addEventListener("change", (e) => { taskView.status = e.target.value; renderAdmin(); });
+        document.getElementById("expand-all-btn").addEventListener("click", () => {
+            const tasks = getVisibleAdminTasks();
+            const allOpen = tasks.every(t => expandedTaskIds.has(t.task_id));
+            tasks.forEach(t => { if (allOpen) expandedTaskIds.delete(t.task_id); else expandedTaskIds.add(t.task_id); });
+            renderAdmin();
+        });
+
+        // Student pop-up, notifications and the turn-in question
+        document.getElementById("peek-close").addEventListener("click", closePeek);
+        document.getElementById("peek-done").addEventListener("click", closePeek);
+        document.getElementById("peek-modal").addEventListener("click", (e) => { if (e.target.id === "peek-modal") closePeek(); });
+        document.getElementById("admin-activity").addEventListener("click", openActivity);
+        document.getElementById("activity-close").addEventListener("click", closeActivity);
+        document.getElementById("activity-modal").addEventListener("click", (e) => { if (e.target.id === "activity-modal") closeActivity(); });
+        document.getElementById("alerts-toggle").addEventListener("click", toggleAlerts);
+        document.getElementById("turnin-yes").addEventListener("click", () => answerTurnedIn(true));
+        document.getElementById("turnin-no").addEventListener("click", () => answerTurnedIn(false));
+
         // Events
         document.getElementById("admin-btn").addEventListener("click", async () => {
             await adminCheckPromise;
@@ -2242,7 +2808,7 @@
             document.getElementById("pw-input").value = "";
             showView("select");
         });
-        document.getElementById("admin-back").addEventListener("click", () => { deleteConfirmId = null; showView("select"); });
+        document.getElementById("admin-back").addEventListener("click", () => { deleteConfirmId = null; closePeek(); showView("select"); });
         document.getElementById("student-back").addEventListener("click", () => { currentStudent = null; showView("select"); });
 
         function setAdminView(view) {
@@ -2374,7 +2940,7 @@
                 return;
             }
             if (amount > balance) {
-                err.textContent = "You only have " + balance + " tokens.";
+                err.textContent = balance > 0 ? "You only have " + balance + " token" + (balance === 1 ? "" : "s") + "." : "You don't have any tokens to spend yet.";
                 err.classList.remove("hidden");
                 return;
             }
@@ -2474,7 +3040,10 @@
             const bulk = document.getElementById("bulk-modal");
             const groups = document.getElementById("groups-modal");
             const linkModal = document.getElementById("link-modal");
+            if (turnInPending) { answerTurnedIn(false); return; }
             if (linkModal && !linkModal.classList.contains("hidden")) { closeLinkModal(); return; }
+            if (peek) { closePeek(); return; }
+            if (!document.getElementById("activity-modal").classList.contains("hidden")) { closeActivity(); return; }
             if (groups && !groups.classList.contains("hidden")) { closeGroupsModal(); return; }
             if (settings && !settings.classList.contains("hidden")) { closeSettingsModal(); return; }
             if (redeem && !redeem.classList.contains("hidden")) { redeem.classList.add("hidden"); return; }
@@ -2748,6 +3317,8 @@
             renderGroupChips("bulk-group-chips", "bulk-student-checkboxes");
             document.getElementById("bulk-tasks-input").value = "";
             document.getElementById("bulk-task-due").value = "";
+            document.getElementById("bulk-task-subject").value = "";
+            document.getElementById("bulk-task-publish").value = "";
             const prio = document.getElementById("bulk-task-priority");
             prio.checked = false;
             prio.parentElement.classList.remove("active");
@@ -2794,6 +3365,8 @@
             }
             const dueDate = document.getElementById("bulk-task-due").value;
             const priority = document.getElementById("bulk-task-priority").checked;
+            const subject = document.getElementById("bulk-task-subject").value.trim();
+            const publishAt = fromLocalInput(document.getElementById("bulk-task-publish").value);
 
             const btn = document.getElementById("bulk-submit");
             const origText = btn.textContent;
@@ -2802,7 +3375,7 @@
             try {
                 playDing();
                 const results = await Promise.allSettled(
-                    titles.map(t => addTask(t, "", selected, "", dueDate, priority))
+                    titles.map(t => addTask(t, "", selected, "", dueDate, priority, "", subject, publishAt))
                 );
                 const ok = results.filter(r => r.status === "fulfilled").length;
                 const failed = results.length - ok;
@@ -2839,6 +3412,10 @@
             const dueDate = document.getElementById("task-due").value;
             const priority = document.getElementById("task-priority").checked;
             const prereq = createPrereq;
+            const subject = document.getElementById("task-subject").value.trim();
+            const publishAt = fromLocalInput(document.getElementById("task-publish").value);
+            document.getElementById("task-subject").value = "";
+            document.getElementById("task-publish").value = "";
 
             input.value = "";
             document.getElementById("task-desc").value = "";
@@ -2852,7 +3429,7 @@
             setPrereqButton("task-prereq-btn", createPrereq);
             document.querySelectorAll("#student-checkboxes input").forEach(cb => cb.checked = false);
             refreshGroupChipStates("task-group-chips", "student-checkboxes");
-            await addTask(text, desc, selected, link, dueDate, priority, prereq);
+            await addTask(text, desc, selected, link, dueDate, priority, prereq, subject, publishAt);
         });
 
         document.getElementById("select-all-btn").addEventListener("click", (e) => {
